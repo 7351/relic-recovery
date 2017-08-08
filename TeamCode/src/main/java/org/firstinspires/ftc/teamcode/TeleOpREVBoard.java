@@ -1,23 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.robotlibrary.BigAl.BeaconUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.BigAl.ColorUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.BigAl.DriveTrain;
-import org.firstinspires.ftc.teamcode.robotlibrary.BigAl.FlyWheel;
-import org.firstinspires.ftc.teamcode.robotlibrary.BigAl.Intake;
-import org.firstinspires.ftc.teamcode.robotlibrary.BigAl.Intake.IntakeSpec;
-import org.firstinspires.ftc.teamcode.robotlibrary.BigAl.Lift;
-import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 
 /**
  * Created by Dynamic Signals on 10/21/2016.
@@ -31,10 +19,10 @@ public class TeleOpREVBoard extends OpMode {
     public Servo servo_1;
     public ColorSensor color;
     public DigitalChannel push;
+    public BNO055IMU imu;
     double servoPostion1 = 0.0;
     double servoPostion2 = 1;
     double motorPower = 0;
-
 
     @Override
     public void init() {
@@ -44,6 +32,8 @@ public class TeleOpREVBoard extends OpMode {
         servo_1 = hardwareMap.servo.get("servo");
         color = hardwareMap.colorSensor.get("color");
         push = hardwareMap.digitalChannel.get("push");
+        push.setMode(DigitalChannel.Mode.INPUT);
+        imu = hardwareMap.
     }
 
     @Override
@@ -54,10 +44,10 @@ public class TeleOpREVBoard extends OpMode {
          */
         motor_1.setPower(-gamepad1.right_stick_y);
 
-        if(gamepad1.a){
+        if (gamepad1.a) {
             servo_1.setPosition(servoPostion1);
         }
-        if (gamepad1.y){
+        if (gamepad1.y) {
             servo_1.setPosition(servoPostion2);
         }
 
@@ -67,6 +57,6 @@ public class TeleOpREVBoard extends OpMode {
         telemetry.addData("Color Red:", color.red());
         telemetry.addData("Color Green:", color.green());
         telemetry.addData("Color Blue:", color.blue());
-        telemetry.addData("Push", push.getState());
+        telemetry.addData("Push", (push.getState() ? "Not pushed" : "Pushed"));
     }
 }
