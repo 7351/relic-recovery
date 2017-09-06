@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.robotlibrary.ColorUtils;
+
 /**
  * Created by Dynamic Signals on 10/21/2016.
  */
@@ -19,6 +21,7 @@ public class TeleOpREVBoard extends OpMode {
     public Servo servo_1;
     public ColorSensor color;
     public DigitalChannel push;
+    ColorUtils utils;
     public BNO055IMU imu;
     double servoPostion1 = 0.0;
     double servoPostion2 = 1;
@@ -29,11 +32,15 @@ public class TeleOpREVBoard extends OpMode {
 
         motor_1 = hardwareMap.dcMotor.get("motor");
         motor_1.setDirection(DcMotor.Direction.REVERSE);
+        motor_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         servo_1 = hardwareMap.servo.get("servo");
         color = hardwareMap.colorSensor.get("color");
         push = hardwareMap.digitalChannel.get("push");
         push.setMode(DigitalChannel.Mode.INPUT);
-        imu = hardwareMap.
+
+        utils = new ColorUtils(hardwareMap);
+
     }
 
     @Override
@@ -52,11 +59,10 @@ public class TeleOpREVBoard extends OpMode {
         }
 
         //telemetry.addData("Beacon Servo", beaconUtils.BeaconServo.getPosition());
-        telemetry.addData("Servo:", servo_1.getPosition());
-        telemetry.addData("Motor:", motor_1.getPower());
-        telemetry.addData("Color Red:", color.red());
-        telemetry.addData("Color Green:", color.green());
-        telemetry.addData("Color Blue:", color.blue());
+        telemetry.addData("Servo", servo_1.getPosition());
+        telemetry.addData("Motor Encoder", motor_1.getCurrentPosition());
+        telemetry.addData("Motor", motor_1.getPower());
+        telemetry.addData("Color", utils.getColorSensorColor(color));
         telemetry.addData("Push", (push.getState() ? "Not pushed" : "Pushed"));
     }
 }
