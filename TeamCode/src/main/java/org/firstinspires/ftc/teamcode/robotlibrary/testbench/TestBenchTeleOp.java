@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robotlibrary.TestBench;
+package org.firstinspires.ftc.teamcode.robotlibrary.testbench;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.robotlibrary.DriveTrain;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 
 /**

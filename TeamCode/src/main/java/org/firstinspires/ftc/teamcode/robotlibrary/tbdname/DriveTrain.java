@@ -1,13 +1,16 @@
-package org.firstinspires.ftc.teamcode.robotlibrary;
+package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorImpl;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.Range;
+
+/**
+ * Created by Dynamic Signals on 10/23/2016.
+ */
 
 public class DriveTrain {
 
