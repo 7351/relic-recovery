@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import com.kauailabs.navx.ftc.AHRS;
-import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,9 +9,6 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
-
-import static org.firstinspires.ftc.teamcode.robotlibrary.BigAl.GyroUtils.Direction.CLOCKWISE;
-import static org.firstinspires.ftc.teamcode.robotlibrary.BigAl.GyroUtils.Direction.COUNTERCLOCKWISE;
 
 /**
  * Created by Dynamic Signals on 10/11/2016.
@@ -90,7 +86,7 @@ public class GyroUtils {
     // -180 to 180
     public static double temporaryZero(AHRS navx, double zeroDegree) {
         double formattedDegree = navx.getYaw();
-        DbgLog.msg("Degree: " + String.valueOf(formattedDegree));
+        RobotLog.d("Degree: " + String.valueOf(formattedDegree));
         if (Math.signum(formattedDegree) == -1) formattedDegree += 360;
         double degree = formattedDegree - zeroDegree;
         if (degree > 360) {
@@ -149,7 +145,7 @@ public class GyroUtils {
 
             if (initialDegreesOff == -1) {
                 initialDegreesOff = degreesOff;
-                DbgLog.msg("Initial degrees off: " + initialDegreesOff);
+                RobotLog.d("Initial degrees off: " + initialDegreesOff);
             }
 
             percentComplete = Double.valueOf(AutonomousUtils.df.format(100 - Range.clip((degreesOff / initialDegreesOff) * 100, 0, 100)));

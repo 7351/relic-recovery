@@ -5,9 +5,6 @@ package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
  */
 
 public interface Routine {
-    double GearRatio = 40;
-    double SprocketRatio = 1.5;
-
     void run();
     boolean isCompleted();
     void completed();
