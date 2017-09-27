@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
+import android.support.annotation.Nullable;
+
 import com.kauailabs.navx.ftc.AHRS;
+import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Dynamic Signals on 2/26/2017.
@@ -10,93 +13,73 @@ import com.qualcomm.robotcore.util.Range;
 
 public class BasicGyroTurn implements Routine {
 
-    private static double startingDrivePower = 0.095;
-    public double percentComplete;
-    public GyroUtils.GyroDetail detail;
-    private int stuckCounter = 0;
-    private double initalDegreesOff;
-    private double drivePower;
-    private double lastDegreesOffRounded = 0;
+    private static BasicGyroTurn instance;
+    private final double TOLERANCE_DEGREES = 2; // The degrees positive and negative that you want to get to
+    private final double TIMEOUT = 0; // In seconds, 0 if you don't want a timeout
 
-    private double tolerance = 3;
-    private DriveTrain driveTrain;
+    public GyroUtils.GyroDetail detail; // Used for getting useful data and stats from a turn
+    public GyroUtils gyroUtils;
+    public DriveTrain driveTrain; // DriveTrain instance, it's public so you can grab the object outside th class
 
-    public BasicGyroTurn(AHRS navx, DriveTrain driveTrain, double targetDegree, double power) {
-        this.driveTrain = driveTrain;
-        startingDrivePower = power;
-        detail = new GyroUtils.GyroDetail(navx, targetDegree);
+    private double targetDegree = 0;
+    private int completedCounter = 0;
 
-        initalDegreesOff = detail.degreesOff;
+    private ElapsedTime creationTime = new ElapsedTime(); // Used for timeout failsafe
 
-        driveTrain.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    private StateMachineOpMode opMode;
+    private double MinMotor = 0.0925, MaxMotor = 1;
 
-    }
+    private BasicGyroTurn(StateMachineOpMode opMode, double targetDegree) {
+        this.opMode = opMode;
+        this.gyroUtils = new GyroUtils(opMode);
+        this.targetDegree = targetDegree;
 
-    public BasicGyroTurn(AHRS navx, DriveTrain driveTrain, double targetDegree) {
-        this(navx, driveTrain, targetDegree, BasicGyroTurn.startingDrivePower);
-    }
-
-    public void setTolerance(double tolerance) {
-        this.tolerance = tolerance;
-    }
-
-    public void setPower(double power) {
-        startingDrivePower = power;
+        detail = new GyroUtils.GyroDetail(gyroUtils, targetDegree);
     }
 
     @Override
     public void run() {
-
         detail.updateData();
 
-        percentComplete = Range.clip(100 - ((detail.degreesOff / initalDegreesOff) * 100), 0, 100);
+        double power = 0;
 
-        if (percentComplete < 75) {
-            percentComplete *= 0.8;
-        }
-
-        if (Math.round(detail.degreesOff) == lastDegreesOffRounded) { // We think we are stuck
-            stuckCounter++; // Lets increment it
+        if (detail.turnDirection.equals(GyroUtils.Direction.CLOCKWISE)) {
+            power = 1;
         } else {
-            stuckCounter = 0; // We are nowhere close to being stuck
-            drivePower = startingDrivePower; // Default power
+            power = -1;
         }
 
-        if (stuckCounter > 750) { // We are definitely stuck (for about 5 seconds)
-            drivePower = Range.clip(drivePower + 0.000075, 0, 1); // Slowly speed up the turn
-        }
-
-        lastDegreesOffRounded = Math.round(detail.degreesOff); // Set the last degree
-        double leftPower = (detail.turnDirection.equals(GyroUtils.Direction.COUNTERCLOCKWISE)) ? -drivePower : drivePower;
-
-
-        driveTrain.powerLeft(leftPower);
-        driveTrain.powerRight(-leftPower);
+        driveTrain.powerLeft(power);
+        driveTrain.powerRight(-power);
 
     }
 
-    /**
-     * Is the turn completed? If it isn't it will keep running, if it is, it will stop the robot
-     *
-     * @return if the turn is completed or not
-     */
     @Override
     public boolean isCompleted() {
-        boolean completed = (detail.degreesOff < 2);
-        if (completed) {
-            completed(); // We automatically stop the robot
+        boolean onTarget = detail.isInTolerance(TOLERANCE_DEGREES);
+        if (onTarget) {
+            completedCounter++;
+        } else {
+            completedCounter = 0;
+        }
+        if (completedCounter > 25 || (TIMEOUT > 0 && creationTime.time() > TIMEOUT)) {
+            completed();
         } else {
             run();
         }
-        return completed;
+        return (completedCounter > 25);
     }
 
     @Override
     public void completed() {
-
+        opMode.next(); // Go to next stage
         driveTrain.stopRobot();
-        driveTrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        teardown();
     }
+
+    public static void teardown() {
+        instance = null;
+    }
+
 
 }

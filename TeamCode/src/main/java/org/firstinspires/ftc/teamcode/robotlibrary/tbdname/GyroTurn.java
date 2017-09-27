@@ -106,7 +106,7 @@ public class GyroTurn implements Routine {
 
         /* Start tracking data */
         yawPIDResult = new navXPIDController.PIDResult();
-        detail = new GyroUtils.GyroDetail(navx, targetDegree);
+        //detail = new GyroUtils.GyroDetail(navx, targetDegree);
 
     }
 

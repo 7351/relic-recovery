@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import com.kauailabs.navx.ftc.AHRS;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,7 +10,14 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
+
+import java.util.Locale;
 
 /**
  * Created by Dynamic Signals on 10/11/2016.
@@ -16,76 +25,68 @@ import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
 
 public class GyroUtils {
 
-    public GyroSensor gyro;
-    public ModernRoboticsI2cGyro i2cGyro;
-    public double dividerNumber = 17;
-    Telemetry telemetry;
-    private int TOLERANCE = 1;
     private DriveTrain driveTrain;
-    private int gyroDistance = 0;
+    private Telemetry telemetry;
+    public BNO055IMU imu;
+    private BNO055IMU.Parameters parameters;
+    private boolean initialized = false;
 
-    @Deprecated
-    public GyroUtils(HardwareMap hardwareMap, DriveTrain driveTrain, Telemetry telemetry) {
-        this.telemetry = telemetry;
-        this.driveTrain = driveTrain;
-        gyro = hardwareMap.gyroSensor.get("gyro");
-        i2cGyro = (ModernRoboticsI2cGyro) gyro;
+    public Orientation angles;
+
+    public GyroUtils(StateMachineOpMode opMode) {
+        //driveTrain = new DriveTrain(opMode.hardwareMap);
+        telemetry = opMode.telemetry;
+        HardwareMap hardwareMap = opMode.hardwareMap;
+
+        parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
     }
 
-    /*
-     * Borrowed from team 5942
-     * @See https://www.reddit.com/r/FTC/comments/44zhfu/help_programming_a_turning_method_using_the_gyro/czuc6uf/
-     */
-    public int gyroDelta() {
-        return gyroDistance - i2cGyro.getIntegratedZValue();
+    public void startGyro() {
+        imu.initialize(parameters);
     }
 
-    public void resetDelta() {
-        gyroDistance = i2cGyro.getIntegratedZValue();
-    }
-
-    public void gTurn(int degrees, double power) {
-        float direction = Math.signum(degrees); //get +/- sign of target
-
-        if (Math.abs(gyroDelta()) < Math.abs(degrees)) {
-            driveTrain.powerLeft(-direction * power);
-            driveTrain.powerRight(direction * power);
-        } else {
-            driveTrain.stopRobot();
+    private void refreshData() {
+        if (!initialized) {
+            imu.initialize(parameters);
+            initialized = true;
         }
+        angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
-    public void setTolerance(int tolerance) {
-        this.TOLERANCE = tolerance;
+    public double getHeading() {
+        refreshData();
+        return Double.valueOf(AutonomousUtils.df.format(-angles.firstAngle));
     }
 
-    public boolean isGyroInTolerance(int degree, int tolerance) {
-        boolean returnValue = false;
-        if ((gyro.getHeading() <= degree + tolerance) && (gyro.getHeading() >= degree - tolerance)) {
-            returnValue = true;
-        }
-        return returnValue;
+    public double getRoll() {
+        refreshData();
+        return Double.valueOf(AutonomousUtils.df.format(-angles.secondAngle));
     }
 
-    public boolean isGyroInTolerance(int degree) {
-        return isGyroInTolerance(degree, TOLERANCE);
+    public double getPitch() {
+        refreshData();
+        return Double.valueOf(AutonomousUtils.df.format(-angles.thirdAngle));
     }
 
-    public int spoofedZero(int zeroDegree) {
-        int ActualDegree = gyro.getHeading();
-        int degree = ActualDegree - zeroDegree;
-        if (degree > 360) {
-            degree = degree - 360;
-        }
-        if (degree < 0) {
-            degree = degree + 360;
-        }
-        return degree;
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees) {
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
     // -180 to 180
-    public static double temporaryZero(AHRS navx, double zeroDegree) {
-        double formattedDegree = navx.getYaw();
+    public static double temporaryZero(GyroUtils gyroUtils, double zeroDegree) {
+        double formattedDegree = gyroUtils.getHeading();
         RobotLog.d("Degree: " + String.valueOf(formattedDegree));
         if (Math.signum(formattedDegree) == -1) formattedDegree += 360;
         double degree = formattedDegree - zeroDegree;
@@ -108,30 +109,24 @@ public class GyroUtils {
         public Direction initialTurnDirection = null;
         private double initialDegreesOff = -1;
 
-        private AHRS navx;
+        private GyroUtils gyroUtils;
 
-        /**
-         * Constructor for GyroDetail which gives useful data about about getting to a certain degree for gyro.
-         * This was made for the navX mxp for micro
-         * @param navx navX device
-         * @param degree the degree you want to get data about (-180 - 180)
-         */
-        public GyroDetail(AHRS navx, double degree) {
+        public GyroDetail(GyroUtils gyroUtils, double degree) {
             this.targetDegree = degree;
-            this.navx = navx;
+            this.gyroUtils = gyroUtils;
 
             updateData();
         }
 
-        public GyroDetail(AHRS navx) {
-            this.navx = navx;
+        public GyroDetail(GyroUtils gyroUtils) {
+            this.gyroUtils = gyroUtils;
         }
 
         public void updateData() {
             if (initialTurnDirection == null) {
                 initialTurnDirection = turnDirection;
             }
-            movedZero = GyroUtils.temporaryZero(navx, Range.clip(targetDegree, -180, 180)); // This is basically spoofedZero, it is used to cross over -180 & 180
+            movedZero = GyroUtils.temporaryZero(gyroUtils, Range.clip(targetDegree, -180, 180)); // This is basically spoofedZero, it is used to cross over -180 & 180
 
             if (movedZero > 0 && movedZero < 180) { // We need to turn counterclockwise
                 degreesOff = movedZero; // Its just the straight degrees
@@ -155,79 +150,9 @@ public class GyroUtils {
             this.targetDegree = degree;
             updateData();
         }
-    }
 
-    public void rotateUsingSpoofed(int ZeroDegree, int TargetDegree, double DivisionNumber, Direction direction) {
-        int CurrentSpoofedDegree = spoofedZero(ZeroDegree); //An expected 39 gyro value from fake zero
-        if (!isGyroInTolerance(TargetDegree)) {
-            double DegreesOff = Math.abs(TargetDegree - CurrentSpoofedDegree);
-            double RawPower = Range.clip(DegreesOff / DivisionNumber, 0, 1);
-            switch (direction) {
-                case CLOCKWISE:
-                    driveTrain.powerLeft(RawPower);
-                    driveTrain.powerRight(-RawPower);
-                    break;
-                case COUNTERCLOCKWISE:
-                    driveTrain.powerLeft(-RawPower);
-                    driveTrain.powerRight(RawPower);
-                    break;
-            }
-
-        }
-    }
-
-    //This function turns a number of degrees compared to where the robot is. Positive numbers trn left.
-    public void turn(int target) throws InterruptedException {
-        turnAbsolute(target + i2cGyro.getIntegratedZValue());
-    }
-
-    //This function turns a number of degrees compared to where the robot was when the program started. Positive numbers trn left.
-    public void turnAbsolute(int target) {
-        int zAccumulated = i2cGyro.getIntegratedZValue();  //Set variables to gyro readings
-        double turnSpeed;
-
-        if (Math.abs(zAccumulated - target) > 15) {
-            turnSpeed = 0.4;
-        } else {
-            turnSpeed = 0.23;
-        }
-
-        if (Math.abs(zAccumulated - target) > 3) {  //Continue while the robot direction is further than three degrees from the target
-            if (zAccumulated > target) {  //if gyro is positive, we will turn right
-                driveTrain.powerLeft(turnSpeed);
-                driveTrain.powerRight(-turnSpeed);
-            }
-
-            if (zAccumulated < target) {  //if gyro is positive, we will turn left
-                driveTrain.powerLeft(-turnSpeed);
-                driveTrain.powerRight(turnSpeed);
-            }
-
-            zAccumulated = i2cGyro.getIntegratedZValue();  //Set variables to gyro readings
-            telemetry.addData("Accumulated", String.format("%03d", zAccumulated));
-        } else {
-            driveTrain.stopRobot();
-        }
-    }
-
-    public void rotateUsingGyro(int DesiredDegree, int DivisionNumber, Direction direction) {
-        int CurrentSpoofedDegree = spoofedZero(DesiredDegree); //An expected 39 gyro value from fake zero
-        if (!isGyroInTolerance(0)) {
-            double DegreesOff = Math.abs(0 - CurrentSpoofedDegree);
-            double ProportionalPower = Range.clip(DegreesOff / DivisionNumber, 0, 1);
-            switch (direction) {
-                case CLOCKWISE:
-                    driveTrain.powerLeft(ProportionalPower);
-                    driveTrain.powerRight(-ProportionalPower);
-                    break;
-                case COUNTERCLOCKWISE:
-                    driveTrain.powerLeft(-ProportionalPower);
-                    driveTrain.powerRight(ProportionalPower);
-                    break;
-            }
-
-        } else {
-
+        public boolean isInTolerance(double tolerance) {
+            return degreesOff < tolerance;
         }
     }
 
