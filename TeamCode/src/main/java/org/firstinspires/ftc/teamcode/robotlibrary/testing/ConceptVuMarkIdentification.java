@@ -1,10 +1,12 @@
 
 package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
 
-//@Autonomous(name = "Concept: VuMark Id", group = "Concept")
+@Autonomous(name = "Concept: VuMark Id", group = "Concept")
 public class ConceptVuMarkIdentification extends StateMachineOpMode {
 
     VuforiaSystem vuforiaSystem;

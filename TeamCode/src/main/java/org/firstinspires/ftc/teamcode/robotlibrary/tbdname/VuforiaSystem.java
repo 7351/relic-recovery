@@ -22,15 +22,11 @@ public class VuforiaSystem {
     public VuforiaLocalizer vuforia;
     public VuforiaTrackable relicTemplate;
     public VuforiaTrackables relicTrackables;
-    public VuforiaTrackables cubes;
-    public VuforiaTrackable brownCube;
-    public VuforiaTrackable greyCube;
 
     /* Vuforia Preferences */
     public static final String VUFORIA_LICENSE_KEY = "AbXnxf//////AAAAGRuNC5J8ZEyftEBQmHGLn/JRAsckJezlsbt+FqzEIevPs5nHoqNr8RxWAOXkyTKIYfEkL17legkgm4sV7qv3qcJXlVQE1Xlo/UKbwVQBgzEfGZi9M3d3tgaJNLEeDe1VLXCVrGyrGSThbd364UF/+nsZMhnFGcnLavxaH8N0QWS5QiAgdbV71V4SLS2vWzML4leBiAxl8qqitSqHEmlez4xF5BoyADuT3lLanURW+g+guX7jFo8ONDzI+xjBsi5BCnI41USBfJdhRnh272sUgdpJFetdTQKIlvRifwHOzGz9oX1WpFSOid+NE76fLon5sHVRx4ztQrqBtSQN3J9CgaJo0DjkDyTMbJBTTE56n2Yi";
     private static final VuforiaLocalizer.CameraDirection DIRECTION = VuforiaLocalizer.CameraDirection.BACK;
     private static final String TEMPLATE_NAME = "RelicVuMark";
-    private static final String CUBES_NAME = "Cubes";
 
     /**
      * Constructor with the initialization of the Vuforia variable.
@@ -48,10 +44,6 @@ public class VuforiaSystem {
         relicTrackables = vuforia.loadTrackablesFromAsset(TEMPLATE_NAME);
         relicTemplate = relicTrackables.get(0);
         relicTrackables.activate();
-        cubes = vuforia.loadTrackablesFromAsset(CUBES_NAME);
-        brownCube = cubes.get(1);
-        greyCube = cubes.get(0);
-        cubes.activate();
     }
 
     /**
