@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import android.support.annotation.Nullable;
 
-import com.kauailabs.navx.ftc.AHRS;
-import com.kauailabs.navx.ftc.navXPIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+import com.stormbots.MiniPID;
 
 /**
- * Created by Dynamic Signals on 2/26/2017.
+ * Created by Dynamic Signals on 1/16/2017.
  */
 
 public class BasicGyroTurn implements Routine {
@@ -18,8 +19,10 @@ public class BasicGyroTurn implements Routine {
     private final double TIMEOUT = 0; // In seconds, 0 if you don't want a timeout
 
     public GyroUtils.GyroDetail detail; // Used for getting useful data and stats from a turn
-    public GyroUtils gyroUtils;
-    public DriveTrain driveTrain; // DriveTrain instance, it's public so you can grab the object outside th class
+    public DriveTrain driveTrain; // DriveTrain instance, it's public so you can grab the object outside the class
+    private DcMotor testingMotor;
+    private MiniPID controller;
+    private GyroUtils gyroUtils;
 
     private double targetDegree = 0;
     private int completedCounter = 0;
@@ -29,34 +32,81 @@ public class BasicGyroTurn implements Routine {
     private StateMachineOpMode opMode;
     private double MinMotor = 0.0925, MaxMotor = 1;
 
-    private BasicGyroTurn(StateMachineOpMode opMode, double targetDegree) {
+    /**
+     * Static constructor for a BasicGyroTurn if you want to specify the PID for
+     *
+     * @param pid The PID instance of the class that has the P, I, and D coefficients.
+     * @return the BasicGyroTurn instance
+     */
+    public static BasicGyroTurn createTurn(StateMachineOpMode opMode, double targetDegree, PIDCoefficients pid) {
+        if (instance == null) {
+            instance = new BasicGyroTurn(opMode, targetDegree, pid);
+        }
+        instance.isCompleted();
+        return instance;
+    }
+
+    /**
+     * Static constructor for an OpMode style class with just the degree and opmode
+     *
+     * @param opModeArg       the OpMode that implements StateMachineOpMode, usually just type "this"
+     * @param targetDegreeArg the degree that you want to turn to (0-360)
+     * @return the instance of the BasicGyroTurn class. You can check the progress using the GyroDetail detail for percentage complete.
+     */
+    public static BasicGyroTurn createTurn(StateMachineOpMode opModeArg, double targetDegreeArg) {
+        return createTurn(opModeArg, targetDegreeArg, null);
+    }
+
+    private BasicGyroTurn(StateMachineOpMode opMode, double targetDegree, @Nullable PIDCoefficients pid) {
         this.opMode = opMode;
-        this.gyroUtils = new GyroUtils(opMode);
+        this.gyroUtils = GyroUtils.getInstance(opMode);
         this.targetDegree = targetDegree;
 
+        testingMotor = opMode.hardwareMap.dcMotor.get("motor");
+        //driveTrain = new DriveTrain(opMode.hardwareMap);
+
+        if (pid == null) {
+            pid = new PIDCoefficients(0.02, 0, 0.05);
+        }
+
+        controller = new MiniPID(pid.p, pid.i, pid.d);
+        controller.setOutputLimits(-1, 1);
+        controller.setDirection(true);
+
+        creationTime.reset();
+
+        /* We want to use the RUN_USING_ENCODER run mode to get the most accurate turning power */
+        //driveTrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        /* Start tracking data */
         detail = new GyroUtils.GyroDetail(gyroUtils, targetDegree);
+
     }
 
     @Override
     public void run() {
+
         detail.updateData();
 
-        double power = 0;
-
-        if (detail.turnDirection.equals(GyroUtils.Direction.CLOCKWISE)) {
-            power = 1;
-        } else {
-            power = -1;
+        double output = -controller.getOutput(detail.degreesOffAndDirection, 0);
+        double power = 0; // Temp value
+        if (Math.signum(output) == 1) {
+            power = Range.clip(output, MinMotor, MaxMotor);
         }
+        if (Math.signum(output) == -1) {
+            power = Range.clip(output, -MaxMotor, -MinMotor);
+        }
+        opMode.telemetry.addData("Power", power);
+        testingMotor.setPower(power);
+        //driveTrain.powerLeft(power);
+        //driveTrain.powerRight(-power);
 
-        driveTrain.powerLeft(power);
-        driveTrain.powerRight(-power);
 
     }
 
     @Override
     public boolean isCompleted() {
-        boolean onTarget = detail.isInTolerance(TOLERANCE_DEGREES);
+        boolean onTarget = detail.degreesOff < TOLERANCE_DEGREES;
         if (onTarget) {
             completedCounter++;
         } else {
@@ -72,14 +122,15 @@ public class BasicGyroTurn implements Routine {
 
     @Override
     public void completed() {
+        testingMotor.setPower(0);
+        /*driveTrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        driveTrain.stopRobot(); // Stop the robot while floating into position*/
         opMode.next(); // Go to next stage
-        driveTrain.stopRobot();
         teardown();
     }
 
     public static void teardown() {
         instance = null;
     }
-
 
 }

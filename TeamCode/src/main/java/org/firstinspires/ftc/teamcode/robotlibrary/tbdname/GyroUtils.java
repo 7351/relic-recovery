@@ -25,18 +25,27 @@ import java.util.Locale;
 
 public class GyroUtils {
 
+    private static GyroUtils instance = null;
     private DriveTrain driveTrain;
     private Telemetry telemetry;
+    public HardwareMap hardwareMap;
     public BNO055IMU imu;
     private BNO055IMU.Parameters parameters;
     private boolean initialized = false;
 
     public Orientation angles;
 
-    public GyroUtils(StateMachineOpMode opMode) {
+    public static GyroUtils getInstance(StateMachineOpMode opMode) {
+        if (instance == null) {
+            instance = new GyroUtils(opMode);
+        }
+        return instance;
+    }
+
+    private GyroUtils(StateMachineOpMode opMode) {
         //driveTrain = new DriveTrain(opMode.hardwareMap);
         telemetry = opMode.telemetry;
-        HardwareMap hardwareMap = opMode.hardwareMap;
+        hardwareMap = opMode.hardwareMap;
 
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -49,7 +58,11 @@ public class GyroUtils {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
     }
 
-    public void startGyro() {
+    /**
+     * This function starts the gyro and also calibrates it and sets all axises to zero.
+     */
+    public void calibrateGyro() {
+        initialized = true;
         imu.initialize(parameters);
     }
 
@@ -102,6 +115,7 @@ public class GyroUtils {
     public static class GyroDetail {
 
         public double degreesOff;
+        public double degreesOffAndDirection;
         public Direction turnDirection;
         public double movedZero;
         public double targetDegree = 0;
@@ -142,6 +156,8 @@ public class GyroUtils {
                 initialDegreesOff = degreesOff;
                 RobotLog.d("Initial degrees off: " + initialDegreesOff);
             }
+
+            degreesOffAndDirection = degreesOff * ((turnDirection.equals(Direction.CLOCKWISE)) ? 1 : -1);
 
             percentComplete = Double.valueOf(AutonomousUtils.df.format(100 - Range.clip((degreesOff / initialDegreesOff) * 100, 0, 100)));
         }
