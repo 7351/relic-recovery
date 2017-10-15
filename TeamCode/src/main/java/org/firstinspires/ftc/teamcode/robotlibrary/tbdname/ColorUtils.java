@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -13,12 +15,13 @@ import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
 
 public class ColorUtils {
 
-    public ColorSensor colorSensor;
+    public ColorSensor jewelColorSensor, lineColorSensor;
 
-    public ColorUtils(HardwareMap hardwareMap) {
-
+    public ColorUtils(StateMachineOpMode opMode) {
+        //jewelColorSensor = hardwareMap.colorSensor.get("jewelColorSensor");
+        //lineColorSensor = hardwareMap.colorSensor.get("lineColorSensor");
+        //TODO: Implement I2c address changing
     }
-
 
     public Color getColorSensorColor(ColorSensor sensor) {
         Color returnColor = Color.NONE;
@@ -83,6 +86,10 @@ public class ColorUtils {
         RED,
         WHITE,
         NONE
+    }
+
+    public enum GlyphColors {
+        BROWN, GREY
     }
 
     public String colorData(ColorSensor sensor) {

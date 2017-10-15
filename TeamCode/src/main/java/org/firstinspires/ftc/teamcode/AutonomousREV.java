@@ -8,13 +8,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
 /**
  * Created by Dynamic Signals on 10/16/2016.
  */
 
 @Autonomous(name = "AutonomousREV", group = "AWorking")
-public class AutonomousREV extends OpMode {
+public class AutonomousREV extends StateMachineOpMode {
 
     public DcMotor motor_1;
     public Servo servo_1;
@@ -35,7 +36,7 @@ public class AutonomousREV extends OpMode {
         servo_1 = hardwareMap.servo.get("servo");
         color = hardwareMap.colorSensor.get("color");
 
-        utils = new ColorUtils(hardwareMap);
+        utils = new ColorUtils(this);
 
     }
 

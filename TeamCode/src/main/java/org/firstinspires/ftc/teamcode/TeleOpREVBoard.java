@@ -8,13 +8,14 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
 /**
  * Created by Dynamic Signals on 10/21/2016.
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOpREVBoard")
-public class TeleOpREVBoard extends OpMode {
+public class TeleOpREVBoard extends StateMachineOpMode {
 
 
     public DcMotor motor_1;
@@ -39,7 +40,7 @@ public class TeleOpREVBoard extends OpMode {
         push = hardwareMap.digitalChannel.get("push");
         push.setMode(DigitalChannel.Mode.INPUT);
 
-        utils = new ColorUtils(hardwareMap);
+        utils = new ColorUtils(this);
 
     }
 
