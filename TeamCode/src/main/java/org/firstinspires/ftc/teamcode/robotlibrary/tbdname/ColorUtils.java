@@ -25,11 +25,11 @@ public class ColorUtils {
 
     public Color getColorSensorColor(ColorSensor sensor) {
         Color returnColor = Color.NONE;
-        if ((sensor.red() > sensor.green() + 50) && (sensor.red() > sensor.blue() + 50)) {
+        if ((sensor.red() > sensor.green() + 4) && (sensor.red() > sensor.blue() + 4)) {
             returnColor = Color.RED;
         }
 
-        if ((sensor.blue() > sensor.red() + 10) && (sensor.blue() > sensor.green() + 10)) {
+        if ((sensor.blue() > sensor.red() + 6) && (sensor.blue() > sensor.green() + 6)) {
             returnColor = Color.BLUE;
         }
         if ((sensor.red() >= 100) && (sensor.green() >= 100) && (sensor.blue() >= 100)) {

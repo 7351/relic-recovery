@@ -38,9 +38,10 @@ public class RangeSensorTest extends StateMachineOpMode {
     @Override
     public void loop() {
 
-
-        telemetry.addData("Range (in)", rangeSensor.getDistance(DistanceUnit.INCH));
-        telemetry.addData("Range (cm)", rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.addData("Range Optical(cm)", rangeSensor.cmOptical());
+        telemetry.addData("Range Ultrasonic(cm)", rangeSensor.cmUltrasonic());
+        telemetry.addData("Range Total(in)", rangeSensor.getDistance(DistanceUnit.INCH));
+        telemetry.addData("Range Total(cm)", rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.addData("Time", time.time());
 
         double timestamp = (double) Math.round(time.time() * 100) / 100;

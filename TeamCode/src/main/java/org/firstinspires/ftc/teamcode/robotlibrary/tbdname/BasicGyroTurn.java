@@ -20,7 +20,6 @@ public class BasicGyroTurn implements Routine {
 
     public GyroUtils.GyroDetail detail; // Used for getting useful data and stats from a turn
     public DriveTrain driveTrain; // DriveTrain instance, it's public so you can grab the object outside the class
-    private DcMotor testingMotor;
     private MiniPID controller;
     private GyroUtils gyroUtils;
 
@@ -62,8 +61,7 @@ public class BasicGyroTurn implements Routine {
         this.gyroUtils = GyroUtils.getInstance(opMode);
         this.targetDegree = targetDegree;
 
-        testingMotor = opMode.hardwareMap.dcMotor.get("motor");
-        //driveTrain = new DriveTrain(opMode.hardwareMap);
+        driveTrain = new DriveTrain(opMode.hardwareMap);
 
         if (pid == null) {
             pid = new PIDCoefficients(0.02, 0, 0.05);
@@ -74,9 +72,6 @@ public class BasicGyroTurn implements Routine {
         controller.setDirection(true);
 
         creationTime.reset();
-
-        /* We want to use the RUN_USING_ENCODER run mode to get the most accurate turning power */
-        //driveTrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         /* Start tracking data */
         detail = new GyroUtils.GyroDetail(gyroUtils, targetDegree);
@@ -97,9 +92,8 @@ public class BasicGyroTurn implements Routine {
             power = Range.clip(output, -MaxMotor, -MinMotor);
         }
         opMode.telemetry.addData("Power", power);
-        testingMotor.setPower(power);
-        //driveTrain.powerLeft(power);
-        //driveTrain.powerRight(-power);
+        driveTrain.powerLeft(power);
+        driveTrain.powerRight(-power);
 
 
     }
@@ -122,9 +116,8 @@ public class BasicGyroTurn implements Routine {
 
     @Override
     public void completed() {
-        testingMotor.setPower(0);
-        /*driveTrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        driveTrain.stopRobot(); // Stop the robot while floating into position*/
+        driveTrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        driveTrain.stopRobot();
         opMode.next(); // Go to next stage
         teardown();
     }

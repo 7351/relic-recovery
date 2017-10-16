@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
 /**
@@ -12,8 +13,12 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 @Autonomous(name = "GyroTurnTest")
 public class GyroTurnTest extends StateMachineOpMode {
 
+    GyroUtils gyroUtils;
+
     @Override
     public void init() {
+
+        GyroUtils.getInstance(this).calibrateGyro();
 
     }
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.suitbots.util.Controller;
 
 import java.text.DecimalFormat;
 
@@ -10,13 +11,20 @@ import java.text.DecimalFormat;
 
 public class TeleOpUtils {
 
-    private Gamepad gamepad1;
-    private Gamepad gamepad2;
+    private Gamepad gamepad1, gamepad2;
+    public Controller gamepad1Controller, gamepad2Controller;
     public static final DecimalFormat df = new DecimalFormat("#.##");
 
     public TeleOpUtils(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+        gamepad1Controller = new Controller(gamepad1);
+        gamepad2Controller = new Controller(gamepad2);
+    }
+
+    public void updateControllers() {
+        gamepad1Controller.update();
+        gamepad2Controller.update();
     }
 
     public double scaleInput(double dVal) {
