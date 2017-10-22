@@ -64,7 +64,7 @@ public class BasicGyroTurn implements Routine {
         driveTrain = new DriveTrain(opMode.hardwareMap);
 
         if (pid == null) {
-            pid = new PIDCoefficients(0.02, 0, 0.05);
+            pid = new PIDCoefficients(0.0225, 0, 0.045);
         }
 
         controller = new MiniPID(pid.p, pid.i, pid.d);

@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.TempUnit;
 import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
 
 import java.util.Locale;
@@ -175,5 +176,9 @@ public class GyroUtils {
     public enum Direction {
         CLOCKWISE,
         COUNTERCLOCKWISE
+    }
+
+    public static void teardown() {
+        instance = null;
     }
 }

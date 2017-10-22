@@ -18,14 +18,12 @@ public class GyroTest extends StateMachineOpMode {
     @Override
     public void init() {
 
+        GyroUtils.teardown();
         gyroUtils = GyroUtils.getInstance(this);
-
-    }
-
-    @Override
-    public void start() {
         gyroUtils.calibrateGyro();
+
     }
+
     @Override
     public void loop() {
 

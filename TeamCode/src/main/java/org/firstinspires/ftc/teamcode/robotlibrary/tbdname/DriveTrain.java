@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
+import com.qualcomm.hardware.lynx.LynxDcMotorController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 public class DriveTrain {
 
     public DcMotor LeftFrontMotor, RightFrontMotor, LeftBackMotor, RightBackMotor;
+    public LynxDcMotorController controller;
     public double LeftPower = 0, RightPower = 0;
     boolean spoofMotors = false;
 
@@ -22,6 +24,7 @@ public class DriveTrain {
             RightFrontMotor = hardwareMap.dcMotor.get("RightFrontMotor");
             LeftBackMotor = hardwareMap.dcMotor.get("LeftBackMotor");
             RightBackMotor = hardwareMap.dcMotor.get("RightBackMotor");
+            controller = hardwareMap.get(LynxDcMotorController.class, "Expansion Hub 2");
         }
 
     }
@@ -71,6 +74,26 @@ public class DriveTrain {
             RightFrontMotor.setZeroPowerBehavior(behavior);
             RightBackMotor.setZeroPowerBehavior(behavior);
         }
+    }
+
+    public boolean isBusy() {
+        boolean[] isBusyArray = new boolean[4];
+        isBusyArray[0] = LeftFrontMotor.isBusy();
+        isBusyArray[1] = RightFrontMotor.isBusy();
+        isBusyArray[2] = LeftBackMotor.isBusy();
+        isBusyArray[3] = RightBackMotor.isBusy();
+        boolean endResult = false;
+        for (boolean busy : isBusyArray) {
+            if (busy) endResult = true;
+        }
+        return endResult;
+    }
+
+    public void setTargetPosition(int position) {
+        LeftFrontMotor.setTargetPosition(position);
+        RightFrontMotor.setTargetPosition(position);
+        LeftBackMotor.setTargetPosition(position);
+        RightBackMotor.setTargetPosition(position);
     }
 
 }
