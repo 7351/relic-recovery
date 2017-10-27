@@ -26,13 +26,14 @@ public class EncoderDriveTest extends StateMachineOpMode {
     @Override
     public void start() {
         driveTrain.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveTrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public void loop() {
 
         if (stage == 0) {
-            EncoderDrive.createDrive(this, 5000, 1);
+            EncoderDrive.createDrive(this, 1000);
         }
 
         telemetry.addData("Stage", stage);

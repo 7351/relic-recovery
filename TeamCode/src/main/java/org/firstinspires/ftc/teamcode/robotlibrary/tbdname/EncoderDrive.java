@@ -71,6 +71,7 @@ class LegacyEncoderDrive implements Routine {
     double power;
     public int targetPosition;
     private int startingPositionRight;
+    private int startingPositionLeft;
 
     private int stuckCounter = 0;
     private int lastRightPositon = 0;
@@ -88,12 +89,18 @@ class LegacyEncoderDrive implements Routine {
         this.power = power;
 
         driveTrain.RightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveTrain.LeftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         driveTrain.RightFrontMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        driveTrain.LeftBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         startingPositionRight = driveTrain.RightFrontMotor.getCurrentPosition();
+        startingPositionRight = driveTrain.LeftBackMotor.getCurrentPosition();
 
         driveTrain.RightFrontMotor.setTargetPosition(targetPosition + startingPositionRight);
+        driveTrain.LeftBackMotor.setTargetPosition(targetPosition + startingPositionLeft);
+
+        driveTrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 

@@ -63,8 +63,10 @@ public class BasicGyroTurn implements Routine {
 
         driveTrain = new DriveTrain(opMode.hardwareMap);
 
+        driveTrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         if (pid == null) {
-            pid = new PIDCoefficients(0.0225, 0, 0.045);
+            pid = new PIDCoefficients(0.025, 0, 0.015);
         }
 
         controller = new MiniPID(pid.p, pid.i, pid.d);
@@ -92,8 +94,8 @@ public class BasicGyroTurn implements Routine {
             power = Range.clip(output, -MaxMotor, -MinMotor);
         }
         opMode.telemetry.addData("Power", power);
-        driveTrain.powerLeft(power);
-        driveTrain.powerRight(-power);
+        driveTrain.powerLeft(-power);
+        driveTrain.powerRight(power);
 
 
     }

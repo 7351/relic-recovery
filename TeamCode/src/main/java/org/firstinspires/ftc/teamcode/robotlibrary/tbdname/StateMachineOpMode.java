@@ -23,16 +23,19 @@ public abstract class StateMachineOpMode extends OpMode implements StateMachine 
         time.reset();
     }
 
-    public void waitTime() {
-        if (time.time() > AutonomousUtils.WAITTIME) {
-            stage++;
+    public void waitStage(double stage, double time) {
+        if (this.stage == stage) {
+            if (this.time.time() > time) {
+                next();
+            }
         }
     }
 
-    public void waitTime(Runnable runnable) {
-        if (time.time() > AutonomousUtils.WAITTIME) {
-            stage++;
-            runnable.run();
+    public void waitStage(double stage) {
+        if (this.stage == stage) {
+            if (this.time.time() > AutonomousUtils.WAITTIME) {
+                next();
+            }
         }
     }
 }
