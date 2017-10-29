@@ -78,7 +78,7 @@ public class R2SingleGlyph extends StateMachineOpMode {
         if (stage == 5) {
             // Drive forward while checking proximity sensor
             // Do code to count how many columns we have passed
-            EncoderDrive.createDrive(this, 1000, 0.35);
+            EncoderDrive.createDrive(this, 1250, 0.35);
         }
 
         waitStage(6);
@@ -88,6 +88,12 @@ public class R2SingleGlyph extends StateMachineOpMode {
             if (turn != null) {
                 telemetry.addData("Degrees left", turn.detail.degreesOffAndDirection);
             }
+        }
+
+        waitStage(8);
+
+        if (stage == 9) {
+            EncoderDrive.createDrive(this, 500);
         }
 
         /*

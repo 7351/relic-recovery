@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
+import com.qualcomm.hardware.lynx.LynxDigitalChannelController;
+import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -7,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
 
 /**
@@ -24,6 +27,7 @@ public class ColorUtils {
     }
 
     public Color getColorSensorColor(ColorSensor sensor) {
+        LynxI2cColorRangeSensor rangeSensor = (LynxI2cColorRangeSensor) sensor;
         Color returnColor = Color.NONE;
         if ((sensor.red() > sensor.green() + 4) && (sensor.red() > sensor.blue() + 4)) {
             returnColor = Color.RED;
@@ -35,6 +39,10 @@ public class ColorUtils {
         if ((sensor.red() >= 100) && (sensor.green() >= 100) && (sensor.blue() >= 100)) {
             returnColor = Color.WHITE;
         }
+        if ((sensor.red() > sensor.green() + 10) && (sensor.green() > sensor.blue() + 5)) {
+            returnColor = Color.BROWN;
+        }
+        if (((Double) rangeSensor.getDistance(DistanceUnit.CM)).isNaN()) returnColor = Color.NONE;
         return returnColor;
     }
 
@@ -85,11 +93,9 @@ public class ColorUtils {
         BLUE,
         RED,
         WHITE,
+        BROWN,
+        GREY,
         NONE
-    }
-
-    public enum GlyphColors {
-        BROWN, GREY
     }
 
     public String colorData(ColorSensor sensor) {

@@ -33,10 +33,6 @@ public class GyroTurnTest extends StateMachineOpMode {
     public void loop() {
 
         if (stage == 0) {
-            EncoderDrive.createDrive(this, 1500, 0.35);
-        }
-
-        if (stage == 1) {
             BasicGyroTurn turn = BasicGyroTurn.createTurn(this, 90);
             if (turn != null) {
                 detail = turn.detail;
@@ -44,7 +40,7 @@ public class GyroTurnTest extends StateMachineOpMode {
             } else {
                 completedTime = time.time();
             }
-        } if (stage == 2) {
+        } if (stage == 1) {
             telemetry.addData("Finished degrees left", detail.degreesOff);
             telemetry.addData("Completed", completedTime);
         }

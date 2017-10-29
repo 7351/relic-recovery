@@ -93,6 +93,10 @@ public class DriveTrain {
         return endResult;
     }
 
+    public void reset() {
+        controller.resetDeviceConfigurationForOpMode();
+    }
+
     public void setTargetPosition(int position) {
         LeftFrontMotor.setTargetPosition(position);
         RightFrontMotor.setTargetPosition(position);

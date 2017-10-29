@@ -1,8 +1,15 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import android.util.Range;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.RangeUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
@@ -11,12 +18,14 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
  * Created by Dynamic Signals on 10/10/2017.
  */
 
+@Autonomous(name = "B1SingleGlyph", group = "Main")
 public class B1SingleGlyph extends StateMachineOpMode {
 
     String alliance = "Blue";
     VuforiaSystem vuforiaSystem;
-    RangeUtils rangeUtils;
+    //RangeUtils rangeUtils;
     ColorUtils colorUtils;
+    GyroUtils gyroUtils;
     RelicRecoveryVuMark relicRecoveryVuMark;
     ColorUtils.Color jewelColor;
     int amountOfColumns;
@@ -26,8 +35,9 @@ public class B1SingleGlyph extends StateMachineOpMode {
 
         vuforiaSystem = new VuforiaSystem();
         colorUtils = new ColorUtils(this);
-        rangeUtils = new RangeUtils(hardwareMap);
-
+        gyroUtils = GyroUtils.getInstance(this);
+        //rangeUtils = new RangeUtils(hardwareMap);
+        gyroUtils.calibrateGyro();
     }
 
     @Override
@@ -35,6 +45,7 @@ public class B1SingleGlyph extends StateMachineOpMode {
 
         if (stage == 0) {
             // Calibrate sensor
+            gyroUtils.calibrateGyro();
             next();
         }
 
@@ -55,6 +66,7 @@ public class B1SingleGlyph extends StateMachineOpMode {
         if (stage == 3) {
             // Read color of jewels (to be determined)
             //jewelColor = colorUtils.getColorSensorColor(colorUtils.jewelColorSensor);
+            next();
         }
 
         if (stage == 4) {
@@ -65,27 +77,42 @@ public class B1SingleGlyph extends StateMachineOpMode {
         }
 
         if (stage == 5) {
-            // Drive backwards while checking proximity sensor
+            // Drive forward while checking proximity sensor
             // Do code to count how many columns we have passed
+            EncoderDrive.createDrive(this, 1500, 0.35);
         }
 
-        if (stage == 6) {
-            BasicGyroTurn.createTurn(this, -90); // 90 or -90 undecided
-        }
+        waitStage(6);
 
         if (stage == 7) {
-            //Drive forward to score glyph using encoders or sensors
+            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, -90, new PIDCoefficients(0.015, 0, 0.01));
+            if (turn != null) {
+                telemetry.addData("Degrees left", turn.detail.degreesOffAndDirection);
+            }
         }
 
+        waitStage(8);
+
+        if (stage == 9) {
+            EncoderDrive.createDrive(this, 400, 0.35);
+        }
+
+        /*
         if (stage == 8) {
             if (colorUtils.getColorSensorColor(colorUtils.lineColorSensor).equals((alliance.equals("Red") ? ColorUtils.Color.RED : ColorUtils.Color.BLUE))) {
                 next();
             }
-        }
+        }*/
 
         if (stage == 9) {
             // Stop driving
         }
+
+        telemetry.addData("Stage", stage);
+        telemetry.addData("Heading", gyroUtils.getHeading());
+        telemetry.addData("Pitch", gyroUtils.getPitch());
+        telemetry.addData("Roll", gyroUtils.getRoll());
+        telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown") );
 
     }
 }

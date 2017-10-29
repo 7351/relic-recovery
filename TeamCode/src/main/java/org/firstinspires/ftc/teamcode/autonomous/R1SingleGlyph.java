@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import android.util.Range;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
@@ -84,10 +85,16 @@ public class R1SingleGlyph extends StateMachineOpMode {
         waitStage(6);
 
         if (stage == 7) {
-            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, 90);
+            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, 90, new PIDCoefficients(0.015, 0, 0.01));
             if (turn != null) {
                 telemetry.addData("Degrees left", turn.detail.degreesOffAndDirection);
             }
+        }
+
+        waitStage(8);
+
+        if (stage == 9) {
+            EncoderDrive.createDrive(this, 400, 0.35);
         }
 
         /*

@@ -15,8 +15,8 @@ import com.stormbots.MiniPID;
 public class BasicGyroTurn implements Routine {
 
     private static BasicGyroTurn instance;
-    private final double TOLERANCE_DEGREES = 2; // The degrees positive and negative that you want to get to
-    private final double TIMEOUT = 0; // In seconds, 0 if you don't want a timeout
+    private final double TOLERANCE_DEGREES = 3; // The degrees positive and negative that you want to get to
+    private final double TIMEOUT = 3; // In seconds, 0 if you don't want a timeout
 
     public GyroUtils.GyroDetail detail; // Used for getting useful data and stats from a turn
     public DriveTrain driveTrain; // DriveTrain instance, it's public so you can grab the object outside the class
