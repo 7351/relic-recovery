@@ -24,13 +24,15 @@ public class GP2Y0E02A extends I2cDeviceSynchDevice<I2cDeviceSynch> implements D
 
         super.registerArmingStateCallback(false);
         this.deviceClient.engage();
+
+        shift = this.deviceClient.read8(GP2Y0E02A_Addresses.SHIFT_ADDR);
     }
 
     @Override
     public double getDistance(DistanceUnit unit) {
         byte[] distanceRaw = deviceClient.read(GP2Y0E02A_Addresses.DISTANCE_ADDR, 2);
-        int shift = deviceClient.read8(GP2Y0E02A_Addresses.SHIFT_ADDR);
-        int cm = (distanceRaw[0] * 16 + distanceRaw[1]) / 16 / (2^shift);
+        double twoPowShift = 2^shift;
+        double cm = (distanceRaw[0] * 16 + distanceRaw[1]) / 16 / (twoPowShift == 0 ? 1 : twoPowShift);
         switch (unit) {
             case CM:
                 return cm;
@@ -81,7 +83,7 @@ public class GP2Y0E02A extends I2cDeviceSynchDevice<I2cDeviceSynch> implements D
         deviceClient.close();
     }
 
-    public final class GP2Y0E02A_Addresses {
+    private final class GP2Y0E02A_Addresses {
         private final static int I2CADDR_DEFAULT = 0x80;
         private final static int SHIFT_ADDR = 0x35;
         private final static int DISTANCE_ADDR = 0x5E;
