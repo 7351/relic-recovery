@@ -6,6 +6,7 @@ import com.suitbots.util.Controller;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
 /**
@@ -16,9 +17,11 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 public class TeleOp extends StateMachineOpMode {
 
     DriveTrain driveTrain;
+    Lift lift;
     TeleOpUtils teleOpUtils;
     private boolean slowMode = false;
     private double slowPower = 0.5;
+    private double delta = 0.01;
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
 
     @Override
@@ -27,6 +30,7 @@ public class TeleOp extends StateMachineOpMode {
         teleOpUtils = new TeleOpUtils(gamepad1, gamepad2);
         driveTrain = new DriveTrain(this);
         driveTrain.setZeroPowerBehavior(currentBehavior);
+        lift = new Lift(this);
 
     }
 
@@ -35,7 +39,16 @@ public class TeleOp extends StateMachineOpMode {
 
         teleOpUtils.updateControllers();
 
-        if (teleOpUtils.gamepad1Controller.rightBumperOnce()) {
+        /*- Controller 1 Controls -*/
+
+        /*
+         * Driving controls
+         * Left bumper - Change from slow to fast mode
+         * A - Toggle from brake to coast mode
+         * Right Joystick - Arcade drive
+         */
+
+        if (teleOpUtils.gamepad1Controller.leftBumperOnce()) {
             slowMode = !slowMode;
         }
 
@@ -74,5 +87,57 @@ public class TeleOp extends StateMachineOpMode {
         /* Controller 1 telemetry data */
         telemetry.addData("Drive power", "L: " + String.valueOf(left) + ", R: " + String.valueOf(right));
         telemetry.addData("Drive mode", currentBehavior.toString().toLowerCase() + " " + (slowMode ? "slow" : "fast"));
+
+        /*
+         * Glyph Controls
+         * D-Pad Down - Open
+         * D-Pad Left - Semi-Open
+         * D-Pad Right - Close
+         * D-Pad Up - Push
+         * Right Bumper - Manual override
+         * D-Pad Up (Manual) - Step open by stepper delta
+         * D-Pad Down (Manual) - Step closed by stepper delta
+         */
+
+        if (!gamepad1.right_bumper) {
+            if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
+                lift.setGlyphGrabberPosition(Lift.ServoPosition.SEMIOPEN);
+            }
+
+            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                lift.setGlyphGrabberPosition(Lift.ServoPosition.PUSH);
+            }
+
+            if (teleOpUtils.gamepad1Controller.dpadRightOnce()) {
+                lift.setGlyphGrabberPosition(Lift.ServoPosition.CLOSED);
+            }
+
+            if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
+            }
+        } else {
+            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                lift.stepOpen();
+            }
+
+            if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                lift.stepClosed();
+            }
+        }
+
+        telemetry.addData("Grabber", "L: " + lift.GlyphGrabberLeft.getPosition() + ", R: " + lift.GlyphGrabberRight.getPosition());
+
+
+        /*
+         * Lift Controls
+         * Left Joystick - Move up or down
+         * Position buttons (To be found and assigned)
+         */
+
+        lift.setPower(-gamepad1.left_stick_y);
+
+
+        /*- Controller 2 Controls -*/
+
     }
 }
