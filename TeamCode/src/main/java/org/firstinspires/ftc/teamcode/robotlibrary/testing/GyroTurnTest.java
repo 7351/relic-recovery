@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
@@ -33,7 +34,7 @@ public class GyroTurnTest extends StateMachineOpMode {
     public void loop() {
 
         if (stage == 0) {
-            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, 90);
+            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, -90);
             if (turn != null) {
                 detail = turn.detail;
                 telemetry.addData("Degrees left", turn.detail.degreesOffAndDirection);

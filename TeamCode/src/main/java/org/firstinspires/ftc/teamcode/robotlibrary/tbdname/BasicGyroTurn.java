@@ -29,7 +29,7 @@ public class BasicGyroTurn implements Routine {
     private ElapsedTime creationTime = new ElapsedTime(); // Used for timeout failsafe
 
     private StateMachineOpMode opMode;
-    private double MinMotor = 0.0925, MaxMotor = 1;
+    private double MinMotor = 0.1, MaxMotor = 1;
 
     /**
      * Static constructor for a BasicGyroTurn if you want to specify the PID for
@@ -66,7 +66,7 @@ public class BasicGyroTurn implements Routine {
         driveTrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         if (pid == null) {
-            pid = new PIDCoefficients(0.025, 0, 0.015);
+            pid = new PIDCoefficients(0.02825, 0, 0.05);
         }
 
         controller = new MiniPID(pid.p, pid.i, pid.d);
