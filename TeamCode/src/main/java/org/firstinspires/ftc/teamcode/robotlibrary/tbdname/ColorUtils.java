@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
 
 public class ColorUtils {
 
-    public ColorSensor jewelColorSensor, lineColorSensor;
+    public ColorSensor lineColorSensor;
 
     public ColorUtils(StateMachineOpMode opMode) {
         //jewelColorSensor = hardwareMap.colorSensor.get("jewelColorSensor");
@@ -26,13 +26,11 @@ public class ColorUtils {
         //TODO: Implement I2c address changing
     }
 
-    public Color getColorSensorColor(ColorSensor sensor) {
-        LynxI2cColorRangeSensor rangeSensor = (LynxI2cColorRangeSensor) sensor;
+    public static Color getColorSensorColor(ColorSensor sensor) {
         Color returnColor = Color.NONE;
         if ((sensor.red() > sensor.green() + 4) && (sensor.red() > sensor.blue() + 4)) {
             returnColor = Color.RED;
         }
-
         if ((sensor.blue() > sensor.red() + 6) && (sensor.blue() > sensor.green() + 6)) {
             returnColor = Color.BLUE;
         }
@@ -42,7 +40,6 @@ public class ColorUtils {
         if ((sensor.red() > sensor.green() + 10) && (sensor.green() > sensor.blue() + 5)) {
             returnColor = Color.BROWN;
         }
-        if (((Double) rangeSensor.getDistance(DistanceUnit.CM)).isNaN()) returnColor = Color.NONE;
         return returnColor;
     }
 

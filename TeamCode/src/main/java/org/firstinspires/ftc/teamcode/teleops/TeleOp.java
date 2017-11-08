@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
-import com.suitbots.util.Controller;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
@@ -19,6 +19,7 @@ public class TeleOp extends StateMachineOpMode {
     DriveTrain driveTrain;
     Lift lift;
     TeleOpUtils teleOpUtils;
+    JewelKicker kicker;
     private boolean slowMode = false;
     private double slowPower = 0.5;
     private double delta = 0.01;
@@ -31,6 +32,7 @@ public class TeleOp extends StateMachineOpMode {
         driveTrain = new DriveTrain(this);
         driveTrain.setZeroPowerBehavior(currentBehavior);
         lift = new Lift(this);
+        kicker = new JewelKicker(this);
 
     }
 
@@ -134,7 +136,19 @@ public class TeleOp extends StateMachineOpMode {
          * Position buttons (To be found and assigned)
          */
 
-        lift.setPower(-gamepad1.left_stick_y);
+        double counts = lift.getAveragePosition();
+        double leftStickValueY = -gamepad1.left_stick_y;
+        if (leftStickValueY == 0) {
+            lift.setPower(0);
+        }
+        if (leftStickValueY < 0) {
+            lift.setPower(leftStickValueY * 0.65);
+        }
+        if (leftStickValueY > 0) {
+            lift.setPower(leftStickValueY);
+        }
+
+        telemetry.addData("Lift Encoder", "Avg: " + lift.getAveragePosition() + " 1: " + lift.getCurrentPositions()[0] + " 2: " + lift.getCurrentPositions()[1]);
 
 
         /*- Controller 2 Controls -*/

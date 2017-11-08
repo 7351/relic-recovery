@@ -5,10 +5,12 @@ import android.util.Range;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.RangeUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
@@ -25,6 +27,7 @@ public class R2SingleGlyph extends StateMachineOpMode {
     //RangeUtils rangeUtils;
     ColorUtils colorUtils;
     GyroUtils gyroUtils;
+    JewelKicker kicker;
     RelicRecoveryVuMark relicRecoveryVuMark;
     ColorUtils.Color jewelColor;
     int amountOfColumns;
@@ -34,6 +37,7 @@ public class R2SingleGlyph extends StateMachineOpMode {
 
         vuforiaSystem = new VuforiaSystem();
         colorUtils = new ColorUtils(this);
+        kicker = new JewelKicker(this);
         gyroUtils = GyroUtils.getInstance(this);
         //rangeUtils = new RangeUtils(hardwareMap);
         gyroUtils.calibrateGyro();
@@ -57,42 +61,27 @@ public class R2SingleGlyph extends StateMachineOpMode {
         }
 
         if (stage == 2) {
-            // Extend mechanism to reach out for jewels (probably servo)
-            if (time.time() > 0.5) {
-                next();
-            }
+            ActUponJewelKicker.doAction(this, kicker, alliance);
         }
+
         if (stage == 3) {
-            // Read color of jewels (to be determined)
-            //jewelColor = colorUtils.getColorSensorColor(colorUtils.jewelColorSensor);
-            next();
-        }
-
-        if (stage == 4) {
-            // Manipulate servo to knock off opposing alliance jewel.
-            if (time.time() > 0.5) {
-                next();
-            }
-        }
-
-        if (stage == 5) {
             // Drive forward while checking proximity sensor
             // Do code to count how many columns we have passed
             EncoderDrive.createDrive(this, 1250, 0.35);
         }
 
-        waitStage(6);
+        waitStage(4);
 
-        if (stage == 7) {
+        if (stage == 5) {
             BasicGyroTurn turn = BasicGyroTurn.createTurn(this, -90);
             if (turn != null) {
                 telemetry.addData("Degrees left", turn.detail.degreesOffAndDirection);
             }
         }
 
-        waitStage(8);
+        waitStage(6);
 
-        if (stage == 9) {
+        if (stage == 7) {
             EncoderDrive.createDrive(this, 500);
         }
 
@@ -103,7 +92,7 @@ public class R2SingleGlyph extends StateMachineOpMode {
             }
         }*/
 
-        if (stage == 9) {
+        if (stage == 8) {
             // Stop driving
         }
 

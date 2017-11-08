@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
 import java.io.File;
@@ -24,6 +27,7 @@ import java.util.List;
 public class RangeSensorTest extends StateMachineOpMode {
 
     ModernRoboticsI2cRangeSensor rangeSensor;
+    DriveTrain driveTrain;
 
     private File chartLocation = new File(Environment.getExternalStorageDirectory() + File.separator + "FIRST" + File.separator + "RangeSensorData.html");
     private List<String> rangeData;
@@ -31,23 +35,36 @@ public class RangeSensorTest extends StateMachineOpMode {
     @Override
     public void init() {
 
+        driveTrain = new DriveTrain(this);
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         rangeData = new ArrayList<>();
+
+        GyroUtils.getInstance(this).calibrateGyro();
     }
 
     @Override
     public void loop() {
+        if (stage == 0) {
+            if (rangeSensor.getDistance(DistanceUnit.INCH) <= 25) {
+                driveTrain.powerLeft(0.25);
+                driveTrain.powerLeft(0.25);
+            } else {
+                driveTrain.stopRobot();
+                next();
+            }
+            double timestamp = (double) Math.round(time.time() * 100) / 100;
+            rangeData.add("\n[" + timestamp + ", " + rangeSensor.getDistance(DistanceUnit.CM) + "],");
+        }
+
+        if (stage == 1) {
+            BasicGyroTurn.createTurn(this, 90);
+        }
 
         telemetry.addData("Range Optical(cm)", rangeSensor.cmOptical());
         telemetry.addData("Range Ultrasonic(cm)", rangeSensor.cmUltrasonic());
         telemetry.addData("Range Total(in)", rangeSensor.getDistance(DistanceUnit.INCH));
         telemetry.addData("Range Total(cm)", rangeSensor.getDistance(DistanceUnit.CM));
         telemetry.addData("Time", time.time());
-
-        double timestamp = (double) Math.round(time.time() * 100) / 100;
-        rangeData.add("\n[" + timestamp + ", " + rangeSensor.getDistance(DistanceUnit.CM) + "],");
-
-        telemetry.addData("Over Pin", !(rangeSensor.getDistance(DistanceUnit.CM) > 24));
 
     }
 

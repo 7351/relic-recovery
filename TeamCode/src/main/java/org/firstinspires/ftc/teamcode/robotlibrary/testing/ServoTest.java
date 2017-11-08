@@ -24,10 +24,10 @@ public class ServoTest extends StateMachineOpMode {
     public void init() {
 
         utils = new TeleOpUtils(gamepad1, gamepad2);
-        servo1 = hardwareMap.servo.get("servo1");
-        servo2 = hardwareMap.servo.get("servo2");
+        servo1 = hardwareMap.servo.get("JewelKickerX");
+        servo2 = hardwareMap.servo.get("JewelKickerY");
         
-        servo1.setPosition(0);
+        servo1.setPosition(0.6);
         servo2.setPosition(0);
 
     }
