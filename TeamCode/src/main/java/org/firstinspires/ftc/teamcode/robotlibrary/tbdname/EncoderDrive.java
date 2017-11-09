@@ -57,7 +57,7 @@ public class EncoderDrive implements Routine {
     public void completed() {
         driveTrain.stopRobot();
         opMode.next();
-        instance = null;
+        teardown();
     }
 
     public static void teardown() {

@@ -106,20 +106,18 @@ public class ActUponJewelKicker implements Routine {
 
         if (stage == 5) {
             kicker.setJewelKickerPosition(JewelKicker.ServoPosition.INROBOT);
-            if (time.time() > 1.5) {
-                stage++;
-            }
+            stage++;
         }
     }
 
     @Override
     public boolean isCompleted() {
-        if (stage >= 5) {
+        if (stage >= 6) {
             completed();
         } else {
             run();
         }
-        return stage >= 4;
+        return stage >= 6;
     }
 
     @Override

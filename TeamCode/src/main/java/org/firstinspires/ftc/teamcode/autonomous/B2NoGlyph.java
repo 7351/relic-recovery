@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
  * Created by Dynamic Signals on 10/10/2017.
  */
 
-@Autonomous(name = "B1SingleGlyph", group = "Main")
-public class B1SingleGlyph extends StateMachineOpMode {
+@Autonomous(name = "B2NoGlyph", group = "A-Team")
+public class B2NoGlyph extends StateMachineOpMode {
 
     String alliance = "Blue";
     VuforiaSystem vuforiaSystem;
@@ -68,13 +68,14 @@ public class B1SingleGlyph extends StateMachineOpMode {
         if (stage == 3) {
             // Drive forward while checking proximity sensor
             // Do code to count how many columns we have passed
-            EncoderDrive.createDrive(this, 1500, 0.35);
+            EncoderDrive.createDrive(this, -1300, 0.35);
         }
 
+        /*
         waitStage(4);
 
         if (stage == 5) {
-            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, -90);
+            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, 90);
             if (turn != null) {
                 telemetry.addData("Degrees left", turn.detail.degreesOffAndDirection);
             }
@@ -86,16 +87,7 @@ public class B1SingleGlyph extends StateMachineOpMode {
             EncoderDrive.createDrive(this, 400, 0.35);
         }
 
-        /*
-        if (stage == 8) {
-            if (colorUtils.getColorSensorColor(colorUtils.lineColorSensor).equals((alliance.equals("Red") ? ColorUtils.Color.RED : ColorUtils.Color.BLUE))) {
-                next();
-            }
-        }*/
-
-        if (stage == 8) {
-            // Stop driving
-        }
+        */
 
         telemetry.addData("Stage", stage);
         telemetry.addData("Heading", gyroUtils.getHeading());
