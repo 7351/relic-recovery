@@ -11,10 +11,12 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.RangeUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
+import org.firstinspires.ftc.teamcode.teleops.TeleOp;
 
 /**
  * Created by Dynamic Signals on 10/10/2017.
@@ -26,6 +28,7 @@ public class R2NoGlyph extends StateMachineOpMode {
     String alliance = "Red";
     VuforiaSystem vuforiaSystem;
     //RangeUtils rangeUtils;
+    Intake intake;
     ColorUtils colorUtils;
     GyroUtils gyroUtils;
     JewelKicker kicker;
@@ -40,6 +43,7 @@ public class R2NoGlyph extends StateMachineOpMode {
         colorUtils = new ColorUtils(this);
         kicker = new JewelKicker(this);
         gyroUtils = GyroUtils.getInstance(this);
+        intake = new Intake(this);
         //rangeUtils = new RangeUtils(hardwareMap);
         gyroUtils.calibrateGyro();
     }
@@ -95,5 +99,10 @@ public class R2NoGlyph extends StateMachineOpMode {
         telemetry.addData("Roll", gyroUtils.getRoll());
         telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown") );
 
+    }
+
+    @Override
+    public void stop() {
+        internalOpModeServices.requestOpModeStop(new TeleOp());
     }
 }

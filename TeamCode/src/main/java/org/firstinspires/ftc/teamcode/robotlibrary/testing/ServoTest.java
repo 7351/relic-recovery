@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
@@ -24,11 +25,8 @@ public class ServoTest extends StateMachineOpMode {
     public void init() {
 
         utils = new TeleOpUtils(gamepad1, gamepad2);
-        servo1 = hardwareMap.servo.get("JewelKickerX");
-        servo2 = hardwareMap.servo.get("JewelKickerY");
-        
-        servo1.setPosition(0.6);
-        servo2.setPosition(0);
+        servo1 = hardwareMap.servo.get("servo1");
+        servo2 = hardwareMap.servo.get("servo2");
 
     }
 

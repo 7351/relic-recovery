@@ -70,23 +70,23 @@ public class Lift {
     public LiftToPosition.LiftPosition getClosestPosition() {
         int currentPosition = getAveragePosition();
         LiftToPosition.LiftPosition lowestOne = LiftToPosition.LiftPosition.FOURTH;
-        HashMap<Integer, LiftToPosition.LiftPosition> differenceMap = new HashMap<>();
         for (LiftToPosition.LiftPosition position: LiftToPosition.LiftPosition.values()) {
             if (position.getPosition() < currentPosition) {
                 lowestOne = position;
             }
         }
+        if (currentPosition < LiftToPosition.LiftPosition.GROUND.getPosition()) {
+            lowestOne = LiftToPosition.LiftPosition.GROUND;
+        }
         return lowestOne;
     }
 
     public boolean isBusy() {
-        boolean notBusy1 = !LiftMotor1.isBusy();
-        boolean notBusy2 = !LiftMotor2.isBusy();
-        return !(!notBusy1 || !notBusy2);
+        return LiftMotor1.isBusy();
     }
 
     public enum ServoPosition {
-        OPEN(0.771, 0.75), // Each position and their corresponding positions for both the Left and Right servos
+        OPEN(0.641, 0.6194), // Each position and their corresponding positions for both the Left and Right servos
         SEMIOPEN(0.662, 0.65),
         CLOSED(0.58, 0.589),
         PUSH(0.45, 0.55);
@@ -101,6 +101,16 @@ public class Lift {
             return position;
         }
 
+    }
+
+    public LiftToPosition.LiftPosition getPositionAbove() {
+        LiftToPosition.LiftPosition currentPosition = getClosestPosition();
+        return LiftToPosition.LiftPosition.values()[Range.clip(currentPosition.ordinal() + 1, 0, LiftToPosition.LiftPosition.values().length - 1)];
+    }
+
+    public LiftToPosition.LiftPosition getPositionBelow() {
+        LiftToPosition.LiftPosition currentPosition = getClosestPosition();
+        return LiftToPosition.LiftPosition.values()[Range.clip(currentPosition.ordinal() - 1, 0, LiftToPosition.LiftPosition.values().length - 1)];
 
     }
 

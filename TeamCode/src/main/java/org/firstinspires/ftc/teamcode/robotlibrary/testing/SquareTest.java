@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
  */
 
 @Autonomous(name = "EncoderDriveTurnClass")
-public class EncoderDriveTurnClass extends StateMachineOpMode {
+public class SquareTest extends StateMachineOpMode {
 
     DriveTrain driveTrain;
     GyroUtils gyroUtils;
@@ -54,6 +54,21 @@ public class EncoderDriveTurnClass extends StateMachineOpMode {
         }
         if (stage == 3) {
             BasicGyroTurn.createTurn(this, 180);
+        }
+        if (stage == 4) {
+            EncoderDrive.createDrive(this, 700, 0.35);
+        }
+        if (stage == 5) {
+            BasicGyroTurn.createTurn(this, -90);
+        }
+        if (stage == 6) {
+            EncoderDrive.createDrive(this, 700, 0.35);
+        }
+        if (stage == 7) {
+            BasicGyroTurn.createTurn(this, 0);
+        }
+        if (stage == 8) {
+            stage = 0;
         }
 
         telemetry.addData("Stage", stage);

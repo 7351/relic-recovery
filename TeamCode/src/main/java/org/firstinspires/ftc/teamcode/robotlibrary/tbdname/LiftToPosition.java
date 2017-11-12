@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by leo on 3/25/17.
@@ -13,16 +14,13 @@ public class LiftToPosition implements Routine {
     private Lift lift;
     private StateMachineOpMode opMode;
     static int maxCounts = 1588;
+    private LiftPosition targetPosition;
+    ElapsedTime time;
 
-    int[] initialPositions;
     int difference;
 
     double power = 0.75;
 
-    // 175 - Position low
-    // 640 - Position 2nd next
-    // 1173 - Position 3rd next (2nd highest)
-    // 1550 - Position 4th (highest)
     // Controls all w trigger
     // D-pad left - low position right off ground
     // D-pad up - level up
@@ -44,8 +42,8 @@ public class LiftToPosition implements Routine {
         public int getPosition() { // Return data
             return position;
         }
-    }
 
+    }
 
     /**
      * Constructor for percent
@@ -54,7 +52,7 @@ public class LiftToPosition implements Routine {
      * @param position position Encoder counts to move lift to, will be clipped too if not within range
      * @return LiftToPosition instance
      */
-    public static LiftToPosition moveCount(StateMachineOpMode opMode, Lift lift, LiftPosition position) {
+    public static LiftToPosition movePosition(StateMachineOpMode opMode, Lift lift, LiftPosition position) {
         if (instance == null) {
             instance = new LiftToPosition(opMode, lift, position);
         }
@@ -66,29 +64,36 @@ public class LiftToPosition implements Routine {
         this.opMode = opMode;
         this.lift = lift;
 
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        initialPositions = lift.getCurrentPositions();
-        int averageCurrent = (initialPositions[0] + initialPositions[1]) / 2;
-
-        difference = position.getPosition() - averageCurrent;
+        difference = position.getPosition() - lift.getAveragePosition();
         // Positive (must go up) (positive power)
         // Negative (must go down) (negative power)
 
-        lift.setTargetPosition(position.getPosition());
+        targetPosition = position;
 
+        time = new ElapsedTime();
     }
 
     @Override
     public void run() {
 
-        lift.setPower((power > 0 && difference < 0) ? -1 * power : power);
+        lift.setPower((power > 0 && difference < 0) ? -1 * power * 0.35 : power);
 
     }
 
     @Override
     public boolean isCompleted() {
-        boolean completed = !lift.isBusy();
+        boolean completed = false;
+        int current = lift.getAveragePosition();
+        if (difference < 0) { // We need to go down
+            if (current <= targetPosition.getPosition()) completed = true;
+        } else { // We need to go up
+            if (current >= targetPosition.getPosition()) completed = true;
+        }
+        if (time.time() > 3) {
+            completed = true;
+        }
         if (completed) {
             completed();
         } else {
@@ -101,7 +106,7 @@ public class LiftToPosition implements Routine {
     public void completed() {
         lift.setPower(0);
         opMode.next();
-        instance = null;
+        teardown();
     }
 
     public static void teardown() {
