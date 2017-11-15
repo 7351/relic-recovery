@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
 import org.firstinspires.ftc.teamcode.teleops.TeleOp;
@@ -21,9 +23,10 @@ import org.firstinspires.ftc.teamcode.teleops.TeleOp;
 public class B1NoGlyph extends StateMachineOpMode {
 
     String alliance = "Blue";
-    VuforiaSystem vuforiaSystem;
+    //VuforiaSystem vuforiaSystem;
     //RangeUtils rangeUtils;
     Intake intake;
+    Lift lift;
     ColorUtils colorUtils;
     GyroUtils gyroUtils;
     JewelKicker kicker;
@@ -34,13 +37,15 @@ public class B1NoGlyph extends StateMachineOpMode {
     @Override
     public void init() {
 
-        vuforiaSystem = new VuforiaSystem();
+        //vuforiaSystem = new VuforiaSystem();
         colorUtils = new ColorUtils(this);
         kicker = new JewelKicker(this);
         gyroUtils = GyroUtils.getInstance(this);
         intake = new Intake(this);
         //rangeUtils = new RangeUtils(hardwareMap);
-        gyroUtils.calibrateGyro();
+        lift = new Lift(this);
+        lift.setGlyphGrabberPosition(Lift.ServoPosition.CLOSED);
+
     }
 
     @Override
@@ -53,11 +58,7 @@ public class B1NoGlyph extends StateMachineOpMode {
         }
 
         if (stage == 1) {
-            // Read VuMark
-            if (time.time() > 0.5) { // Wait 0.5 seconds before we take our VuMark reading
-                relicRecoveryVuMark = vuforiaSystem.getVuMark(); // Store the value
-                next();
-            }
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
         }
 
         if (stage == 2) {
@@ -70,23 +71,9 @@ public class B1NoGlyph extends StateMachineOpMode {
             EncoderDrive.createDrive(this, -1500, 0.35);
         }
 
-        /*
-        waitStage(4);
-
-        if (stage == 5) {
-            BasicGyroTurn turn = BasicGyroTurn.createTurn(this, 90);
-            if (turn != null) {
-                telemetry.addData("Degrees left", turn.detail.degreesOffAndDirection);
-            }
+        if (stage == 4) {
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
         }
-
-        waitStage(6);
-
-        if (stage == 7) {
-            EncoderDrive.createDrive(this, 400, 0.35);
-        }
-
-        */
 
         telemetry.addData("Stage", stage);
         telemetry.addData("Heading", gyroUtils.getHeading());

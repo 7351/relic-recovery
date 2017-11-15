@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Intake {
 
     StateMachineOpMode opMode;
-    Servo LeftPositionServo, RightPostiionServo;
+    public Servo LeftPositionServo, RightPostiionServo;
     CRServo LeftCRServo, RightCRServo;
     double[] stopPower = {-0.09, 0.04};
 
@@ -29,7 +29,7 @@ public class Intake {
 
     public enum ServoPosition {
         IN(0.015, 1),
-        OUT(0.93, 0.089);
+        OUT(0.89, 0.088);
 
         private double[] position; // Array containing data
 
@@ -65,7 +65,5 @@ public class Intake {
                 break;
         }
     }
-
-
 
 }

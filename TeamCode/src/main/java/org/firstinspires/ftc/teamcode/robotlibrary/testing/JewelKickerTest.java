@@ -42,7 +42,11 @@ public class JewelKickerTest extends StateMachineOpMode {
     public void loop() {
 
         if (stage == 0) {
-            ActUponJewelKicker.doAction(this, kicker, alliance);
+            ActUponJewelKicker doAction = ActUponJewelKicker.doAction(this, kicker, alliance);
+            if (doAction != null) {
+                telemetry.addData("ActionStage", doAction.stage);
+            }
+
         }
 
         telemetry.addData("Color", ColorUtils.getColorSensorColor(kicker.colorSensor));

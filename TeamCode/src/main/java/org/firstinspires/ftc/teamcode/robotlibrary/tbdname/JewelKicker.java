@@ -36,7 +36,7 @@ public class JewelKicker {
         MIDDLEJEWEL(INROBOT.getPosition()[0], 0.11),
         KNOCKRIGHT(0.74, MIDDLEJEWEL.getPosition()[1]),
         KNOCKLEFT(0.5, MIDDLEJEWEL.getPosition()[1]),
-        TELEOP(INROBOT.getPosition()[0] - 0.1, 0.65);
+        TELEOP(INROBOT.getPosition()[0], 0.555);
 
         private double[] position; // Array containing data
 

@@ -86,9 +86,9 @@ public class Lift {
     }
 
     public enum ServoPosition {
-        OPEN(0.641, 0.6194), // Each position and their corresponding positions for both the Left and Right servos
+        OPEN(0.748, 0.722), // Each position and their corresponding positions for both the Left and Right servos
         SEMIOPEN(0.662, 0.65),
-        CLOSED(0.58, 0.589),
+        CLOSED(0.565, 0.573),
         PUSH(0.45, 0.55);
 
         private double[] position; // Array containing data

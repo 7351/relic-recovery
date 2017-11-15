@@ -18,7 +18,7 @@ public class ActUponJewelKicker implements Routine {
     double deltaPosition = 0.025, deltaTime = 0.0005;
     JewelKicker kicker;
     String alliance;
-    int stage = 0;
+    public int stage = 0;
     int ballDistance = 16 - 1;
 
     public static ActUponJewelKicker doAction(StateMachineOpMode opMode, JewelKicker kicker, String alliance) {
@@ -56,6 +56,10 @@ public class ActUponJewelKicker implements Routine {
                     stage++;
                     time.reset();
                 } else {
+                    if (time.time() > 6) {
+                        stage = 4;
+                        time.reset();
+                    }
                     kicker.stepKickerDown();
                 }
             }
@@ -73,22 +77,30 @@ public class ActUponJewelKicker implements Routine {
                 if (alliance.equals("Red")) {
                     if (computerColor.equals(ColorUtils.Color.RED)) {
                         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKLEFT);
+                        stage++;
+                        time.reset();
                     }
                     if (computerColor.equals(ColorUtils.Color.BLUE)) {
                         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKRIGHT);
+                        stage++;
+                        time.reset();
                     }
                 }
                 if (alliance.equals("Blue")) {
                     if (computerColor.equals(ColorUtils.Color.RED)) {
                         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKRIGHT);
+                        time.reset();
                     }
                     if (computerColor.equals(ColorUtils.Color.BLUE)) {
                         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKLEFT);
+                        time.reset();
                     }
                 }
             }
-            stage++;
-
+            if (time.time() > 4) {
+                stage++;
+                time.reset();
+            }
         }
         if (stage == 3) {
             if (time.time() > 0.75) {

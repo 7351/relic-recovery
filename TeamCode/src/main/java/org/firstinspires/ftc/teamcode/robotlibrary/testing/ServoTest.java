@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 public class ServoTest extends StateMachineOpMode {
     
     private Servo servo1, servo2;
+    Intake intake;
     TeleOpUtils utils;
 
     double delta = 0.01;
@@ -25,8 +27,9 @@ public class ServoTest extends StateMachineOpMode {
     public void init() {
 
         utils = new TeleOpUtils(gamepad1, gamepad2);
-        servo1 = hardwareMap.servo.get("servo1");
-        servo2 = hardwareMap.servo.get("servo2");
+        intake = new Intake(this);
+        servo1 = intake.LeftPositionServo;
+        servo2 = intake.RightPostiionServo;
 
     }
 
@@ -49,6 +52,15 @@ public class ServoTest extends StateMachineOpMode {
 
         if (utils.gamepad1Controller.dpadDownOnce()) {
             servo1.setPosition(Range.clip(servo1.getPosition() - delta, 0, 1));
+        }
+
+        intake.setPower(gamepad1.right_trigger != 0);
+
+        if (utils.gamepad1Controller.dpadLeftOnce()) {
+            intake.setPosition(Intake.ServoPosition.OUT);
+        }
+        if (utils.gamepad1Controller.dpadRightOnce()) {
+            intake.setPosition(Intake.ServoPosition.IN);
         }
 
         telemetry.addData("1", servo1.getPosition());
