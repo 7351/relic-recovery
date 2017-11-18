@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
+import com.suitbots.util.Controller;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
@@ -30,6 +31,8 @@ public class TeleOp extends StateMachineOpMode {
     private boolean runLiftToPosition = false;
     private LiftToPosition.LiftPosition targetPosition;
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
+    private Controller selectedController;
+    private Gamepad selectedGamepad;
 
     @Override
     public void init() {
@@ -49,6 +52,14 @@ public class TeleOp extends StateMachineOpMode {
 
         teleOpUtils.updateControllers();
 
+        if (!gamepad1.atRest()) {
+            selectedGamepad = gamepad1;
+            selectedController = teleOpUtils.gamepad1Controller;
+        } else {
+            selectedGamepad = gamepad2;
+            selectedController = teleOpUtils.gamepad2Controller;
+        }
+
         /*- Controller 1 Controls -*/
 
         /*
@@ -58,11 +69,11 @@ public class TeleOp extends StateMachineOpMode {
          * Right Joystick - Arcade drive
          */
 
-        if (teleOpUtils.gamepad1Controller.leftBumperOnce()) {
+        if (selectedController.leftBumperOnce()) {
             slowMode = !slowMode;
         }
 
-        if (teleOpUtils.gamepad1Controller.AOnce()) {
+        if (selectedController.AOnce()) {
             if (currentBehavior == DcMotor.ZeroPowerBehavior.BRAKE) {
                 currentBehavior = DcMotor.ZeroPowerBehavior.FLOAT;
             } else {
@@ -70,14 +81,15 @@ public class TeleOp extends StateMachineOpMode {
             }
             driveTrain.setZeroPowerBehavior(currentBehavior);
         }
+
         float left = 0;
         float right = 0;
         // throttle: right_stick_y ranges from -1 to 1, where -1 is full up, and
         // 1 is full down
         // direction: right_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
-        float throttle = -gamepad1.right_stick_y;
-        float direction = -gamepad1.right_stick_x;
+        float throttle = -selectedGamepad.right_stick_y;
+        float direction = -selectedGamepad.right_stick_x;
 
         right = throttle - direction;
         left = throttle + direction;
@@ -109,29 +121,29 @@ public class TeleOp extends StateMachineOpMode {
          * D-Pad Down (Manual) - Step closed by stepper delta
          */
 
-        if (gamepad1.left_trigger == 0) {
-            if (!gamepad1.right_bumper) {
-                if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
+        if (selectedGamepad.left_trigger == 0) {
+            if (!selectedGamepad.right_bumper) {
+                if (selectedController.dpadLeftOnce()) {
                     lift.setGlyphGrabberPosition(Lift.ServoPosition.SEMIOPEN);
                 }
 
-                if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                if (selectedController.dpadUpOnce()) {
                     lift.setGlyphGrabberPosition(Lift.ServoPosition.PUSH);
                 }
 
-                if (teleOpUtils.gamepad1Controller.dpadRightOnce()) {
+                if (selectedController.dpadRightOnce()) {
                     lift.setGlyphGrabberPosition(Lift.ServoPosition.CLOSED);
                 }
 
-                if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                if (selectedController.dpadDownOnce()) {
                     lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
                 }
             } else {
-                if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                if (selectedController.dpadUpOnce()) {
                     lift.stepOpen();
                 }
 
-                if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                if (selectedController.dpadDownOnce()) {
                     lift.stepClosed();
                 }
             }
@@ -151,7 +163,7 @@ public class TeleOp extends StateMachineOpMode {
          */
 
         double counts = lift.getAveragePosition();
-        double leftStickValueY = -gamepad1.left_stick_y;
+        double leftStickValueY = -selectedGamepad.left_stick_y;
         if (leftStickValueY == 0) {
             lift.setPower(0);
         }
@@ -162,16 +174,16 @@ public class TeleOp extends StateMachineOpMode {
             lift.setPower(leftStickValueY);
         }
 
-        if (gamepad1.left_trigger != 0) {
-            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+        if (selectedGamepad.left_trigger != 0) {
+            if (selectedController.dpadUpOnce()) {
                 runLiftToPosition = true;
                 targetPosition = lift.getPositionAbove();
             }
-            if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+            if (selectedController.dpadDownOnce()) {
                 runLiftToPosition = true;
                 targetPosition = LiftToPosition.LiftPosition.GROUND;
             }
-            if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
+            if (selectedController.dpadLeftOnce()) {
                 runLiftToPosition = true;
                 targetPosition = LiftToPosition.LiftPosition.FIRST;
             }
@@ -195,7 +207,7 @@ public class TeleOp extends StateMachineOpMode {
          * When Right trigger is pressed - put intake out and set power to be on
          */
 
-        if (gamepad1.right_trigger != 0) {
+        if (selectedGamepad.right_trigger != 0) {
             intake.setPosition(Intake.ServoPosition.OUT);
         } else {
             intake.setPosition(Intake.ServoPosition.IN);
