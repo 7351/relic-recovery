@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -12,17 +13,16 @@ public class Intake {
 
     StateMachineOpMode opMode;
     public Servo LeftPositionServo, RightPostiionServo;
-    CRServo LeftCRServo, RightCRServo;
-    double[] stopPower = {-0.09, 0.04};
+    public DcMotor LeftIntakeMotor, RightIntakeMotor;
 
     public Intake(StateMachineOpMode opMode) {
         this.opMode = opMode;
 
         LeftPositionServo = opMode.hardwareMap.servo.get("LeftIntakePositionServo");
         RightPostiionServo = opMode.hardwareMap.servo.get("RightIntakePositionServo");
-        LeftCRServo = opMode.hardwareMap.crservo.get("LeftIntakeCRServo");
-        RightCRServo = opMode.hardwareMap.crservo.get("RightIntakeCRServo");
-        RightCRServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        LeftIntakeMotor = opMode.hardwareMap.dcMotor.get("LeftIntakeMotor");
+        RightIntakeMotor = opMode.hardwareMap.dcMotor.get("RightIntakeMotor");
+        LeftIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         setPosition(ServoPosition.IN);
     }
@@ -45,11 +45,11 @@ public class Intake {
 
     public void setPower(boolean on) {
         if (on) {
-            LeftCRServo.setPower(1);
-            RightCRServo.setPower(1);
+            LeftIntakeMotor.setPower(0.5);
+            RightIntakeMotor.setPower(0.5);
         } else {
-            LeftCRServo.setPower(stopPower[0]);
-            RightCRServo.setPower(stopPower[1]);
+            LeftIntakeMotor.setPower(0);
+            RightIntakeMotor.setPower(0);
         }
     }
 

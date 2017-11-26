@@ -60,6 +60,7 @@ public class BasicGyroTurn implements Routine {
         this.opMode = opMode;
         this.gyroUtils = GyroUtils.getInstance(opMode);
         this.targetDegree = targetDegree;
+        opMode.telemetryEnabled = false;
 
         driveTrain = new DriveTrain(opMode.hardwareMap);
 
@@ -125,6 +126,7 @@ public class BasicGyroTurn implements Routine {
         driveTrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         driveTrain.stopRobot();
         opMode.next(); // Go to next stage
+        opMode.telemetryEnabled = true;
         teardown();
     }
 

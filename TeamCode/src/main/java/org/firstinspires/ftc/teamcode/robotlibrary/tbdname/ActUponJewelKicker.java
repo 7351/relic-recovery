@@ -117,7 +117,7 @@ public class ActUponJewelKicker implements Routine {
         }
 
         if (stage == 5) {
-            kicker.setJewelKickerPosition(JewelKicker.ServoPosition.INROBOT);
+            kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
             stage++;
         }
     }

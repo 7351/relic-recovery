@@ -31,11 +31,17 @@ public class TeleOp extends StateMachineOpMode {
     private boolean runLiftToPosition = false;
     private LiftToPosition.LiftPosition targetPosition;
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
+    private JewelKicker.ServoPosition currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
     private Controller selectedController;
     private Gamepad selectedGamepad;
 
     @Override
     public void init() {
+
+    }
+
+    @Override
+    public void start() {
 
         teleOpUtils = new TeleOpUtils(gamepad1, gamepad2);
         driveTrain = new DriveTrain(this);
@@ -60,7 +66,24 @@ public class TeleOp extends StateMachineOpMode {
             selectedController = teleOpUtils.gamepad2Controller;
         }
 
+        telemetry.addData("Gamepad1", gamepad1.atRest());
+
         /*- Controller 1 Controls -*/
+
+        /*
+         * Kicker controls
+         * X - toggle between INROBOT and TELEOP
+         */
+
+        if (selectedController.XOnce()) {
+            if (currentKickerPosition.equals(JewelKicker.ServoPosition.TELEOP)) {
+                currentKickerPosition = JewelKicker.ServoPosition.INROBOT;
+            }
+            if (currentKickerPosition.equals(JewelKicker.ServoPosition.INROBOT)) {
+                currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
+            }
+            kicker.setJewelKickerPosition(currentKickerPosition);
+        }
 
         /*
          * Driving controls
@@ -162,7 +185,6 @@ public class TeleOp extends StateMachineOpMode {
          * D-pad down - ground level
          */
 
-        double counts = lift.getAveragePosition();
         double leftStickValueY = -selectedGamepad.left_stick_y;
         if (leftStickValueY == 0) {
             lift.setPower(0);
@@ -213,8 +235,10 @@ public class TeleOp extends StateMachineOpMode {
             intake.setPosition(Intake.ServoPosition.IN);
         }
 
+    }
 
-        /*- Controller 2 Controls -*/
+    @Override
+    public void stop() {
 
     }
 }

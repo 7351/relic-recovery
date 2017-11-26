@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -19,22 +20,30 @@ public class EncoderDrive implements Routine {
     This class is basically a wrapper for LegacyEncoderDrive in the new StateMachine format
      */
 
+    public static EncoderDrive createDrive(StateMachineOpMode opMode, int targetPosition, boolean wiggle) {
+        return createDrive(opMode, targetPosition, 0.35, wiggle);
+    }
+
     public static EncoderDrive createDrive(StateMachineOpMode opMode, int targetPosition) {
-        return createDrive(opMode, targetPosition, 0.5);
+        return createDrive(opMode, targetPosition, 0.35, false);
     }
 
     public static EncoderDrive createDrive(StateMachineOpMode opMode, int targetPosition, double power) {
+        return createDrive(opMode, targetPosition, power, false);
+    }
+
+    public static EncoderDrive createDrive(StateMachineOpMode opMode, int targetPosition, double power, boolean wiggle) {
         if (instance == null) {
-            instance = new EncoderDrive(opMode, targetPosition, power);
+            instance = new EncoderDrive(opMode, targetPosition, power, wiggle);
         }
         instance.isCompleted();
         return instance;
     }
 
-    private EncoderDrive(StateMachineOpMode opMode, int targetPosition, double power) {
+    private EncoderDrive(StateMachineOpMode opMode, int targetPosition, double power, boolean wiggle) {
         this.opMode = opMode;
         driveTrain = new DriveTrain(opMode.hardwareMap);
-        drive = new LegacyEncoderDrive(new DriveTrain(opMode.hardwareMap), targetPosition, power);
+        drive = new LegacyEncoderDrive(new DriveTrain(opMode.hardwareMap), targetPosition, power, wiggle);
     }
 
     @Override
@@ -75,6 +84,9 @@ class LegacyEncoderDrive implements Routine {
 
     private int stuckCounter = 0;
     private int lastRightPositon = 0;
+    private ElapsedTime time;
+    private int stage = 0;
+    private boolean wiggle = false;
 
     // We only want to use the FrontRightMotor encoder
 
@@ -83,10 +95,11 @@ class LegacyEncoderDrive implements Routine {
      *
      * @param driveTrain - The drive train object that should be initialized
      */
-    public LegacyEncoderDrive(DriveTrain driveTrain, int targetPosition, double power) {
+    public LegacyEncoderDrive(DriveTrain driveTrain, int targetPosition, double power, boolean wiggle) {
         this.driveTrain = driveTrain;
         this.targetPosition = targetPosition;
         this.power = power;
+        this.wiggle = wiggle;
 
         driveTrain.RightFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveTrain.LeftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -101,6 +114,8 @@ class LegacyEncoderDrive implements Routine {
         driveTrain.LeftBackMotor.setTargetPosition(targetPosition + startingPositionLeft);
 
         driveTrain.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        time = new ElapsedTime();
 
     }
 
@@ -140,11 +155,33 @@ class LegacyEncoderDrive implements Routine {
     @Override
     public void run() {
 
-        // Set the power for all 4 motors
-        driveTrain.powerLeft((power > 0 && targetPosition < 0) ? -1 * power : power);
-        driveTrain.powerRight((power > 0 && targetPosition < 0) ? -1 * power : power);
-        // We do this funky equation to make sure that we will eventually reach the target and it won't run forever.
-        // If the target is negative, and you specified positive power, it will change it to negative power
+        if (wiggle) {
+            if (stage == 0) { // Wiggle left
+                if (time.time() < 0.25) {
+                    driveTrain.powerLeft((power > 0 && targetPosition < 0) ? -1 * power : power);
+                    driveTrain.powerRight((power > 0 && targetPosition < 0) ? -1 * power * 0.5 : power * 0.5);
+                } else {
+                    stage++;
+                    time.reset();
+                }
+            }
+            if (stage == 1) { // Wiggle right
+                if (time.time() < 0.25) {
+                    driveTrain.powerLeft((power > 0 && targetPosition < 0) ? -1 * power * 0.5 : power * 0.5);
+                    driveTrain.powerRight((power > 0 && targetPosition < 0) ? -1 * power : power);
+                } else {
+                    stage = 0;
+                    time.reset();
+                }
+            }
+        } else {
+            // Set the power for all 4 motors
+            driveTrain.powerLeft((power > 0 && targetPosition < 0) ? -1 * power : power);
+            driveTrain.powerRight((power > 0 && targetPosition < 0) ? -1 * power : power);
+            // We do this funky equation to make sure that we will eventually reach the target and it won't run forever.
+            // If the target is negative, and you specified positive power, it will change it to negative power
+        }
+
     }
 
     public void runWithDecrementPower(double subtractivePower) {

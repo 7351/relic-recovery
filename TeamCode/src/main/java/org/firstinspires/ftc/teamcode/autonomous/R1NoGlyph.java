@@ -1,23 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import android.util.Range;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.RangeUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
 import org.firstinspires.ftc.teamcode.teleops.TeleOp;
 
 /**
@@ -25,72 +14,68 @@ import org.firstinspires.ftc.teamcode.teleops.TeleOp;
  */
 
 @Autonomous(name = "R1NoGlyph", group = "A-Team")
-public class R1NoGlyph extends StateMachineOpMode {
-
-    String alliance = "Red";
-    //VuforiaSystem vuforiaSystem;
-    //RangeUtils rangeUtils;
-    Intake intake;
-    Lift lift;
-    ColorUtils colorUtils;
-    GyroUtils gyroUtils;
-    JewelKicker kicker;
-    RelicRecoveryVuMark relicRecoveryVuMark;
-    ColorUtils.Color jewelColor;
-    int amountOfColumns;
+public class R1NoGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Autonomous {
 
     @Override
-    public void init() {
-
-        //vuforiaSystem = new VuforiaSystem();
-        colorUtils = new ColorUtils(this);
-        kicker = new JewelKicker(this);
-        gyroUtils = GyroUtils.getInstance(this);
-        intake = new Intake(this);
-        //rangeUtils = new RangeUtils(hardwareMap);
+    public void start() {
+        setAlliance("Red");
         gyroUtils.calibrateGyro();
-        lift = new Lift(this);
-        lift.setGlyphGrabberPosition(Lift.ServoPosition.CLOSED);
-
     }
 
     @Override
     public void loop() {
 
         if (stage == 0) {
-            // Calibrate sensor
-            gyroUtils.calibrateGyro();
-            next();
+            ActUponJewelKicker.doAction(this, kicker, alliance);
         }
 
         if (stage == 1) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
         }
 
+        /*
+         * Left - 2000
+         * Center - 1575
+         * Right - 1225
+         */
         if (stage == 2) {
-            ActUponJewelKicker.doAction(this, kicker, alliance);
+            EncoderDrive.createDrive(this, 2000, 0.25);
         }
 
         if (stage == 3) {
-            // Drive forward while checking proximity sensor
-            // Do code to count how many columns we have passed
-            EncoderDrive.createDrive(this, 1500, 0.35);
+            BasicGyroTurn.createTurn(this, 90);
         }
 
         if (stage == 4) {
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
+        }
+
+        if (stage == 5) {
+            EncoderDrive.createDrive(this, 350, true);
+        }
+
+        if (stage == 6) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
         }
 
-        telemetry.addData("Stage", stage);
-        telemetry.addData("Heading", gyroUtils.getHeading());
-        telemetry.addData("Pitch", gyroUtils.getPitch());
-        telemetry.addData("Roll", gyroUtils.getRoll());
-        telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown") );
+        if (stage == 7) {
+            lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
+            next();
+        }
+
+        if (stage == 8) {
+            EncoderDrive.createDrive(this, -100);
+        }
+
+        if (telemetryEnabled) {
+            telemetry.addData("Stage", stage);
+            telemetry.addData("Heading", gyroUtils.getHeading());
+            telemetry.addData("Pitch", gyroUtils.getPitch());
+            telemetry.addData("Roll", gyroUtils.getRoll());
+            telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown") );
+
+        }
 
     }
 
-    @Override
-    public void stop() {
-        internalOpModeServices.requestOpModeStop(new TeleOp());
-    }
 }

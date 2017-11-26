@@ -1,23 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import android.util.Range;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ActUponJewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.RangeUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VuforiaSystem;
 import org.firstinspires.ftc.teamcode.teleops.TeleOp;
 
 /**
@@ -25,33 +12,11 @@ import org.firstinspires.ftc.teamcode.teleops.TeleOp;
  */
 
 @Autonomous(name = "B2NoGlyph", group = "A-Team")
-public class B2NoGlyph extends StateMachineOpMode {
-
-    String alliance = "Blue";
-    //VuforiaSystem vuforiaSystem;
-    //RangeUtils rangeUtils;
-    Intake intake;
-    Lift lift;
-    ColorUtils colorUtils;
-    GyroUtils gyroUtils;
-    JewelKicker kicker;
-    RelicRecoveryVuMark relicRecoveryVuMark;
-    ColorUtils.Color jewelColor;
-    int amountOfColumns;
+public class B2NoGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Autonomous {
 
     @Override
-    public void init() {
-
-        //vuforiaSystem = new VuforiaSystem();
-        colorUtils = new ColorUtils(this);
-        kicker = new JewelKicker(this);
-        gyroUtils = GyroUtils.getInstance(this);
-        intake = new Intake(this);
-        //rangeUtils = new RangeUtils(hardwareMap);
-        gyroUtils.calibrateGyro();
-        lift = new Lift(this);
-        lift.setGlyphGrabberPosition(Lift.ServoPosition.CLOSED);
-
+    public void start() {
+        setAlliance("Blue");
     }
 
     @Override
@@ -64,11 +29,11 @@ public class B2NoGlyph extends StateMachineOpMode {
         }
 
         if (stage == 1) {
-            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
+            ActUponJewelKicker.doAction(this, kicker, alliance);
         }
 
         if (stage == 2) {
-            ActUponJewelKicker.doAction(this, kicker, alliance);
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
         }
 
         if (stage == 3) {
