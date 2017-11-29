@@ -34,12 +34,12 @@ public class R1NoGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdna
         }
 
         /*
-         * Left - 2000
+         * Left - 1900
          * Center - 1575
          * Right - 1225
          */
         if (stage == 2) {
-            EncoderDrive.createDrive(this, 2000, 0.25);
+            EncoderDrive.createDrive(this, 1225, 0.25);
         }
 
         if (stage == 3) {

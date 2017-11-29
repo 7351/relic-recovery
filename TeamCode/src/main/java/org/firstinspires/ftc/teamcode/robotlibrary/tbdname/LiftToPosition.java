@@ -27,7 +27,7 @@ public class LiftToPosition implements Routine {
     // D-pad down - ground level
 
     public enum LiftPosition {
-        GROUND(20),
+        GROUND(30),
         FIRST(175),
         SECOND(640),
         THIRD(1173),

@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Routine;
 import org.firstinspires.ftc.teamcode.teleops.TeleOp;
@@ -26,38 +27,56 @@ public class B1NoGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdna
     public void loop() {
 
 
-        if (stage == 1) {
+        if (stage == 0) {
             ActUponJewelKicker.doAction(this, kicker, alliance);
         }
 
-        if (stage == 2) {
+        if (stage == 1) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
         }
 
-        if (stage == 3) {
-            // Drive forward while checking proximity sensor
-            // Do code to count how many columns we have passed
-            EncoderDrive.createDrive(this, -1500, 0.35);
+        /*
+         * Left - -1095
+         * Center - -1375
+         * Right - -1900TBD
+         */
+        if (stage == 2) {
+            EncoderDrive.createDrive(this, -1095, 0.25);
         }
 
-        if (stage == 4) {
+        if (stage == 3) {
             BasicGyroTurn.createTurn(this, 90);
         }
 
+        if (stage == 4) {
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
+        }
+
         if (stage == 5) {
+            EncoderDrive.createDrive(this, 350, true);
+        }
+
+        if (stage == 6) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
         }
 
-        telemetry.addData("Stage", stage);
-        telemetry.addData("Heading", gyroUtils.getHeading());
-        telemetry.addData("Pitch", gyroUtils.getPitch());
-        telemetry.addData("Roll", gyroUtils.getRoll());
-        telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown"));
+        if (stage == 7) {
+            lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
+            next();
+        }
 
+        if (stage == 8) {
+            EncoderDrive.createDrive(this, -100);
+        }
+
+        if (telemetryEnabled) {
+            telemetry.addData("Stage", stage);
+            telemetry.addData("Heading", gyroUtils.getHeading());
+            telemetry.addData("Pitch", gyroUtils.getPitch());
+            telemetry.addData("Roll", gyroUtils.getRoll());
+            telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown") );
+
+        }
     }
 
-    @Override
-    public void stop() {
-        internalOpModeServices.requestOpModeStop(new TeleOp());
-    }
 }

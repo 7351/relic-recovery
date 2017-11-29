@@ -46,6 +46,9 @@ public class EncoderDrive implements Routine {
         drive = new LegacyEncoderDrive(new DriveTrain(opMode.hardwareMap), targetPosition, power, wiggle);
     }
 
+    private int lastEncoder = 0;
+    private int stuckCounter = 0;
+
     @Override
     public void run() {
         drive.run();
@@ -54,11 +57,21 @@ public class EncoderDrive implements Routine {
     @Override
     public boolean isCompleted() {
         boolean completed = drive.isCompleted();
+        if (lastEncoder == driveTrain.RightFrontMotor.getCurrentPosition()) {
+            stuckCounter++;
+        } else {
+            stuckCounter = 0;
+        }
+        opMode.telemetry.addData("Counter", stuckCounter);
+        if (stuckCounter > 2) {
+            completed = true;
+        }
         if (completed) {
             completed();
         } else {
             run();
         }
+        lastEncoder = driveTrain.RightFrontMotor.getCurrentPosition();
         return completed;
     }
 
