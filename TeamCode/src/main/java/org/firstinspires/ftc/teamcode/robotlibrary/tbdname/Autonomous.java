@@ -14,7 +14,7 @@ public abstract class Autonomous extends StateMachineOpMode {
     OpModeManagerImpl manager;
 
     public String alliance;
-    //public VuforiaSystem vuforiaSystem;
+    public VuforiaSystem vuforiaSystem;
     //public RangeUtils rangeUtils;
     public Intake intake;
     public Lift lift;
@@ -23,8 +23,6 @@ public abstract class Autonomous extends StateMachineOpMode {
     public JewelKicker kicker;
     public RelicRecoveryVuMark relicRecoveryVuMark;
     AutoTransitioner autoTransitioner;
-    public ColorUtils.Color jewelColor;
-    public int amountOfColumns;
 
     public void setAlliance(String alliance) {
         this.alliance = alliance;
@@ -33,7 +31,7 @@ public abstract class Autonomous extends StateMachineOpMode {
     @Override
     public void init() {
 
-        //vuforiaSystem = new VuforiaSystem();
+        vuforiaSystem = new VuforiaSystem();
         colorUtils = new ColorUtils(this);
         kicker = new JewelKicker(this);
         gyroUtils = GyroUtils.getInstance(this);

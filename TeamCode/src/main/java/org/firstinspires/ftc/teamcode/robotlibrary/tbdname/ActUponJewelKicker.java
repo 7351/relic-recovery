@@ -89,24 +89,26 @@ public class ActUponJewelKicker implements Routine {
                 if (alliance.equals("Blue")) {
                     if (computerColor.equals(ColorUtils.Color.RED)) {
                         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKRIGHT);
+                        stage++;
                         time.reset();
                     }
                     if (computerColor.equals(ColorUtils.Color.BLUE)) {
                         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKLEFT);
+                        stage++;
                         time.reset();
                     }
                 }
             }
-            if (time.time() > 4) {
-                stage++;
-                time.reset();
+            if (time.time() > 3) {
+                if (time.time() > 0.75) {
+                    stage++;
+                    time.reset();
+                }
             }
         }
         if (stage == 3) {
-            if (time.time() > 0.75) {
-                stage++;
-                time.reset();
-            }
+            stage++;
+            time.reset();
         }
         if (stage == 4) {
             kicker.setJewelKickerPositionX(JewelKicker.ServoPosition.MIDDLEJEWEL, servoStepperTime, deltaPosition, deltaTime);
