@@ -67,8 +67,7 @@ public class TeleOp extends StateMachineOpMode {
         if (teleOpUtils.gamepad1Controller.XOnce()) {
             if (currentKickerPosition.equals(JewelKicker.ServoPosition.TELEOP)) {
                 currentKickerPosition = JewelKicker.ServoPosition.INROBOT;
-            }
-            if (currentKickerPosition.equals(JewelKicker.ServoPosition.INROBOT)) {
+            } else if (currentKickerPosition.equals(JewelKicker.ServoPosition.INROBOT)) {
                 currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
             }
             kicker.setJewelKickerPosition(currentKickerPosition);

@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
 
 /**
@@ -29,7 +27,7 @@ public class ServoTest extends StateMachineOpMode {
         utils = new TeleOpUtils(gamepad1, gamepad2);
         intake = new Intake(this);
         servo1 = intake.LeftPositionServo;
-        servo2 = intake.RightPostiionServo;
+        servo2 = intake.RightPositionServo;
 
     }
 
