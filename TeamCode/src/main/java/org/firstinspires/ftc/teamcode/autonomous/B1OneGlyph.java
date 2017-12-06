@@ -27,6 +27,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
     @Override
     public void loop() {
 
+        // Use Jewel Kicker with color and alliance and read vumark
         if (stage == 0) {
             ActUponJewelKicker.doAction(this, kicker, alliance);
             relicRecoveryVuMark = vuforiaSystem.getVuMark();
@@ -35,6 +36,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             }
         }
 
+        // Lift up lift to second position
         if (stage == 1) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
         }
@@ -44,6 +46,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
          * Center - -1375
          * Right - -1800
          */
+        // Drive to distance depending on read vumark
         if (stage == 2) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 EncoderDrive.createDrive(this, -1095, 0.35);
@@ -56,27 +59,33 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             }
         }
 
+        // Turn to 90 degrees
         if (stage == 3) {
             BasicGyroTurn.createTurn(this, 90);
         }
 
+        // Move lift down to first position to prepare for placing block
         if (stage == 4) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
         }
 
+        // Insert block between rails
         if (stage == 5) {
             EncoderDrive.createDrive(this, 350, true);
         }
 
+        // Take lift down
         if (stage == 6) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
         }
 
+        // Release block
         if (stage == 7) {
             lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
             next();
         }
 
+        // Back up and park
         if (stage == 8) {
             EncoderDrive.createDrive(this, -100);
         }

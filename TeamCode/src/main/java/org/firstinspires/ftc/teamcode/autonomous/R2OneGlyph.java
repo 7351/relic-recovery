@@ -26,6 +26,7 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
     @Override
     public void loop() {
 
+        // Use Jewel Kicker with color and alliance and read vumark
         if (stage == 0) {
             ActUponJewelKicker.doAction(this, kicker, alliance);
             relicRecoveryVuMark = vuforiaSystem.getVuMark();
@@ -34,14 +35,17 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             }
         }
 
+        // Move lift up to second position
         if (stage == 1) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
         }
 
+        // Drive off ramp
         if (stage == 2) {
             EncoderDrive.createDrive(this, 1100, 0.35);
         }
 
+        // Turn to -90 degrees to be parallel to the cryptobox
         if (stage == 3) {
             BasicGyroTurn.createTurn(this, -90);
         }
@@ -51,7 +55,7 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
          * Center - 425
          * Left - 825
          */
-
+        // Drive to appropriate positions based on read vumark
         if (stage == 4) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
                 EncoderDrive.createDrive(this, 100, 0.35);
@@ -64,27 +68,33 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             }
         }
 
+        // Turn to face cryptobox
         if (stage == 5) {
             BasicGyroTurn.createTurn(this, 0);
         }
 
+        // Move lift to first position
         if (stage == 6) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
         }
 
+        // Insert glyph to rails
         if (stage == 7) {
             EncoderDrive.createDrive(this, 350, 0.35);
         }
 
+        // Bring lift to the ground
         if (stage == 8) {
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
         }
 
+        // Release glyph
         if (stage == 9) {
             lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
             next();
         }
 
+        // Back up and park
         if (stage == 10) {
             EncoderDrive.createDrive(this, -100, 0.35);
         }

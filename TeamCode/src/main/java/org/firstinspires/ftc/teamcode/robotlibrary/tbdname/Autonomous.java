@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 
@@ -15,7 +13,6 @@ public abstract class Autonomous extends StateMachineOpMode {
 
     public String alliance;
     public VuforiaSystem vuforiaSystem;
-    //public RangeUtils rangeUtils;
     public Intake intake;
     public Lift lift;
     public ColorUtils colorUtils;
@@ -36,12 +33,19 @@ public abstract class Autonomous extends StateMachineOpMode {
         kicker = new JewelKicker(this);
         gyroUtils = GyroUtils.getInstance(this);
         intake = new Intake(this);
-        //rangeUtils = new RangeUtils(hardwareMap);
         lift = new Lift(this);
         lift.setGlyphGrabberPosition(Lift.ServoPosition.CLOSED);
 
         autoTransitioner = new AutoTransitioner();
         autoTransitioner.setNewTransition(this, "TeleOp");
+
+        /* To be implemented in the future
+        if (getClass().getName().contains("R")) {
+            alliance = "Red";
+        }
+        if (getClass().getName().contains("B")) {
+            alliance = "Blue";
+        }*/
 
     }
 
