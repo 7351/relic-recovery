@@ -32,7 +32,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             ActUponJewelKicker.doAction(this, kicker, alliance);
             relicRecoveryVuMark = vuforiaSystem.getVuMark();
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.CENTER;
+                relicRecoveryVuMark = RelicRecoveryVuMark.LEFT;
             }
         }
 
@@ -70,7 +70,6 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
                 BasicGyroTurn.createTurn(this, 127);
             }
-
         }
 
         // Move lift down to first position to prepare for placing block

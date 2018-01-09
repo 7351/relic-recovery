@@ -41,26 +41,34 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
         }
 
         /*
-         * Left - 1900
-         * Center - 1575
-         * Right - 1225
+         * Left - 1350
+         * Center - 1100
+         * Right - 1850
          */
         // Drive to distance depending on read vumark
         if (stage == 2) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                EncoderDrive.createDrive(this, 1900, 0.35);
+                EncoderDrive.createDrive(this, 1350, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                EncoderDrive.createDrive(this, 1575, 0.35);
+                EncoderDrive.createDrive(this, 1100, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                EncoderDrive.createDrive(this, 1225, 0.35);
+                EncoderDrive.createDrive(this, 1850, 0.35);
             }
         }
 
-        // Turn to 90 degrees
+        // Turn based on vumark
         if (stage == 3) {
-            BasicGyroTurn.createTurn(this, 90);
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                BasicGyroTurn.createTurn(this, 51);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
+                BasicGyroTurn.createTurn(this, 58);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                BasicGyroTurn.createTurn(this, 127);
+            }
         }
 
         // Move lift to first position
@@ -70,7 +78,7 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
 
         // Insert block between rails
         if (stage == 5) {
-            EncoderDrive.createDrive(this, 350, true);
+            EncoderDrive.createDrive(this, 650, true);
         }
 
         // Take lift down
