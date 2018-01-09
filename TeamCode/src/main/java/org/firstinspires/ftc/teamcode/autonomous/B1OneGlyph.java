@@ -32,7 +32,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             ActUponJewelKicker.doAction(this, kicker, alliance);
             relicRecoveryVuMark = vuforiaSystem.getVuMark();
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.LEFT;
+                relicRecoveryVuMark = RelicRecoveryVuMark.CENTER;
             }
         }
 
@@ -42,26 +42,35 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
         }
 
         /*
-         * Left - -1095
-         * Center - -1375
-         * Right - -1800
+         * Left - -1700
+         * Center - -1000
+         * Right - -1520
          */
         // Drive to distance depending on read vumark
         if (stage == 2) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                EncoderDrive.createDrive(this, -1095, 0.35);
+                EncoderDrive.createDrive(this, -1700, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                EncoderDrive.createDrive(this, -1375, 0.35);
+                EncoderDrive.createDrive(this, -1000, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                EncoderDrive.createDrive(this, -1800, 0.35);
+                EncoderDrive.createDrive(this, -1250, 0.35);
             }
         }
 
-        // Turn to 90 degrees
+        // Turn based on vumark
         if (stage == 3) {
-            BasicGyroTurn.createTurn(this, 90);
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                BasicGyroTurn.createTurn(this, 57);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
+                BasicGyroTurn.createTurn(this, 123);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                BasicGyroTurn.createTurn(this, 127);
+            }
+
         }
 
         // Move lift down to first position to prepare for placing block
@@ -71,7 +80,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
 
         // Insert block between rails
         if (stage == 5) {
-            EncoderDrive.createDrive(this, 350, true);
+            EncoderDrive.createDrive(this, 650, true);
         }
 
         // Take lift down
