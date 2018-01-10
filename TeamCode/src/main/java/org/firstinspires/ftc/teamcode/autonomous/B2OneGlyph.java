@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
-import org.firstinspires.ftc.teamcode.teleops.TeleOp;
 
 /**
  * Created by Dynamic Signals on 10/10/2017.
@@ -31,7 +30,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             ActUponJewelKicker.doAction(this, kicker, alliance);
             relicRecoveryVuMark = vuforiaSystem.getVuMark();
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.RIGHT;
+                relicRecoveryVuMark = RelicRecoveryVuMark.LEFT;
             }
         }
 
@@ -51,26 +50,35 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
         }
 
         /*
-         * Left - -200
-         * Center - -400
-         * Right - -775
+         * Left - -500
+         * Center - None
+         * Right - -300
          */
         // Drive to distance depending on read vumark
         if (stage == 4) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                EncoderDrive.createDrive(this, -200, 0.35);
+                EncoderDrive.createDrive(this, -500, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                EncoderDrive.createDrive(this, -400, 0.35);
+                //EncoderDrive.createDrive(this, -100, 0.35);
+                next();
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                EncoderDrive.createDrive(this, -775, 0.35);
+                EncoderDrive.createDrive(this, -300, 0.35);
             }
         }
 
-        // Turn to face cryptobox
+        // Turn based on vumark
         if (stage == 5) {
-            BasicGyroTurn.createTurn(this, -180);
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                BasicGyroTurn.createTurn(this, 144);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
+                BasicGyroTurn.createTurn(this, -150);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                BasicGyroTurn.createTurn(this, -150);
+            }
         }
 
         // Bring lift down to prepare to insert
@@ -104,7 +112,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
             telemetry.addData("Heading", gyroUtils.getHeading());
             telemetry.addData("Pitch", gyroUtils.getPitch());
             telemetry.addData("Roll", gyroUtils.getRoll());
-            telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown") );
+            telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown"));
 
         }
     }
