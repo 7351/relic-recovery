@@ -51,26 +51,34 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdn
         }
 
         /*
-         * Right - 100
-         * Center - 425
-         * Left - 825
+         * Right - 400
+         * Center - 100
+         * Left - 400
          */
         // Drive to appropriate positions based on read vumark
         if (stage == 4) {
-            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                EncoderDrive.createDrive(this, 100, 0.35);
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                EncoderDrive.createDrive(this, 400, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                EncoderDrive.createDrive(this, 425, 0.35);
+                EncoderDrive.createDrive(this, 100, 0.35);
             }
-            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                EncoderDrive.createDrive(this, 825, 0.35);
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                EncoderDrive.createDrive(this, 400, 0.35);
             }
         }
 
-        // Turn to face cryptobox
+        // Turn based on vumark
         if (stage == 5) {
-            BasicGyroTurn.createTurn(this, 0);
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                BasicGyroTurn.createTurn(this, -30);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
+                BasicGyroTurn.createTurn(this, -27);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                BasicGyroTurn.createTurn(this, 35);
+            }
         }
 
         // Move lift to first position
