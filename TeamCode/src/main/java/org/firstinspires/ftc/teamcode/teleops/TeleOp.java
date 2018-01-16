@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.teleops;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.Range;
-import com.suitbots.util.Controller;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.DriveTrain;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.IntakeV2;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.JewelKicker;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
  * Created by Dynamic Signals on 1/15/2017.
@@ -25,6 +24,7 @@ public class TeleOp extends StateMachineOpMode {
     TeleOpUtils teleOpUtils;
     JewelKicker kicker;
     Intake intake;
+    IntakeV2 intakeV2;
     private boolean slowMode = false;
     private double slowPower = 0.5;
     private double delta = 0.01;
@@ -32,23 +32,41 @@ public class TeleOp extends StateMachineOpMode {
     private LiftToPosition.LiftPosition targetPosition;
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
     private JewelKicker.ServoPosition currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
-    boolean twoControllers = false;
+    public boolean intakev2 = false;
+    public boolean eightMotorMode = false;
 
     @Override
     public void init() {
+        teleOpUtils = new TeleOpUtils(gamepad1, gamepad2);
+    }
 
+    @Override
+    public void init_loop() {
+        teleOpUtils.updateControllers();
+        if (intakev2) {
+            if (teleOpUtils.gamepad1Controller.XOnce()) {
+                eightMotorMode = !eightMotorMode;
+            }
+        }
+        telemetry.addData("How to","Use X to toggle between 8 or 4");
+        telemetry.addData("Current", (eightMotorMode ? "8" : "6"));
     }
 
     @Override
     public void start() {
 
-        teleOpUtils = new TeleOpUtils(gamepad1, gamepad2);
+
         driveTrain = new DriveTrain(this);
         driveTrain.setZeroPowerBehavior(currentBehavior);
         lift = new Lift(this);
         kicker = new JewelKicker(this);
         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
-        intake = new Intake(this);
+        if (!intakev2) {
+            intake = new Intake(this);
+        } else {
+            intakeV2 = new IntakeV2(this, eightMotorMode);
+        }
+
 
     }
 
@@ -218,11 +236,30 @@ public class TeleOp extends StateMachineOpMode {
          * When Right trigger is pressed - put intake out and set power to be on
          */
 
-        if (gamepad1.right_trigger != 0) {
-            intake.setPosition(Intake.ServoPosition.OUT);
+        if (!intakev2) {
+            if (gamepad1.right_trigger != 0) {
+                intake.setPosition(Intake.ServoPosition.OUT);
+            } else {
+                intake.setPosition(Intake.ServoPosition.IN);
+            }
         } else {
-            intake.setPosition(Intake.ServoPosition.IN);
+            if (gamepad1.right_trigger != 0) {
+                intakeV2.setIntakeMode(IntakeV2.IntakeMode.IN);
+            }
+            else if (gamepad1.left_trigger != 0) {
+                intakeV2.setIntakeMode(IntakeV2.IntakeMode.OUT);
+            }
+            else if (gamepad1.right_bumper) {
+                intakeV2.setIntakeMode(IntakeV2.IntakeMode.UP);
+            }
+            else if (gamepad1.left_bumper) {
+                intakeV2.setIntakeMode(IntakeV2.IntakeMode.DOWN);
+            }
+            else {
+                intakeV2.setIntakeMode(IntakeV2.IntakeMode.REST);
+            }
         }
+
 
     }
 

@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.GyroUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
  * Created by Dynamic Signals on 9/24/2017.

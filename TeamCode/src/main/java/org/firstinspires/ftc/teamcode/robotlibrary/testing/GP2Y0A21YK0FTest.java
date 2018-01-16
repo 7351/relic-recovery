@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GP2Y0A21YK0F;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.GP2Y0A21YK0F;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
  * Created by Dynamic Signals on 10/29/2017.

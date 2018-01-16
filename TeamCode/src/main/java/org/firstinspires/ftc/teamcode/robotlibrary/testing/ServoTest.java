@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Intake;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
  * Created by Leo on 10/31/2017.

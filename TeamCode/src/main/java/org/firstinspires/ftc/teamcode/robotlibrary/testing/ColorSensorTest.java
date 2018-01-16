@@ -3,12 +3,10 @@ package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.ColorUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
  * Created by Leo on 10/15/2017.

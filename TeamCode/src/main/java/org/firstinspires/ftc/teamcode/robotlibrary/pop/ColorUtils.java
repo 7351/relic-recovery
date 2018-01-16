@@ -1,15 +1,9 @@
-package org.firstinspires.ftc.teamcode.robotlibrary.tbdname;
+package org.firstinspires.ftc.teamcode.robotlibrary.pop;
 
-import com.qualcomm.hardware.lynx.LynxDigitalChannelController;
-import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.robotlibrary.AutonomousUtils;
 
 /**

@@ -3,19 +3,18 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ActUponJewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
-import org.firstinspires.ftc.teamcode.teleops.TeleOp;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 
 /**
  * Created by Dynamic Signals on 10/10/2017.
  */
 
 @Autonomous(name = "R1OneGlyph", group = "A-Team")
-public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Autonomous {
+public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.Autonomous {
 
     @Override
     public void start() {

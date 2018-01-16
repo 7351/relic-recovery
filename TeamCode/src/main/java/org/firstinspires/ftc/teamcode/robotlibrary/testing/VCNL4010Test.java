@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.VCNL4010;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.VCNL4010;
 
 /**
  * Created by Leo on 10/11/2017.

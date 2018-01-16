@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GyroUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.DriveTrain;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.GyroUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
  * Created by Leo on 11/9/2017.

@@ -6,10 +6,10 @@ import com.google.common.io.Files;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.DriveTrain;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.GP2Y0E02A;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.DriveTrain;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.GP2Y0E02A;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 import java.io.File;
 import java.io.IOException;

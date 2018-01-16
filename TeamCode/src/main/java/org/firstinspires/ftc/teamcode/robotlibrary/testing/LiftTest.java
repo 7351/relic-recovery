@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Lift;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
  * Created by Leo on 11/12/2017.

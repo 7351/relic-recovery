@@ -1,12 +1,11 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.suitbots.util.Controller;
 
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ActUponJewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ColorUtils;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.JewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.StateMachineOpMode;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.ColorUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.JewelKicker;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.CM;
 

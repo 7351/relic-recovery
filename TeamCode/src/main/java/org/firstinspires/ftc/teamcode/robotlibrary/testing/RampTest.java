@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.ActUponJewelKicker;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.Autonomous;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.BasicGyroTurn;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.EncoderDrive;
-import org.firstinspires.ftc.teamcode.robotlibrary.tbdname.LiftToPosition;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Autonomous;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
 
 /**
  * Created by Leo on 11/26/2017.
