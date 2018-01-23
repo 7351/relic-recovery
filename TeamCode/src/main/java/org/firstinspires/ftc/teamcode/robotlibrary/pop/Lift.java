@@ -13,7 +13,7 @@ public class Lift {
 
     private StateMachineOpMode opMode;
 
-    private DcMotor LiftMotor1, LiftMotor2;
+    public DcMotor LiftMotor1, LiftMotor2;
     public Servo GlyphGrabberLeft, GlyphGrabberRight;
 
     private double delta = 0.015;
@@ -21,13 +21,12 @@ public class Lift {
     public Lift(StateMachineOpMode opMode) {
         this.opMode = opMode;
         LiftMotor1 = opMode.hardwareMap.dcMotor.get("LiftMotor1");
-        LiftMotor2 = opMode.hardwareMap.dcMotor.get("LiftMotor2"); // Grab from hardwaremap\
+        LiftMotor2 = opMode.hardwareMap.dcMotor.get("LiftMotor2"); // Grab from hardwaremap
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        LiftMotor1.setDirection(DcMotorSimple.Direction.REVERSE); // Reverse direction of both motors
-        LiftMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
+        LiftMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
 
         LiftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // We want the motor to brake when we give it 0 power
         LiftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -49,13 +48,8 @@ public class Lift {
         LiftMotor2.setMode(mode);
     }
 
-    public void setTargetPosition(int position) {
-        LiftMotor1.setTargetPosition(position);
-        LiftMotor2.setTargetPosition(position);
-    }
-
     public int[] getCurrentPositions() {
-        return new int[]{LiftMotor1.getCurrentPosition(), LiftMotor2.getCurrentPosition()};
+        return new int[]{-LiftMotor1.getCurrentPosition(), LiftMotor2.getCurrentPosition()};
     }
 
     public int getAveragePosition() {
@@ -77,13 +71,9 @@ public class Lift {
         return lowestOne;
     }
 
-    public boolean isBusy() {
-        return LiftMotor1.isBusy();
-    }
-
     public enum ServoPosition {
-        OPEN(0.748, 0.722), // Each position and their corresponding positions for both the Left and Right servos
-        SEMIOPEN(0.662, 0.65),
+        OPEN(0.748, 0.796), // Each position and their corresponding positions for both the Left and Right servos
+        SEMIOPEN(0.602, 0.66),
         CLOSED(0.565, 0.573),
         PUSH(0.45, 0.55);
 
@@ -118,6 +108,22 @@ public class Lift {
     public void stepOpen() {
         GlyphGrabberLeft.setPosition(Range.clip(GlyphGrabberLeft.getPosition() + delta, 0, 1)); // Stepping open aka adding delta
         GlyphGrabberRight.setPosition(Range.clip(GlyphGrabberRight.getPosition() + delta, 0, 1));
+    }
+
+    public void stepOpenLeft() {
+        GlyphGrabberLeft.setPosition(Range.clip(GlyphGrabberLeft.getPosition() + delta, 0, 1)); // Stepping open aka adding delta
+    }
+
+    public void stepClosedLeft() {
+        GlyphGrabberLeft.setPosition(Range.clip(GlyphGrabberLeft.getPosition() - delta, 0, 1)); // Stepping closed aka subtracting delta
+    }
+
+    public void stepOpenRight() {
+        GlyphGrabberRight.setPosition(Range.clip(GlyphGrabberRight.getPosition() + delta, 0, 1));
+    }
+
+    public void stepClosedRight() {
+        GlyphGrabberRight.setPosition(Range.clip(GlyphGrabberRight.getPosition() - delta, 0, 1));
     }
 
     public void setGlyphGrabberPosition(ServoPosition position) { // Function to operate the glyph grabber position

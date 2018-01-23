@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.IntakeV2;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.RelicGrabber;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 
 /**
@@ -24,6 +25,7 @@ public class TeleOp extends StateMachineOpMode {
     TeleOpUtils teleOpUtils;
     JewelKicker kicker;
     Intake intake;
+    RelicGrabber relicGrabber;
     IntakeV2 intakeV2;
     private boolean slowMode = false;
     private double slowPower = 0.5;
@@ -47,9 +49,10 @@ public class TeleOp extends StateMachineOpMode {
             if (teleOpUtils.gamepad1Controller.XOnce()) {
                 eightMotorMode = !eightMotorMode;
             }
+            telemetry.addData("How to","Use X to toggle between 8 or 4");
+            telemetry.addData("Current", (eightMotorMode ? "8" : "6"));
         }
-        telemetry.addData("How to","Use X to toggle between 8 or 4");
-        telemetry.addData("Current", (eightMotorMode ? "8" : "6"));
+
     }
 
     @Override
@@ -61,6 +64,7 @@ public class TeleOp extends StateMachineOpMode {
         lift = new Lift(this);
         kicker = new JewelKicker(this);
         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
+        relicGrabber = new RelicGrabber(this);
         if (!intakev2) {
             intake = new Intake(this);
         } else {
@@ -169,13 +173,33 @@ public class TeleOp extends StateMachineOpMode {
                     lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
                 }
             } else {
-                if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                    lift.stepOpen();
+                if (!gamepad1.b && !gamepad1.x) {
+                    if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                        lift.stepOpen();
+                    }
+
+                    if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                        lift.stepClosed();
+                    }
+                }
+                if (gamepad1.b) {
+                    if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                        lift.stepOpenRight();
+                    }
+
+                    if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                        lift.stepClosedRight();
+                    }
+                } else if (gamepad1.x) {
+                    if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                        lift.stepOpenLeft();
+                    }
+
+                    if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                        lift.stepClosedLeft();
+                    }
                 }
 
-                if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
-                    lift.stepClosed();
-                }
             }
         }
 
@@ -192,14 +216,14 @@ public class TeleOp extends StateMachineOpMode {
          * D-pad down - ground level
          */
 
-        double leftStickValueY = -gamepad1.left_stick_y;
-        if (leftStickValueY == 0) {
+        double leftStickValueY = -teleOpUtils.scaleInput(gamepad1.left_stick_y);
+        if (leftStickValueY <= 0.15 && leftStickValueY >= -0.15) {
             lift.setPower(0);
         }
-        if (leftStickValueY < 0) {
-            lift.setPower(leftStickValueY * 0.65);
+        if (leftStickValueY < -0.15) {
+            lift.setPower(leftStickValueY * 0.15);
         }
-        if (leftStickValueY > 0) {
+        if (leftStickValueY > 0.15) {
             lift.setPower(leftStickValueY);
         }
 
@@ -228,7 +252,7 @@ public class TeleOp extends StateMachineOpMode {
         }
 
         telemetry.addData("Lift Position", lift.getClosestPosition().toString());
-        telemetry.addData("Lift Encoder", "Avg: " + lift.getAveragePosition() + " 1: " + lift.getCurrentPositions()[0] + " 2: " + lift.getCurrentPositions()[1]);
+        telemetry.addData("Lift Encoder", "Avg: " + lift.getAveragePosition() + " 1: " + -lift.getCurrentPositions()[0] + " 2: " + lift.getCurrentPositions()[1]);
 
 
         /*
@@ -259,6 +283,17 @@ public class TeleOp extends StateMachineOpMode {
                 intakeV2.setIntakeMode(IntakeV2.IntakeMode.REST);
             }
         }
+
+        /*- Controller 2 Controls -*/
+
+        /*
+         * Relic Scorer
+         * Right Joystick, move lift up and down
+         */
+
+        double relicLiftJoystick = -teleOpUtils.scaleInput(gamepad2.right_stick_y);
+        relicGrabber.setPower(relicLiftJoystick);
+
 
 
     }

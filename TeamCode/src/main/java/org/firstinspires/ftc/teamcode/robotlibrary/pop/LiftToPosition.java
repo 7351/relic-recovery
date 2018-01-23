@@ -19,7 +19,7 @@ public class LiftToPosition implements Routine {
 
     int difference;
 
-    double power = 0.75;
+    double power = 0.5;
 
     // Controls all w trigger
     // D-pad left - low position right off ground
@@ -27,11 +27,11 @@ public class LiftToPosition implements Routine {
     // D-pad down - ground level
 
     public enum LiftPosition {
-        GROUND(100),
-        FIRST(400),
-        SECOND(640),
-        THIRD(1173),
-        FOURTH(1550);
+        GROUND(5),
+        FIRST(100),
+        SECOND(425),
+        THIRD(700),
+        FOURTH(1000);
 
         private int position; // Array containing data
 
