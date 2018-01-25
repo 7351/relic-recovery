@@ -49,7 +49,7 @@ public class TeleOp extends StateMachineOpMode {
             if (teleOpUtils.gamepad1Controller.XOnce()) {
                 eightMotorMode = !eightMotorMode;
             }
-            telemetry.addData("How to","Use X to toggle between 8 or 4");
+            telemetry.addData("How to", "Use X to toggle between 8 or 4");
             telemetry.addData("Current", (eightMotorMode ? "8" : "6"));
         }
 
@@ -269,17 +269,13 @@ public class TeleOp extends StateMachineOpMode {
         } else {
             if (gamepad1.right_trigger != 0) {
                 intakeV2.setIntakeMode(IntakeV2.IntakeMode.IN);
-            }
-            else if (gamepad1.left_trigger != 0) {
+            } else if (gamepad1.left_trigger != 0) {
                 intakeV2.setIntakeMode(IntakeV2.IntakeMode.OUT);
-            }
-            else if (gamepad1.right_bumper) {
+            } else if (gamepad1.right_bumper) {
                 intakeV2.setIntakeMode(IntakeV2.IntakeMode.UP);
-            }
-            else if (gamepad1.left_bumper) {
+            } else if (gamepad1.left_bumper) {
                 intakeV2.setIntakeMode(IntakeV2.IntakeMode.DOWN);
-            }
-            else {
+            } else {
                 intakeV2.setIntakeMode(IntakeV2.IntakeMode.REST);
             }
         }
@@ -288,12 +284,35 @@ public class TeleOp extends StateMachineOpMode {
 
         /*
          * Relic Scorer
-         * Right Joystick, move lift up and down
+         * Left Joystick - move lift out and in
+         * A - Put grabber down
+         * Y - Put grabber up
+         * X - Toggle for gripping
          */
 
-        double relicLiftJoystick = -teleOpUtils.scaleInput(gamepad2.right_stick_y);
+        double relicLiftJoystick = -teleOpUtils.scaleInput(gamepad2.left_stick_y);
         relicGrabber.setPower(relicLiftJoystick);
 
+        if (teleOpUtils.gamepad2Controller.AOnce()) {
+            relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.SQUARE);
+        }
+
+        if (teleOpUtils.gamepad2Controller.YOnce()) {
+            relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.UP);
+        }
+
+        if (teleOpUtils.gamepad2Controller.XOnce()) {
+            switch (relicGrabber.BottomCurrentPosition) {
+                case GRIP:
+                    if (!relicGrabber.TopCurrentPosition.equals(RelicGrabber.TopGrabberPosition.UP)) {
+                        relicGrabber.setBottomPosition(RelicGrabber.BottomGrabberPosition.OPEN);
+                    }
+                    break;
+                case OPEN:
+                    relicGrabber.setBottomPosition(RelicGrabber.BottomGrabberPosition.GRIP);
+                    break;
+            }
+        }
 
 
     }

@@ -8,6 +8,8 @@ public class RelicGrabber {
 
     private DcMotor LiftMotor1, LiftMotor2;
     private Servo TopGrabberServo, BottomGrabberServo;
+    public BottomGrabberPosition BottomCurrentPosition = BottomGrabberPosition.OPEN;
+    public TopGrabberPosition TopCurrentPosition = TopGrabberPosition.SQUARE;
 
     public RelicGrabber(StateMachineOpMode opMode) {
         TopGrabberServo = opMode.hardwareMap.servo.get("TopGrabberServo");
@@ -21,12 +23,12 @@ public class RelicGrabber {
         LiftMotor1 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor1");
         LiftMotor2 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor2");
 
-        setBottomPosition(BottomGrabberPosition.OPEN);
+        setBottomPosition(BottomCurrentPosition);
         setTopPosition(TopGrabberPosition.SQUARE);
     }
 
     public enum TopGrabberPosition {
-        SQUARE(0.11),
+        SQUARE(0.12),
         UP(0.7);
 
         private double position; // Array containing data
@@ -56,10 +58,12 @@ public class RelicGrabber {
     }
 
     public void setBottomPosition(BottomGrabberPosition position) {
+        BottomCurrentPosition = position;
         BottomGrabberServo.setPosition(position.getPosition());
     }
 
     public void setTopPosition(TopGrabberPosition position) {
+        TopCurrentPosition = position;
         TopGrabberServo.setPosition(position.getPosition());
     }
 

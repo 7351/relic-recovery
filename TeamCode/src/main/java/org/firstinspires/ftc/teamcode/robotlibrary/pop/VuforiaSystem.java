@@ -33,17 +33,22 @@ public class VuforiaSystem {
      */
 
     public VuforiaSystem() {
-        if (vuforia == null) {
-            VuforiaLocalizer.Parameters vuforiaParameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-            vuforiaParameters.cameraDirection = DIRECTION;
-            vuforiaParameters.vuforiaLicenseKey = VUFORIA_LICENSE_KEY;
-            vuforia = ClassFactory.createVuforiaLocalizer(vuforiaParameters);
-        } else {
-            RobotLog.a("Vuforia already initialized!");
-        }
-        relicTrackables = vuforia.loadTrackablesFromAsset(TEMPLATE_NAME);
-        relicTemplate = relicTrackables.get(0);
-        relicTrackables.activate();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (vuforia == null) {
+                    VuforiaLocalizer.Parameters vuforiaParameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+                    vuforiaParameters.cameraDirection = DIRECTION;
+                    vuforiaParameters.vuforiaLicenseKey = VUFORIA_LICENSE_KEY;
+                    vuforia = ClassFactory.createVuforiaLocalizer(vuforiaParameters);
+                } else {
+                    RobotLog.a("Vuforia already initialized!");
+                }
+                relicTrackables = vuforia.loadTrackablesFromAsset(TEMPLATE_NAME);
+                relicTemplate = relicTrackables.get(0);
+                relicTrackables.activate();
+            }
+        });
     }
 
     /**

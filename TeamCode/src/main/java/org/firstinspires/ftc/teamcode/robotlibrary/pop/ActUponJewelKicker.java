@@ -14,6 +14,7 @@ public class ActUponJewelKicker implements Routine {
     private static ActUponJewelKicker instance;
 
     StateMachineOpMode opMode;
+    public ColorUtils.Color computerColor;
     ElapsedTime time, servoStepperTime;
     double deltaPosition = 0.025, deltaTime = 0.0005;
     JewelKicker kicker;
@@ -67,7 +68,6 @@ public class ActUponJewelKicker implements Routine {
         if (stage == 2) {
             ColorUtils.Color readColor = getColorSensorColor(kicker.colorSensor);
             double distance = kicker.colorRangeSensor.getDistance(CM);
-            ColorUtils.Color computerColor;
             if (distance <= ballDistance) {
                 if (readColor.equals(ColorUtils.Color.NONE)) {
                     computerColor = ColorUtils.Color.BLUE;
@@ -99,7 +99,7 @@ public class ActUponJewelKicker implements Routine {
                     }
                 }
             }
-            if (time.time() > 3) {
+            if (time.time() > 3.5) {
                 if (time.time() > 0.75) {
                     stage++;
                     time.reset();

@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.C
 public class JewelKickerTest extends StateMachineOpMode {
 
     JewelKicker kicker;
-    String alliance = "Red";
+    String alliance = "Blue";
 
     @Override
     public void init() {
@@ -44,6 +44,7 @@ public class JewelKickerTest extends StateMachineOpMode {
             ActUponJewelKicker doAction = ActUponJewelKicker.doAction(this, kicker, alliance);
             if (doAction != null) {
                 telemetry.addData("ActionStage", doAction.stage);
+                telemetry.addData("Computed Color", doAction.computerColor);
             }
 
         }

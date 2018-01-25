@@ -2,12 +2,15 @@
 <Robot type="FirstInspires-FTC">
     <LynxUsbDevice name="Expansion Hubs" serialNumber="DQ1443B1" parentModuleAddress="2">
         <LynxModule name="Expansion Hub 2 (Left)" port="2">
-		    <NeveRest20Gearmotor name="LeftIntakeMotor" port="0" />
-            <NeveRest20Gearmotor name="RightIntakeMotor" port="1" />
+            <NeveRest40Gearmotor name="RelicLiftMotor1" port="0" />
+            <NeveRest40Gearmotor name="RelicLiftMotor2" port="1" />
             <NeveRest20Gearmotor name="LiftMotor1" port="2" />
             <NeveRest20Gearmotor name="LiftMotor2" port="3" />
             <Servo name="GlyphGrabberLeft" port="0" />
             <Servo name="GlyphGrabberRight" port="1" />
+            <Servo name="TopGrabberServo" port="2" />
+            <Servo name="BottomGrabberServo" port="3" />
+            <ContinuousRotationServo name="LeftIntakeCRServo" port="4" />
             <Servo name="LeftIntakePositionServo" port="5" />
         </LynxModule>
         <LynxModule name="Expansion Hub 3 (Right)" port="3">
@@ -15,6 +18,7 @@
             <NeveRest20Gearmotor name="LeftFrontMotor" port="1" />
             <NeveRest20Gearmotor name="RightBackMotor" port="2" />
             <NeveRest20Gearmotor name="RightFrontMotor" port="3" />
+            <ContinuousRotationServo name="RightIntakeCRServo" port="0" />
             <Servo name="RightIntakePositionServo" port="2" />
             <Servo name="JewelKickerX" port="3" />
             <Servo name="JewelKickerY" port="5" />
