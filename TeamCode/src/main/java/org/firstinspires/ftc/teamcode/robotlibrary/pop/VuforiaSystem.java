@@ -48,7 +48,7 @@ public class VuforiaSystem {
                 relicTemplate = relicTrackables.get(0);
                 relicTrackables.activate();
             }
-        });
+        }).run();
     }
 
     /**
