@@ -221,7 +221,7 @@ public class TeleOp extends StateMachineOpMode {
             lift.setPower(0);
         }
         if (leftStickValueY < -0.15) {
-            lift.setPower(leftStickValueY * 0.15);
+            lift.setPower(leftStickValueY * 0.3);
         }
         if (leftStickValueY > 0.15) {
             lift.setPower(leftStickValueY);

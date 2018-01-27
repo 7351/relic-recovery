@@ -32,10 +32,10 @@ public class JewelKicker {
 
 
     public enum ServoPosition {
-        INROBOT(0.54, 0.81),
+        INROBOT(0.54, 0.796),
         MIDDLEJEWEL(INROBOT.getPosition()[0], 0.11),
         KNOCKRIGHT(0.74, MIDDLEJEWEL.getPosition()[1]),
-        KNOCKLEFT(0.5, MIDDLEJEWEL.getPosition()[1]),
+        KNOCKLEFT(0.4, MIDDLEJEWEL.getPosition()[1]),
         TELEOP(INROBOT.getPosition()[0], 0.58);
 
         private double[] position; // Array containing data
