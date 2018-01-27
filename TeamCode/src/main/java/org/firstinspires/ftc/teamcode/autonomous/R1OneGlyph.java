@@ -47,13 +47,13 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         // Drive to distance depending on read vumark
         if (stage == 2) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                EncoderDrive.createDrive(this, 1350, 0.35);
+                EncoderDrive.createDrive(this, 1270, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
                 EncoderDrive.createDrive(this, 1100, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                EncoderDrive.createDrive(this, 1850, 0.35);
+                EncoderDrive.createDrive(this, 1750, 0.35);
             }
         }
 

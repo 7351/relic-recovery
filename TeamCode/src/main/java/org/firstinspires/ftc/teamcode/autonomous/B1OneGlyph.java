@@ -50,7 +50,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
                 EncoderDrive.createDrive(this, -1700, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                EncoderDrive.createDrive(this, -1000, 0.35);
+                EncoderDrive.createDrive(this, -1100, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
                 EncoderDrive.createDrive(this, -1250, 0.35);

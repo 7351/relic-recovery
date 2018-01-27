@@ -41,7 +41,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
         // Drive off platform
         if (stage == 2) {
-            EncoderDrive.createDrive(this, -1100, 0.35);
+            EncoderDrive.createDrive(this, -980, 0.35);
         }
 
         // Turn to be parallel with cryptobox
@@ -60,11 +60,10 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
                 EncoderDrive.createDrive(this, -500, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                //EncoderDrive.createDrive(this, -100, 0.35);
-                next();
+                EncoderDrive.createDrive(this, -200, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                EncoderDrive.createDrive(this, -300, 0.35);
+                EncoderDrive.createDrive(this, -600, 0.35);
             }
         }
 
