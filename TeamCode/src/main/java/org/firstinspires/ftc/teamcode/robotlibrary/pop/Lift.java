@@ -26,7 +26,7 @@ public class Lift {
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        LiftMotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        LiftMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         LiftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // We want the motor to brake when we give it 0 power
         LiftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
