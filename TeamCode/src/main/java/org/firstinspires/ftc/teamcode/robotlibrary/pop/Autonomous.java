@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.pop;
 
+import com.vuforia.CameraDevice;
+
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 
@@ -47,13 +49,20 @@ public abstract class Autonomous extends StateMachineOpMode {
             alliance = "Blue";
         }*/
 
+        CameraDevice.getInstance().setFlashTorchMode(true);
 
+    }
+
+    @Override
+    public void init_loop() {
+        telemetry.addData("VuMark (Not Saved)", vuforiaSystem.getVuMark().toString().toLowerCase());
     }
 
     @Override
     public void stop() {
         manager = (OpModeManagerImpl) internalOpModeServices;
         manager.initActiveOpMode("TeleOp");
+        CameraDevice.getInstance().setFlashTorchMode(false);
     }
 
 }

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robotlibrary.pop;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.CM;
 
@@ -136,6 +137,7 @@ public class ActUponJewelKicker implements Routine {
 
     @Override
     public void completed() {
+        CameraDevice.getInstance().setFlashTorchMode(false);
         opMode.next(); // Go to next stage
         teardown();
     }

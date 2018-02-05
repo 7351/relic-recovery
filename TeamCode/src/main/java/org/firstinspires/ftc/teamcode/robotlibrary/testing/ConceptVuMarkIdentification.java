@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.StateMachineOpMode;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.VuforiaSystem;
@@ -13,9 +14,8 @@ public class ConceptVuMarkIdentification extends StateMachineOpMode {
 
     @Override
     public void init() {
-
         vuforiaSystem = new VuforiaSystem();
-
+        CameraDevice.getInstance().setFlashTorchMode(true);
     }
 
     @Override
@@ -36,5 +36,10 @@ public class ConceptVuMarkIdentification extends StateMachineOpMode {
                 break;
         }
 
+    }
+
+    @Override
+    public void stop() {
+        CameraDevice.getInstance().setFlashTorchMode(false);
     }
 }

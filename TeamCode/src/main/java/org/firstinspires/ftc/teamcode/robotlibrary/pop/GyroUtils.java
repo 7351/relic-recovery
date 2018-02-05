@@ -59,13 +59,17 @@ public class GyroUtils {
      */
     public void calibrateGyro() {
         initialized = true;
-        imu.initialize(parameters);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                imu.initialize(parameters);
+            }
+        }).run();
     }
 
     private void refreshData() {
         if (!initialized) {
-            imu.initialize(parameters);
-            initialized = true;
+            calibrateGyro();
         }
         angles = imu.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }

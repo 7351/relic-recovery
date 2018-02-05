@@ -76,7 +76,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
                 BasicGyroTurn.createTurn(this, -150);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                BasicGyroTurn.createTurn(this, -150);
+                BasicGyroTurn.createTurn(this, -153);
             }
         }
 
@@ -113,6 +113,10 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             telemetry.addData("Roll", gyroUtils.getRoll());
             telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown"));
 
+        }
+
+        if (stage != 1 && stage != 6 && stage != 8 && stage <= 10) {
+            lift.setPower(0.01);
         }
     }
 
