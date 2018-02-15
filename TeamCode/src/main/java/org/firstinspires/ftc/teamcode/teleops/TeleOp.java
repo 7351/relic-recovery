@@ -108,7 +108,7 @@ public class TeleOp extends StateMachineOpMode {
         // 1 is full down
         // direction: right_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
-        float throttle = -gamepad1.right_stick_y;
+        float throttle = gamepad1.right_stick_y;
         float direction = -gamepad1.right_stick_x;
 
         right = throttle - direction;
