@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
-import org.firstinspires.ftc.teamcode.robotlibrary.pop.IntakeV2;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
@@ -26,7 +25,6 @@ public class TeleOp extends StateMachineOpMode {
     JewelKicker kicker;
     Intake intake;
     RelicGrabber relicGrabber;
-    IntakeV2 intakeV2;
     private boolean slowMode = false;
     private double slowPower = 0.5;
     private double delta = 0.01;
@@ -34,8 +32,7 @@ public class TeleOp extends StateMachineOpMode {
     private LiftToPosition.LiftPosition targetPosition;
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
     private JewelKicker.ServoPosition currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
-    public boolean intakev2 = false;
-    public boolean eightMotorMode = false;
+    private boolean intakeOut = false;
 
     @Override
     public void init() {
@@ -45,14 +42,6 @@ public class TeleOp extends StateMachineOpMode {
     @Override
     public void init_loop() {
         teleOpUtils.updateControllers();
-        if (intakev2) {
-            if (teleOpUtils.gamepad1Controller.XOnce()) {
-                eightMotorMode = !eightMotorMode;
-            }
-            telemetry.addData("How to", "Use X to toggle between 8 or 4");
-            telemetry.addData("Current", (eightMotorMode ? "8" : "6"));
-        }
-
     }
 
     @Override
@@ -65,11 +54,7 @@ public class TeleOp extends StateMachineOpMode {
         kicker = new JewelKicker(this);
         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
         relicGrabber = new RelicGrabber(this);
-        if (!intakev2) {
-            intake = new Intake(this);
-        } else {
-            intakeV2 = new IntakeV2(this, eightMotorMode);
-        }
+        intake = new Intake(this);
 
 
     }
@@ -94,6 +79,8 @@ public class TeleOp extends StateMachineOpMode {
             }
             kicker.setJewelKickerPosition(currentKickerPosition);
         }
+
+        telemetry.addData("Kicker", kicker.toString());
 
         /*
          * Driving controls
@@ -146,65 +133,31 @@ public class TeleOp extends StateMachineOpMode {
 
         /*
          * Glyph Controls
-         * D-Pad Down - Open
-         * D-Pad Left - Semi-Open
-         * D-Pad Right - Close
-         * D-Pad Up - Push
-         * Right Bumper - Manual override
-         * D-Pad Up (Manual) - Step open by stepper delta
-         * D-Pad Down (Manual) - Step closed by stepper delta
+         * When left trigger isn't pressed
+         * Y - Toggle grip
          */
 
         if (gamepad1.left_trigger == 0) {
-            if (!gamepad1.right_bumper) {
-                if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
-                    lift.setGlyphGrabberPosition(Lift.ServoPosition.SEMIOPEN);
-                }
-
-                if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                    lift.setGlyphGrabberPosition(Lift.ServoPosition.PUSH);
-                }
-
-                if (teleOpUtils.gamepad1Controller.dpadRightOnce()) {
-                    lift.setGlyphGrabberPosition(Lift.ServoPosition.CLOSED);
-                }
-
-                if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
-                    lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
-                }
-            } else {
-                if (!gamepad1.b && !gamepad1.x) {
-                    if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                        lift.stepOpen();
-                    }
-
-                    if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
-                        lift.stepClosed();
-                    }
-                }
-                if (gamepad1.b) {
-                    if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                        lift.stepOpenRight();
-                    }
-
-                    if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
-                        lift.stepClosedRight();
-                    }
-                } else if (gamepad1.x) {
-                    if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                        lift.stepOpenLeft();
-                    }
-
-                    if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
-                        lift.stepClosedLeft();
-                    }
-                }
-
+            if (teleOpUtils.gamepad1Controller.YOnce()) {
+                lift.toggleGrip();
             }
         }
 
-        telemetry.addData("Grabber", "L: " + lift.GlyphGrabberLeft.getPosition() + ", R: " + lift.GlyphGrabberRight.getPosition());
+        /*
+         * Ramp controls
+         * When left trigger isn't pressed
+         * Dpad up - go to next ramp position
+         * Dpad down - go to lower ramp position
+         */
 
+        if (gamepad1.left_trigger == 0) {
+            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                lift.rampPositionUp();
+            }
+            if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
+                lift.rampPositionDown();
+            }
+        }
 
         /*
          * Lift Controls
@@ -257,27 +210,17 @@ public class TeleOp extends StateMachineOpMode {
 
         /*
          * Intake Controls
-         * When Right trigger is pressed - put intake out and set power to be on
+         * Right bumper - toggle intake out or in
          */
 
-        if (!intakev2) {
-            if (gamepad1.right_trigger != 0) {
-                intake.setPosition(Intake.ServoPosition.OUT);
-            } else {
-                intake.setPosition(Intake.ServoPosition.IN);
-            }
+        if (teleOpUtils.gamepad1Controller.rightBumperOnce()) {
+            intakeOut = !intakeOut;
+        }
+
+        if (intakeOut) {
+            intake.setPosition(Intake.ServoPosition.OUT);
         } else {
-            if (gamepad1.right_trigger != 0) {
-                intakeV2.setIntakeMode(IntakeV2.IntakeMode.IN);
-            } else if (gamepad1.left_trigger != 0) {
-                intakeV2.setIntakeMode(IntakeV2.IntakeMode.OUT);
-            } else if (gamepad1.right_bumper) {
-                intakeV2.setIntakeMode(IntakeV2.IntakeMode.UP);
-            } else if (gamepad1.left_bumper) {
-                intakeV2.setIntakeMode(IntakeV2.IntakeMode.DOWN);
-            } else {
-                intakeV2.setIntakeMode(IntakeV2.IntakeMode.REST);
-            }
+            intake.setPosition(Intake.ServoPosition.IN);
         }
 
         /*- Controller 2 Controls -*/
@@ -319,6 +262,6 @@ public class TeleOp extends StateMachineOpMode {
 
     @Override
     public void stop() {
-
+        intake.setPower(false);
     }
 }

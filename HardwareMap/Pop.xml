@@ -1,16 +1,17 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot type="FirstInspires-FTC">
     <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ1443B1" parentModuleAddress="2">
-        <LynxModule name="Expansion Hub B" port="1">
-            <NeveRest20Gearmotor name="LeftBackMotor" port="0" />
-            <NeveRest20Gearmotor name="LeftFrontMotor" port="1" />
-            <NeveRest20Gearmotor name="RightBackMotor" port="2" />
-            <NeveRest20Gearmotor name="RightFrontMotor" port="3" />
-            <ContinuousRotationServo name="RightIntakeCRServo" port="0" />
-            <Servo name="RightIntakePositionServo" port="2" />
-            <Servo name="JewelKickerX" port="3" />
+        <LynxModule name="Expansion Hub B" port="3">
+            <NeveRest20Gearmotor name="RightBackMotor" port="0" />
+            <NeveRest20Gearmotor name="RightFrontMotor" port="1" />
+            <NeveRest20Gearmotor name="LeftBackMotor" port="2" />
+            <NeveRest20Gearmotor name="LeftFrontMotor" port="3" />
+            <ContinuousRotationServo name="LeftIntakeCRServo" port="0" />
+            <Servo name="LeftIntakePositionServo" port="3" />
+            <Servo name="JewelKickerX" port="2" />
+            <Servo name="Gripper1" port="1" />
             <Servo name="TopGrabberServo" port="4" />
-            <Servo name="JewelKickerY" port="5" />
+            <Servo name="JewelKickerY" port="5"/>
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <LynxColorSensor name="JewelColorSensor" port="1" bus="0" />
         </LynxModule>
@@ -19,11 +20,12 @@
             <NeveRest60Gearmotor name="RelicLiftMotor2" port="1" />
             <NeveRest40Gearmotor name="LiftMotor1" port="2" />
             <NeveRest40Gearmotor name="LiftMotor2" port="3" />
-            <Servo name="GlyphGrabberLeft" port="0" />
-            <Servo name="GlyphGrabberRight" port="1" />
+            <Servo name="Gripper2" port="2" />
+            <Servo name="RampUpDown1" port="0" />
+            <Servo name="RampUpDown2" port="1" />
             <Servo name="BottomGrabberServo" port="3" />
-            <ContinuousRotationServo name="LeftIntakeCRServo" port="4" />
-            <Servo name="LeftIntakePositionServo" port="5" />
+            <ContinuousRotationServo name="RightIntakeCRServo" port="4" />
+            <Servo name="RightIntakePositionServo" port="5" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
         </LynxModule>
     </LynxUsbDevice>

@@ -87,7 +87,7 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
         // Release block
         if (stage == 7) {
-            lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
+            lift.setGlyphGrabberPosition(Lift.GripperServoPosition.OPEN);
             next();
         }
 

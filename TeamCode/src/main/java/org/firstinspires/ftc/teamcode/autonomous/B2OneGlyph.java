@@ -97,7 +97,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
         // Release glyph
         if (stage == 9) {
-            lift.setGlyphGrabberPosition(Lift.ServoPosition.OPEN);
+            lift.setGlyphGrabberPosition(Lift.GripperServoPosition.OPEN);
             next();
         }
 

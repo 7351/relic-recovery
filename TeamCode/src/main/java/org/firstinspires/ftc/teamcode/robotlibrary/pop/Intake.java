@@ -21,14 +21,14 @@ public class Intake {
         RightPositionServo = opMode.hardwareMap.servo.get("RightIntakePositionServo");
         LeftIntakeCRServo = opMode.hardwareMap.crservo.get("LeftIntakeCRServo");
         RightIntakeCRServo = opMode.hardwareMap.crservo.get("RightIntakeCRServo");
-        LeftIntakeCRServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        RightIntakeCRServo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         setPosition(ServoPosition.IN);
     }
 
     public enum ServoPosition {
-        IN(0.015, 1),
-        OUT(0.89, 0.088);
+        IN(0.01, 1),
+        OUT(0.85, 0.12);
 
         private double[] position; // Array containing data
 

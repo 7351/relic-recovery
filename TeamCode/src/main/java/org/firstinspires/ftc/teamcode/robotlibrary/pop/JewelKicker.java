@@ -30,13 +30,12 @@ public class JewelKicker {
         setJewelKickerPosition(ServoPosition.INROBOT);
     }
 
-
     public enum ServoPosition {
-        INROBOT(0.54, 0.796),
+        INROBOT(0.65, 0.06),
         MIDDLEJEWEL(INROBOT.getPosition()[0], 0.11),
         KNOCKRIGHT(0.74, MIDDLEJEWEL.getPosition()[1]),
         KNOCKLEFT(0.4, MIDDLEJEWEL.getPosition()[1]),
-        TELEOP(INROBOT.getPosition()[0], 0.58);
+        TELEOP(INROBOT.getPosition()[0], 0.38);
 
         private double[] position; // Array containing data
 
@@ -92,4 +91,8 @@ public class JewelKicker {
         JewelKickerY.setPosition(Range.clip(JewelKickerY.getPosition() - delta, minPosition, 1));
     }
 
+    @Override
+    public String toString() {
+        return "X: " + JewelKickerX.getPosition() + " Y: " + JewelKickerY.getPosition();
+    }
 }

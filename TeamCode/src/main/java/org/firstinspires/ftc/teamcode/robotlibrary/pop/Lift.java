@@ -14,7 +14,11 @@ public class Lift {
     private StateMachineOpMode opMode;
 
     public DcMotor LiftMotor1, LiftMotor2;
-    public Servo GlyphGrabberLeft, GlyphGrabberRight;
+    public Servo RampUpDown1, RampUpDown2;
+    public Servo Gripper1, Gripper2;
+
+    private RampServoPosition currentRampPosition;
+    private GripperServoPosition gripperServoPosition;
 
     private double delta = 0.015;
 
@@ -31,11 +35,14 @@ public class Lift {
         LiftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // We want the motor to brake when we give it 0 power
         LiftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        GlyphGrabberLeft = opMode.hardwareMap.servo.get("GlyphGrabberLeft"); // Grab both servos from hardwaremap
-        GlyphGrabberRight = opMode.hardwareMap.servo.get("GlyphGrabberRight");
-        GlyphGrabberLeft.setDirection(Servo.Direction.REVERSE); // Reverse left so that the zero is facing inward
+        RampUpDown1 = opMode.hardwareMap.servo.get("RampUpDown1");
+        RampUpDown2 = opMode.hardwareMap.servo.get("RampUpDown2");
 
-        setGlyphGrabberPosition(ServoPosition.OPEN); // By default, set position to open
+        Gripper1 = opMode.hardwareMap.servo.get("Gripper1");
+        Gripper2 = opMode.hardwareMap.servo.get("Gripper2");
+
+        setGlyphGrabberPosition(GripperServoPosition.OPEN); // By default, set position to open
+        setRampPosition(RampServoPosition.HOME);
     }
 
     public void setPower(double power) {
@@ -49,7 +56,7 @@ public class Lift {
     }
 
     public int[] getCurrentPositions() {
-        return new int[]{-LiftMotor1.getCurrentPosition(), LiftMotor2.getCurrentPosition()};
+        return new int[]{LiftMotor1.getCurrentPosition(), -LiftMotor2.getCurrentPosition()};
     }
 
     public int getAveragePosition() {
@@ -71,19 +78,34 @@ public class Lift {
         return lowestOne;
     }
 
-    public enum ServoPosition {
-        OPEN(0.748, 0.796), // Each position and their corresponding positions for both the Left and Right servos
-        SEMIOPEN(0.602, 0.66),
-        CLOSED(0.565, 0.573),
-        PUSH(0.45, 0.55);
+    public enum GripperServoPosition {
+        OPEN(0.47, 0.66),
+        GRIP(0.52, 0.6);
 
         private double[] position; // Array containing data
 
-        ServoPosition(double positionLeft, double positionRight) { // Constructor
+        GripperServoPosition(double positionLeft, double positionRight) { // Constructor
             this.position = new double[]{positionLeft, positionRight}; // Create array
         }
 
         public double[] getPosition() { // Return data
+            return position;
+        }
+
+    }
+
+    public enum RampServoPosition {
+        HOME(0.26),
+        SCORE(0.83),
+        INBETWEEN(0.45);
+
+        private double position; // Array containing data
+
+        RampServoPosition(double positionLeft) { // Constructor
+            this.position = positionLeft; // Create array
+        }
+
+        public double getPosition() { // Return data
             return position;
         }
 
@@ -100,35 +122,49 @@ public class Lift {
 
     }
 
-    public void stepClosed() {
-        GlyphGrabberLeft.setPosition(Range.clip(GlyphGrabberLeft.getPosition() - delta, 0, 1)); // Stepping closed aka subtracting delta
-        GlyphGrabberRight.setPosition(Range.clip(GlyphGrabberRight.getPosition() - delta, 0, 1));
+    public void toggleGrip() {
+        switch (gripperServoPosition) {
+            case GRIP:
+                setGlyphGrabberPosition(GripperServoPosition.OPEN);
+                break;
+            case OPEN:
+                setGlyphGrabberPosition(GripperServoPosition.GRIP);
+                break;
+        }
     }
 
-    public void stepOpen() {
-        GlyphGrabberLeft.setPosition(Range.clip(GlyphGrabberLeft.getPosition() + delta, 0, 1)); // Stepping open aka adding delta
-        GlyphGrabberRight.setPosition(Range.clip(GlyphGrabberRight.getPosition() + delta, 0, 1));
+    public void rampPositionUp() {
+        switch (currentRampPosition) {
+            case HOME:
+                setRampPosition(RampServoPosition.INBETWEEN);
+                break;
+            case INBETWEEN:
+                setRampPosition(RampServoPosition.SCORE);
+                break;
+        }
     }
 
-    public void stepOpenLeft() {
-        GlyphGrabberLeft.setPosition(Range.clip(GlyphGrabberLeft.getPosition() + delta, 0, 1)); // Stepping open aka adding delta
+    public void rampPositionDown() {
+        switch (currentRampPosition) {
+            case SCORE:
+                setRampPosition(RampServoPosition.INBETWEEN);
+                break;
+            case INBETWEEN:
+                setRampPosition(RampServoPosition.HOME);
+                break;
+        }
     }
 
-    public void stepClosedLeft() {
-        GlyphGrabberLeft.setPosition(Range.clip(GlyphGrabberLeft.getPosition() - delta, 0, 1)); // Stepping closed aka subtracting delta
+    public void setGlyphGrabberPosition(GripperServoPosition position) { // Function to operate the glyph grabber position
+        Gripper1.setPosition(position.getPosition()[0]);
+        Gripper2.setPosition(position.getPosition()[1]);
+        gripperServoPosition = position;
     }
 
-    public void stepOpenRight() {
-        GlyphGrabberRight.setPosition(Range.clip(GlyphGrabberRight.getPosition() + delta, 0, 1));
-    }
-
-    public void stepClosedRight() {
-        GlyphGrabberRight.setPosition(Range.clip(GlyphGrabberRight.getPosition() - delta, 0, 1));
-    }
-
-    public void setGlyphGrabberPosition(ServoPosition position) { // Function to operate the glyph grabber position
-        GlyphGrabberLeft.setPosition(position.getPosition()[0]);
-        GlyphGrabberRight.setPosition(position.getPosition()[1]);
+    public void setRampPosition(RampServoPosition position) {
+        RampUpDown1.setPosition(position.position);
+        RampUpDown2.setPosition(position.position);
+        currentRampPosition = position;
     }
 
 }
