@@ -28,10 +28,10 @@ public class LiftToPosition implements Routine {
 
     public enum LiftPosition {
         GROUND(5),
-        FIRST(100),
-        SECOND(425),
-        THIRD(700),
-        FOURTH(1000);
+        FIRST(216),
+        SECOND(GROUND.position),
+        FOURTH(GROUND.position),
+        TOP(1150);
 
         private int position; // Array containing data
 

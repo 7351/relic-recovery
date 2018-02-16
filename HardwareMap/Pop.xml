@@ -2,10 +2,10 @@
 <Robot type="FirstInspires-FTC">
     <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ1443B1" parentModuleAddress="2">
         <LynxModule name="Expansion Hub B" port="3">
-            <NeveRest20Gearmotor name="RightBackMotor" port="0" />
-            <NeveRest20Gearmotor name="RightFrontMotor" port="1" />
-            <NeveRest20Gearmotor name="LeftBackMotor" port="2" />
-            <NeveRest20Gearmotor name="LeftFrontMotor" port="3" />
+            <NeveRest20Gearmotor name="LeftFrontMotor" port="0" />
+            <NeveRest20Gearmotor name="LeftBackMotor" port="1" />
+            <NeveRest20Gearmotor name="RightFrontMotor" port="2" />
+            <NeveRest20Gearmotor name="RightBackMotor" port="3" />
             <ContinuousRotationServo name="LeftIntakeCRServo" port="0" />
             <Servo name="LeftIntakePositionServo" port="3" />
             <Servo name="JewelKickerX" port="2" />

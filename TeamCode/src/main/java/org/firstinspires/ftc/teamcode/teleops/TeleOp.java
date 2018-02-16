@@ -32,7 +32,7 @@ public class TeleOp extends StateMachineOpMode {
     private LiftToPosition.LiftPosition targetPosition;
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
     private JewelKicker.ServoPosition currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
-    private boolean intakeOut = false;
+    private boolean intakeRunning = false;
 
     @Override
     public void init() {
@@ -108,8 +108,8 @@ public class TeleOp extends StateMachineOpMode {
         // 1 is full down
         // direction: right_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
-        float throttle = gamepad1.right_stick_y;
-        float direction = -gamepad1.right_stick_x;
+        float throttle = -gamepad1.right_stick_y;
+        float direction = gamepad1.right_stick_x;
 
         right = throttle - direction;
         left = throttle + direction;
@@ -151,11 +151,14 @@ public class TeleOp extends StateMachineOpMode {
          */
 
         if (gamepad1.left_trigger == 0) {
-            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                lift.rampPositionUp();
+            if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
+                lift.setRampPosition(Lift.RampServoPosition.INBETWEEN);
             }
             if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
-                lift.rampPositionDown();
+                lift.setRampPosition(Lift.RampServoPosition.HOME);
+            }
+            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
+                lift.setRampPosition(Lift.RampServoPosition.SCORE);
             }
         }
 
@@ -173,25 +176,26 @@ public class TeleOp extends StateMachineOpMode {
         if (leftStickValueY <= 0.15 && leftStickValueY >= -0.15) {
             lift.setPower(0);
         }
-        if (leftStickValueY < -0.15) {
+        if (leftStickValueY < -0.15) { // Down
             lift.setPower(leftStickValueY * 0.3);
         }
-        if (leftStickValueY > 0.15) {
-            lift.setPower(leftStickValueY);
+        if (leftStickValueY > 0.15) { // Up
+            if (lift.getAveragePosition() < LiftToPosition.LiftPosition.TOP.getPosition()) {
+                lift.setPower(leftStickValueY);
+            }
+        }
+
+        if (lift.getAveragePosition() > LiftToPosition.LiftPosition.TOP.getPosition() + 60) {
+            lift.setPower(-0.1);
         }
 
         if (gamepad1.left_trigger != 0) {
-            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                runLiftToPosition = true;
-                targetPosition = lift.getPositionAbove();
+            if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
+                lift.setRampPosition(Lift.RampServoPosition.FLAT);
             }
             if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
                 runLiftToPosition = true;
                 targetPosition = LiftToPosition.LiftPosition.GROUND;
-            }
-            if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
-                runLiftToPosition = true;
-                targetPosition = LiftToPosition.LiftPosition.FIRST;
             }
         }
 
@@ -214,14 +218,22 @@ public class TeleOp extends StateMachineOpMode {
          */
 
         if (teleOpUtils.gamepad1Controller.rightBumperOnce()) {
-            intakeOut = !intakeOut;
+            intakeRunning = !intakeRunning;
+            intake.setPower(intakeRunning);
         }
 
-        if (intakeOut) {
+        if (gamepad1.right_trigger != 0) {
             intake.setPosition(Intake.ServoPosition.OUT);
+            if (!intakeRunning) {
+                intake.setPower(true);
+            }
         } else {
             intake.setPosition(Intake.ServoPosition.IN);
+            if (!intakeRunning) {
+                intake.setPower(false);
+            }
         }
+
 
         /*- Controller 2 Controls -*/
 

@@ -97,6 +97,7 @@ public class Lift {
     public enum RampServoPosition {
         HOME(0.26),
         SCORE(0.83),
+        FLAT(0.35),
         INBETWEEN(0.45);
 
         private double position; // Array containing data

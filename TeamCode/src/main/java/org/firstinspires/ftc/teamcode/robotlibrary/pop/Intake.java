@@ -55,14 +55,6 @@ public class Intake {
     public void setPosition(ServoPosition position) {
         LeftPositionServo.setPosition(position.getPosition()[0]);
         RightPositionServo.setPosition(position.getPosition()[1]);
-        switch (position) {
-            case IN:
-                setPower(false);
-                break;
-            case OUT:
-                setPower(true);
-                break;
-        }
     }
 
 }
