@@ -15,10 +15,8 @@ public class Lift {
 
     public DcMotor LiftMotor1, LiftMotor2;
     public Servo RampUpDown1, RampUpDown2;
-    public Servo Gripper1, Gripper2;
 
     private RampServoPosition currentRampPosition;
-    private GripperServoPosition gripperServoPosition;
 
     private double delta = 0.015;
 
@@ -38,10 +36,6 @@ public class Lift {
         RampUpDown1 = opMode.hardwareMap.servo.get("RampUpDown1");
         RampUpDown2 = opMode.hardwareMap.servo.get("RampUpDown2");
 
-        Gripper1 = opMode.hardwareMap.servo.get("Gripper1");
-        Gripper2 = opMode.hardwareMap.servo.get("Gripper2");
-
-        setGlyphGrabberPosition(GripperServoPosition.OPEN); // By default, set position to open
         setRampPosition(RampServoPosition.HOME);
     }
 
@@ -78,27 +72,11 @@ public class Lift {
         return lowestOne;
     }
 
-    public enum GripperServoPosition {
-        OPEN(0.47, 0.66),
-        GRIP(0.52, 0.6);
-
-        private double[] position; // Array containing data
-
-        GripperServoPosition(double positionLeft, double positionRight) { // Constructor
-            this.position = new double[]{positionLeft, positionRight}; // Create array
-        }
-
-        public double[] getPosition() { // Return data
-            return position;
-        }
-
-    }
-
     public enum RampServoPosition {
         HOME(0.26),
         SCORE(0.83),
         FLAT(0.35),
-        INBETWEEN(0.45);
+        INBETWEEN(0.5);
 
         private double position; // Array containing data
 
@@ -123,17 +101,6 @@ public class Lift {
 
     }
 
-    public void toggleGrip() {
-        switch (gripperServoPosition) {
-            case GRIP:
-                setGlyphGrabberPosition(GripperServoPosition.OPEN);
-                break;
-            case OPEN:
-                setGlyphGrabberPosition(GripperServoPosition.GRIP);
-                break;
-        }
-    }
-
     public void rampPositionUp() {
         switch (currentRampPosition) {
             case HOME:
@@ -154,12 +121,6 @@ public class Lift {
                 setRampPosition(RampServoPosition.HOME);
                 break;
         }
-    }
-
-    public void setGlyphGrabberPosition(GripperServoPosition position) { // Function to operate the glyph grabber position
-        Gripper1.setPosition(position.getPosition()[0]);
-        Gripper2.setPosition(position.getPosition()[1]);
-        gripperServoPosition = position;
     }
 
     public void setRampPosition(RampServoPosition position) {

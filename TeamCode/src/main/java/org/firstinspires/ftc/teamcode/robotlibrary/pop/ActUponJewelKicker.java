@@ -51,9 +51,19 @@ public class ActUponJewelKicker implements Routine {
             time.reset();
         }
         if (stage == 1) {
+            if (time.time() < 1) {
+                kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
+            } if (time.time() > 1 && time.time() < 2) {
+                kicker.setJewelKickerPosition(JewelKicker.ServoPosition.MIDDLEJEWELUP);
+            } if (time.time() > 2) {
+                stage++;
+                time.reset();
+            }
+        }
+        if (stage == 2) {
             kicker.setJewelKickerPositionY(JewelKicker.ServoPosition.MIDDLEJEWEL, servoStepperTime, deltaPosition, deltaTime);
             double distance = kicker.colorRangeSensor.getDistance(CM);
-            if (time.time() > 1.5) {
+            if (time.time() > 3) {
                 if (distance <= ballDistance) {
                     stage++;
                     time.reset();
@@ -66,7 +76,7 @@ public class ActUponJewelKicker implements Routine {
                 }
             }
         }
-        if (stage == 2) {
+        if (stage == 3) {
             ColorUtils.Color readColor = getColorSensorColor(kicker.colorSensor);
             double distance = kicker.colorRangeSensor.getDistance(CM);
             if (distance <= ballDistance) {
@@ -77,24 +87,24 @@ public class ActUponJewelKicker implements Routine {
                 }
                 if (alliance.equals("Red")) {
                     if (computerColor.equals(ColorUtils.Color.RED)) {
-                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKLEFT);
+                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKRIGHT);
                         stage++;
                         time.reset();
                     }
                     if (computerColor.equals(ColorUtils.Color.BLUE)) {
-                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKRIGHT);
+                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKLEFT);
                         stage++;
                         time.reset();
                     }
                 }
                 if (alliance.equals("Blue")) {
                     if (computerColor.equals(ColorUtils.Color.RED)) {
-                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKRIGHT);
+                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKLEFT);
                         stage++;
                         time.reset();
                     }
                     if (computerColor.equals(ColorUtils.Color.BLUE)) {
-                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKLEFT);
+                        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.KNOCKRIGHT);
                         stage++;
                         time.reset();
                     }
@@ -107,11 +117,11 @@ public class ActUponJewelKicker implements Routine {
                 }
             }
         }
-        if (stage == 3) {
+        if (stage == 4) {
             stage++;
             time.reset();
         }
-        if (stage == 4) {
+        if (stage == 5) {
             kicker.setJewelKickerPositionX(JewelKicker.ServoPosition.MIDDLEJEWEL, servoStepperTime, deltaPosition, deltaTime);
             if (time.time() > 1) {
                 time.reset();
@@ -119,7 +129,7 @@ public class ActUponJewelKicker implements Routine {
             }
         }
 
-        if (stage == 5) {
+        if (stage == 6) {
             kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
             stage++;
         }
@@ -127,12 +137,12 @@ public class ActUponJewelKicker implements Routine {
 
     @Override
     public boolean isCompleted() {
-        if (stage >= 6) {
+        if (stage >= 7) {
             completed();
         } else {
             run();
         }
-        return stage >= 6;
+        return stage >= 7;
     }
 
     @Override

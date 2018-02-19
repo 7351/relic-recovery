@@ -30,13 +30,14 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             ActUponJewelKicker.doAction(this, kicker, alliance);
             relicRecoveryVuMark = vuforiaSystem.getVuMark();
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.LEFT;
+                relicRecoveryVuMark = RelicRecoveryVuMark.RIGHT;
             }
         }
 
         // Lift up lift to second position
         if (stage == 1) {
-            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.SECOND);
+            lift.setRampPosition(Lift.RampServoPosition.FLAT);
+            next();
         }
 
         /*
@@ -60,40 +61,46 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         // Turn based on vumark
         if (stage == 3) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                BasicGyroTurn.createTurn(this, 57);
+                BasicGyroTurn.createTurn(this, 55);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                BasicGyroTurn.createTurn(this, 123);
+                BasicGyroTurn.createTurn(this, 115);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                BasicGyroTurn.createTurn(this, 127);
+                BasicGyroTurn.createTurn(this, 125);
             }
         }
 
-        // Move lift down to first position to prepare for placing block
         if (stage == 4) {
-            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
+            EncoderDrive.createDrive(this, 200);
         }
 
-        // Insert block between rails
         if (stage == 5) {
-            EncoderDrive.createDrive(this, 650, true);
+            lift.setRampPosition(Lift.RampServoPosition.SCORE);
+            if (time.time() > 1) {
+                next();
+            }
         }
 
-        // Take lift down
         if (stage == 6) {
-            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
+            EncoderDrive.createDrive(this, -100);
         }
 
-        // Release block
         if (stage == 7) {
-            lift.setGlyphGrabberPosition(Lift.GripperServoPosition.OPEN);
+            EncoderDrive.createDrive(this, 220);
+        }
+
+        if (stage == 8) {
+            EncoderDrive.createDrive(this, -200);
+        }
+
+        if (stage == 9) {
+            lift.setRampPosition(Lift.RampServoPosition.HOME);
             next();
         }
 
-        // Back up and park
-        if (stage == 8) {
-            EncoderDrive.createDrive(this, -100);
+        if (stage == 10) {
+            BasicGyroTurn.createTurn(this, 90);
         }
 
         if (telemetryEnabled) {

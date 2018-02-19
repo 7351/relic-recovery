@@ -71,7 +71,7 @@ public class TeleOp extends StateMachineOpMode {
          * X - toggle between INROBOT and TELEOP
          */
 
-        if (teleOpUtils.gamepad1Controller.XOnce()) {
+        if (teleOpUtils.gamepad1Controller.YOnce()) {
             if (currentKickerPosition.equals(JewelKicker.ServoPosition.TELEOP)) {
                 currentKickerPosition = JewelKicker.ServoPosition.INROBOT;
             } else if (currentKickerPosition.equals(JewelKicker.ServoPosition.INROBOT)) {
@@ -108,8 +108,8 @@ public class TeleOp extends StateMachineOpMode {
         // 1 is full down
         // direction: right_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
-        float throttle = -gamepad1.right_stick_y;
-        float direction = gamepad1.right_stick_x;
+        float throttle = gamepad1.right_stick_y;
+        float direction = -gamepad1.right_stick_x;
 
         right = throttle - direction;
         left = throttle + direction;
@@ -132,18 +132,6 @@ public class TeleOp extends StateMachineOpMode {
 
 
         /*
-         * Glyph Controls
-         * When left trigger isn't pressed
-         * Y - Toggle grip
-         */
-
-        if (gamepad1.left_trigger == 0) {
-            if (teleOpUtils.gamepad1Controller.YOnce()) {
-                lift.toggleGrip();
-            }
-        }
-
-        /*
          * Ramp controls
          * When left trigger isn't pressed
          * Dpad up - go to next ramp position
@@ -160,6 +148,7 @@ public class TeleOp extends StateMachineOpMode {
             if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
                 lift.setRampPosition(Lift.RampServoPosition.SCORE);
             }
+
         }
 
         /*
@@ -204,6 +193,9 @@ public class TeleOp extends StateMachineOpMode {
         }
 
         if (stage == 1) {
+            if (targetPosition == LiftToPosition.LiftPosition.GROUND) {
+                lift.setRampPosition(Lift.RampServoPosition.HOME);
+            }
             runLiftToPosition = false;
             stage = 0;
         }
@@ -219,18 +211,23 @@ public class TeleOp extends StateMachineOpMode {
 
         if (teleOpUtils.gamepad1Controller.rightBumperOnce()) {
             intakeRunning = !intakeRunning;
-            intake.setPower(intakeRunning);
+            intake.setPower(Intake.Power.IN);
         }
 
         if (gamepad1.right_trigger != 0) {
             intake.setPosition(Intake.ServoPosition.OUT);
             if (!intakeRunning) {
-                intake.setPower(true);
+                if (gamepad1.left_trigger == 0) {
+                    intake.setPower(Intake.Power.IN);
+                } else {
+                    intake.setPower(Intake.Power.OUT);
+                }
+
             }
         } else {
             intake.setPosition(Intake.ServoPosition.IN);
             if (!intakeRunning) {
-                intake.setPower(false);
+                intake.setPower(Intake.Power.STOP);
             }
         }
 
@@ -245,11 +242,11 @@ public class TeleOp extends StateMachineOpMode {
          * X - Toggle for gripping
          */
 
-        double relicLiftJoystick = -teleOpUtils.scaleInput(gamepad2.left_stick_y);
+        double relicLiftJoystick = teleOpUtils.scaleInput(gamepad2.left_stick_y);
         relicGrabber.setPower(relicLiftJoystick);
 
         if (teleOpUtils.gamepad2Controller.AOnce()) {
-            relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.SQUARE);
+            relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.LIFTOUTGRAB);
         }
 
         if (teleOpUtils.gamepad2Controller.YOnce()) {
@@ -274,6 +271,8 @@ public class TeleOp extends StateMachineOpMode {
 
     @Override
     public void stop() {
-        intake.setPower(false);
+        if (intake != null) {
+            intake.setPower(Intake.Power.STOP);
+        }
     }
 }

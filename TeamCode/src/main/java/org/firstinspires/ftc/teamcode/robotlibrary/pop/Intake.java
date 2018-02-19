@@ -27,8 +27,8 @@ public class Intake {
     }
 
     public enum ServoPosition {
-        IN(0.01, 1),
-        OUT(0.85, 0.12);
+        IN(0.25, 0.75),
+        OUT(0.92, 0.07);
 
         private double[] position; // Array containing data
 
@@ -42,14 +42,36 @@ public class Intake {
 
     }
 
+    public enum Power {
+        OUT(-0.7),
+        STOP(0),
+        IN(0.7);
+
+        private double power;
+
+        Power(double power) {
+            this.power = power;
+        }
+
+        public double getPower() {return power;}
+
+    }
+
+    @Deprecated
     public void setPower(boolean on) {
+        /*
         if (on) {
             LeftIntakeCRServo.setPower(0.7);
             RightIntakeCRServo.setPower(0.7);
         } else {
             LeftIntakeCRServo.setPower(0);
             RightIntakeCRServo.setPower(0);
-        }
+        }*/
+    }
+
+    public void setPower(Power power) {
+        LeftIntakeCRServo.setPower(power.getPower());
+        RightIntakeCRServo.setPower(power.getPower());
     }
 
     public void setPosition(ServoPosition position) {

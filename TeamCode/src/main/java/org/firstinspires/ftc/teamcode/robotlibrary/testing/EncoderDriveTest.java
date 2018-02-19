@@ -39,7 +39,5 @@ public class EncoderDriveTest extends StateMachineOpMode {
         telemetry.addData("Stage", stage);
         telemetry.addData("F",  -driveTrain.LeftFrontMotor.getCurrentPosition() + " " + driveTrain.RightFrontMotor.getCurrentPosition());
         telemetry.addData("B",  driveTrain.LeftBackMotor.getCurrentPosition() + " " + driveTrain.RightBackMotor.getCurrentPosition());
-
-
     }
 }

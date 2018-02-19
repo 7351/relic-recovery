@@ -13,23 +13,19 @@ public class RelicGrabber {
 
     public RelicGrabber(StateMachineOpMode opMode) {
         TopGrabberServo = opMode.hardwareMap.servo.get("TopGrabberServo");
-        // Square - 0.11
-        // Up - 1 but step it so its slow
-
         BottomGrabberServo = opMode.hardwareMap.servo.get("BottomGrabberServo");
-        // Grip - 0.27
-        // Open - 0.83
 
         LiftMotor1 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor1");
         LiftMotor2 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor2");
 
         setBottomPosition(BottomCurrentPosition);
-        setTopPosition(TopGrabberPosition.SQUARE);
+        setTopPosition(TopGrabberPosition.UP);
     }
 
     public enum TopGrabberPosition {
         SQUARE(0.12),
-        UP(0.7);
+        LIFTOUTGRAB(0.81),
+        UP(0.02);
 
         private double position; // Array containing data
 
@@ -43,8 +39,8 @@ public class RelicGrabber {
     }
 
     public enum BottomGrabberPosition {
-        GRIP(0.27),
-        OPEN(0.83);
+        GRIP(0.57),
+        OPEN(0.27);
 
         private double position; // Array containing data
 
@@ -109,6 +105,14 @@ public class RelicGrabber {
         LiftToPosition.LiftPosition currentPosition = getClosestPosition();
         return LiftToPosition.LiftPosition.values()[Range.clip(currentPosition.ordinal() - 1, 0, LiftToPosition.LiftPosition.values().length - 1)];
 
+    }
+
+    public void stepTopUp() {
+        TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() - 0.02, 0, 1));
+    }
+
+    public void stepTopDown() {
+        TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() + 0.02, 0, 1));
     }
 
 }

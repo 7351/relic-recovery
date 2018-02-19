@@ -49,7 +49,7 @@ public class AutoTransitioner extends Thread {
     }
 
     public void setNewTransition(OpMode onStop, String transitionTo) {
-        synchronized (this) { //Synchronized to prevent wierd conditions
+        synchronized (this) { //Synchronized to prevent weird conditions
             this.onStop = onStop;
             this.transitionTo = transitionTo;
             this.opModeManager = (OpModeManagerImpl) onStop.internalOpModeServices; //Store OpModeManagerImpl

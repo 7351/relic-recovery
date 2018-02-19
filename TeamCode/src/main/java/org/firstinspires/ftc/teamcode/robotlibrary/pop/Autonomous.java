@@ -36,7 +36,6 @@ public abstract class Autonomous extends StateMachineOpMode {
         gyroUtils = GyroUtils.getInstance(this);
         intake = new Intake(this);
         lift = new Lift(this);
-        lift.setGlyphGrabberPosition(Lift.GripperServoPosition.GRIP);
 
         autoTransitioner = new AutoTransitioner();
         autoTransitioner.setNewTransition(this, "TeleOp");
