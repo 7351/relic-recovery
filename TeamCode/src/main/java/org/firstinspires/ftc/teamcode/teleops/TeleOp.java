@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robotlibrary.TeleOpUtils;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.BalanceOnStone;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.JewelKicker;
@@ -29,6 +30,7 @@ public class TeleOp extends StateMachineOpMode {
     private double slowPower = 0.5;
     private double delta = 0.01;
     private boolean runLiftToPosition = false;
+    private boolean balacing = false;
     private LiftToPosition.LiftPosition targetPosition;
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
     private JewelKicker.ServoPosition currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
@@ -123,8 +125,27 @@ public class TeleOp extends StateMachineOpMode {
         right = (float) teleOpUtils.scaleInput(right);
         left = (float) teleOpUtils.scaleInput(left);
 
-        driveTrain.powerLeft((slowMode ? left * slowPower : left));
-        driveTrain.powerRight((slowMode ? right * slowPower : right));
+        if (!balacing) {
+            driveTrain.powerLeft((slowMode ? left * slowPower : left));
+            driveTrain.powerRight((slowMode ? right * slowPower : right));
+        }
+
+        if (teleOpUtils.gamepad1Controller.BOnce()) {
+            balacing = !balacing;
+        }
+
+        if (balacing) {
+            BalanceOnStone.balance(this);
+        }
+
+        if (!balacing) {
+            BalanceOnStone.teardown();
+        }
+
+        if (stage == 2) {
+            stage = 0;
+            balacing = false;
+        }
 
         /* Controller 1 telemetry data */
         telemetry.addData("Drive power", "L: " + String.valueOf(left) + ", R: " + String.valueOf(right));
@@ -246,17 +267,35 @@ public class TeleOp extends StateMachineOpMode {
         relicGrabber.setPower(relicLiftJoystick);
 
         if (teleOpUtils.gamepad2Controller.AOnce()) {
-            relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.LIFTOUTGRAB);
+            if (gamepad2.right_trigger != 0 && gamepad2.left_trigger != 0) {
+                relicGrabber.stepTopDown();
+            } else {
+                if (gamepad2.right_trigger == 0) {
+                    relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.SQUARECLOSE);
+                } else {
+                    relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.SQUAREFAR);
+                }
+            }
+
         }
 
         if (teleOpUtils.gamepad2Controller.YOnce()) {
-            relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.UP);
+            if (gamepad2.right_trigger != 0 && gamepad2.left_trigger != 0) {
+                relicGrabber.stepTopUp();
+            } else {
+                relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.UP);
+            }
+        }
+
+        if (teleOpUtils.gamepad2Controller.BOnce()) {
+            relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.HOME);
         }
 
         if (teleOpUtils.gamepad2Controller.XOnce()) {
             switch (relicGrabber.BottomCurrentPosition) {
                 case GRIP:
-                    if (!relicGrabber.TopCurrentPosition.equals(RelicGrabber.TopGrabberPosition.UP)) {
+                    if (relicGrabber.TopCurrentPosition.equals(RelicGrabber.TopGrabberPosition.SQUARECLOSE) ||
+                            relicGrabber.TopCurrentPosition.equals(RelicGrabber.TopGrabberPosition.SQUAREFAR)) {
                         relicGrabber.setBottomPosition(RelicGrabber.BottomGrabberPosition.OPEN);
                     }
                     break;
@@ -266,6 +305,7 @@ public class TeleOp extends StateMachineOpMode {
             }
         }
 
+        telemetry.addData("Top Relic Servo", relicGrabber.TopGrabberServo.getPosition());
 
     }
 

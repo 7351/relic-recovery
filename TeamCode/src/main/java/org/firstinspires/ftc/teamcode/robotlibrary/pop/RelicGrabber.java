@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.util.Range;
 public class RelicGrabber {
 
     private DcMotor LiftMotor1, LiftMotor2;
-    private Servo TopGrabberServo, BottomGrabberServo;
+    public Servo TopGrabberServo, BottomGrabberServo;
     public BottomGrabberPosition BottomCurrentPosition = BottomGrabberPosition.OPEN;
-    public TopGrabberPosition TopCurrentPosition = TopGrabberPosition.SQUARE;
+    public TopGrabberPosition TopCurrentPosition = TopGrabberPosition.SQUARECLOSE;
 
     public RelicGrabber(StateMachineOpMode opMode) {
         TopGrabberServo = opMode.hardwareMap.servo.get("TopGrabberServo");
@@ -23,9 +23,10 @@ public class RelicGrabber {
     }
 
     public enum TopGrabberPosition {
-        SQUARE(0.12),
-        LIFTOUTGRAB(0.81),
-        UP(0.02);
+        HOME(0),
+        SQUARECLOSE(0.97),
+        SQUAREFAR(0.79),
+        UP(0.4);
 
         private double position; // Array containing data
 
@@ -39,8 +40,8 @@ public class RelicGrabber {
     }
 
     public enum BottomGrabberPosition {
-        GRIP(0.57),
-        OPEN(0.27);
+        OPEN(0.67),
+        GRIP(0.27);
 
         private double position; // Array containing data
 
@@ -108,11 +109,11 @@ public class RelicGrabber {
     }
 
     public void stepTopUp() {
-        TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() - 0.02, 0, 1));
+        TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() - 0.01, 0, 1));
     }
 
     public void stepTopDown() {
-        TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() + 0.02, 0, 1));
+        TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() + 0.01, 0, 1));
     }
 
 }
