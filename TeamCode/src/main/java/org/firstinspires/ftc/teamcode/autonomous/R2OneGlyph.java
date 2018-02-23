@@ -82,7 +82,7 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         if (stage == 6) {
-            EncoderDrive.createDrive(this, 200);
+            EncoderDrive.createDrive(this, 120);
         }
 
         if (stage == 7) {

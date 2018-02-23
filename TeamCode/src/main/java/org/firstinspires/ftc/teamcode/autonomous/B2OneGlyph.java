@@ -82,7 +82,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         if (stage == 6) {
-            EncoderDrive.createDrive(this, 200);
+            EncoderDrive.createDrive(this, 90);
         }
 
         if (stage == 7) {

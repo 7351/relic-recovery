@@ -266,7 +266,7 @@ public class TeleOp extends StateMachineOpMode {
         double relicLiftJoystick = teleOpUtils.scaleInput(gamepad2.left_stick_y);
         relicGrabber.setPower(relicLiftJoystick);
 
-        if (teleOpUtils.gamepad2Controller.AOnce()) {
+        if (teleOpUtils.gamepad2Controller.A()) {
             if (gamepad2.right_trigger != 0 && gamepad2.left_trigger != 0) {
                 relicGrabber.stepTopDown();
             } else {

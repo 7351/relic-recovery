@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode.robotlibrary.pop;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 public class RelicGrabber {
 
     private DcMotor LiftMotor1, LiftMotor2;
+    private ElapsedTime time;
+    double deltaPosition = 0.025, deltaTime = 0.0005;
     public Servo TopGrabberServo, BottomGrabberServo;
     public BottomGrabberPosition BottomCurrentPosition = BottomGrabberPosition.OPEN;
     public TopGrabberPosition TopCurrentPosition = TopGrabberPosition.SQUARECLOSE;
@@ -20,6 +23,7 @@ public class RelicGrabber {
 
         setBottomPosition(BottomCurrentPosition);
         setTopPosition(TopGrabberPosition.UP);
+        time = new ElapsedTime();
     }
 
     public enum TopGrabberPosition {
@@ -61,7 +65,14 @@ public class RelicGrabber {
 
     public void setTopPosition(TopGrabberPosition position) {
         TopCurrentPosition = position;
-        TopGrabberServo.setPosition(position.getPosition());
+        if (!position.equals(TopGrabberPosition.SQUARECLOSE)) {
+            TopGrabberServo.setPosition(position.getPosition());
+        } else {
+            if (time.time() > deltaTime) {
+                TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() + deltaPosition, 0, TopGrabberPosition.SQUARECLOSE.position));
+                time.reset();
+            }
+        }
     }
 
     public void setPower(double power) {
