@@ -130,6 +130,13 @@ public class ActUponJewelKicker implements Routine {
         }
 
         if (stage == 6) {
+            kicker.setJewelKickerPosition(JewelKicker.ServoPosition.MIDDLEJEWELUP);
+            if (time.time() > 1) {
+                stage++;
+            }
+        }
+
+        if (stage == 7) {
             kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
             stage++;
         }
@@ -137,12 +144,12 @@ public class ActUponJewelKicker implements Routine {
 
     @Override
     public boolean isCompleted() {
-        if (stage >= 7) {
+        if (stage >= 8) {
             completed();
         } else {
             run();
         }
-        return stage >= 7;
+        return stage >= 8;
     }
 
     @Override
