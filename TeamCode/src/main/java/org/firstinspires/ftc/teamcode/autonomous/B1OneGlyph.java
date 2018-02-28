@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.serenegiant.media.Encoder;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 
@@ -101,6 +103,31 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
         if (stage == 10) {
             BasicGyroTurn.createTurn(this, 90);
+        }
+
+        if (stage == 11) {
+            intake.setPower(Intake.Power.IN);
+            intake.setPosition(Intake.ServoPosition.OUT);
+            EncoderDrive.createDrive(this, -1200);
+        }
+
+        if (stage == 12) {
+            if (time.time() < 0.75) {
+                driveTrain.powerRight(-0.45);
+            } else {
+                driveTrain.stopRobot();
+                next();
+            }
+        }
+
+        if (stage == 13) {
+            BasicGyroTurn.createTurn(this, 90);
+        }
+
+        if (stage == 14) {
+            if (time.time() > 1.5) {
+                next();
+            }
         }
 
         if (telemetryEnabled) {

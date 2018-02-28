@@ -75,12 +75,14 @@ android {
             ndk {
                 abiFilters "armeabi-v7a"
             }
+            multiDexKeepFile file('multidex.keep')
         }
         debug {
             debuggable true
             ndk {
                 abiFilters "armeabi-v7a"
             }
+            multiDexKeepFile file('multidex.keep')
         }
     }
 
@@ -92,6 +94,17 @@ android {
     sourceSets.main {
         jni.srcDirs = []
         jniLibs.srcDir rootProject.file('libs')
+    }
+
+    defaultConfig {
+        multiDexEnabled true
+    }
+
+    dexOptions {
+        jumboMode = true
+
+        // Avoid the OutOfMemoryError: GC overhead limit exceeded:
+        javaMaxHeapSize "4g"
     }
 }
 

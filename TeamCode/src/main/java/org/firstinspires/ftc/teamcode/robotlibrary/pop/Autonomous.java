@@ -20,6 +20,7 @@ public abstract class Autonomous extends StateMachineOpMode {
     public ColorUtils colorUtils;
     public GyroUtils gyroUtils;
     public JewelKicker kicker;
+    public DriveTrain driveTrain;
     public RelicRecoveryVuMark relicRecoveryVuMark;
     AutoTransitioner autoTransitioner;
 
@@ -36,6 +37,7 @@ public abstract class Autonomous extends StateMachineOpMode {
         gyroUtils = GyroUtils.getInstance(this);
         intake = new Intake(this);
         lift = new Lift(this);
+        driveTrain = new DriveTrain(this);
 
         autoTransitioner = new AutoTransitioner();
         autoTransitioner.setNewTransition(this, "TeleOp");

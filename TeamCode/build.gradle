@@ -20,8 +20,10 @@ dependencies {
     repositories {
         mavenCentral()
         jcenter()
+        maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
+        maven { url 'https://maven.google.com' }
+        mavenCentral()
     }
     compile 'com.suitbots:libsb:0.0.1'
     compile 'com.google.guava:guava:20.0'
-    //compile 'com.github.nisrulz:lantern:1.1.2'
 }

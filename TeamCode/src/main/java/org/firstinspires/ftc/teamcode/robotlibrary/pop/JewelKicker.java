@@ -27,7 +27,7 @@ public class JewelKicker {
         colorSensor.enableLed(true);
         colorRangeSensor = (LynxI2cColorRangeSensor) colorSensor;
 
-        setJewelKickerPosition(ServoPosition.INROBOT);
+        //setJewelKickerPosition(ServoPosition.INROBOT);
     }
 
     public enum ServoPosition {

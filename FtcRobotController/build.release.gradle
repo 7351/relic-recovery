@@ -6,4 +6,7 @@ dependencies {
     compile (name:'FtcCommon-release', ext: 'aar')
     compile (name:'Analytics-release', ext:'aar')
     compile (name:'WirelessP2p-release', ext:'aar')
+    compile (project(':libuvccamera')) {
+        exclude module: 'support-annotations'
+    }
 }
