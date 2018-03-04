@@ -27,10 +27,11 @@ public class RelicGrabber {
     }
 
     public enum TopGrabberPosition {
-        HOME(0),
+        HOME(0.1),
         SQUARECLOSE(0.97),
         SQUAREFAR(0.79),
-        UP(0.4);
+        SQUARE(0.9),
+        UP(0.3);
 
         private double position; // Array containing data
 
@@ -44,8 +45,8 @@ public class RelicGrabber {
     }
 
     public enum BottomGrabberPosition {
-        OPEN(0.67),
-        GRIP(0.27);
+        OPEN(0.45),
+        GRIP(0.83);
 
         private double position; // Array containing data
 

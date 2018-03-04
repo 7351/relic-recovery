@@ -26,4 +26,6 @@ dependencies {
     }
     compile 'com.suitbots:libsb:0.0.1'
     compile 'com.google.guava:guava:20.0'
+    compile project(':DogeCV')
+    compile project(':openCVLibrary320')
 }

@@ -108,26 +108,11 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         if (stage == 11) {
             intake.setPower(Intake.Power.IN);
             intake.setPosition(Intake.ServoPosition.OUT);
-            EncoderDrive.createDrive(this, -1200);
+            EncoderDrive.createDrive(this, -1300);
         }
 
         if (stage == 12) {
-            if (time.time() < 0.75) {
-                driveTrain.powerRight(-0.45);
-            } else {
-                driveTrain.stopRobot();
-                next();
-            }
-        }
-
-        if (stage == 13) {
-            BasicGyroTurn.createTurn(this, 90);
-        }
-
-        if (stage == 14) {
-            if (time.time() > 1.5) {
-                next();
-            }
+            EncoderDrive.createDrive(this,100, 0.25);
         }
 
         if (telemetryEnabled) {
