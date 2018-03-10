@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.pop;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,12 +12,14 @@ public class RelicGrabber {
     private ElapsedTime time;
     double deltaPosition = 0.025, deltaTime = 0.0005;
     public Servo TopGrabberServo, BottomGrabberServo;
+    public Servo RelicRackCRServo;
     public BottomGrabberPosition BottomCurrentPosition = BottomGrabberPosition.OPEN;
-    public TopGrabberPosition TopCurrentPosition = TopGrabberPosition.SQUARECLOSE;
+    public TopGrabberPosition TopCurrentPosition = TopGrabberPosition.UP;
 
     public RelicGrabber(StateMachineOpMode opMode) {
         TopGrabberServo = opMode.hardwareMap.servo.get("TopGrabberServo");
         BottomGrabberServo = opMode.hardwareMap.servo.get("BottomGrabberServo");
+        RelicRackCRServo = opMode.hardwareMap.servo.get("RelicRackCRServo");
 
         LiftMotor1 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor1");
         LiftMotor2 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor2");
@@ -24,12 +27,11 @@ public class RelicGrabber {
         setBottomPosition(BottomCurrentPosition);
         setTopPosition(TopGrabberPosition.UP);
         time = new ElapsedTime();
+        bringDownRack();
     }
 
     public enum TopGrabberPosition {
         HOME(0.1),
-        SQUARECLOSE(0.97),
-        SQUAREFAR(0.79),
         SQUARE(0.9),
         UP(0.3);
 
@@ -59,20 +61,41 @@ public class RelicGrabber {
         }
     }
 
+    public void bringDownRack() {
+        RelicRackCRServo.setPosition(0.97);
+    }
+
+    public void bringUpRack() {
+        RelicRackCRServo.setPosition(0.615);
+    }
+
+    public void rackMiddle() {
+        RelicRackCRServo.setPosition(0.8);
+    }
+
+    public void stepRackDown() {
+        RelicRackCRServo.setPosition(Range.clip(RelicRackCRServo.getPosition() + 0.01, 0.615, 0.97));
+    }
+
+    public void stepRackUp() {
+        RelicRackCRServo.setPosition(Range.clip(RelicRackCRServo.getPosition() - 0.01, 0.615, 0.97));
+    }
+
     public void setBottomPosition(BottomGrabberPosition position) {
         BottomCurrentPosition = position;
         BottomGrabberServo.setPosition(position.getPosition());
     }
 
     public void setTopPosition(TopGrabberPosition position) {
-        TopCurrentPosition = position;
-        if (!position.equals(TopGrabberPosition.SQUARECLOSE)) {
+        if (!position.equals(TopGrabberPosition.SQUARE)) {
             TopGrabberServo.setPosition(position.getPosition());
+            TopCurrentPosition = position;
         } else {
             if (time.time() > deltaTime) {
-                TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() + deltaPosition, 0, TopGrabberPosition.SQUARECLOSE.position));
+                TopGrabberServo.setPosition(Range.clip(TopGrabberServo.getPosition() + deltaPosition, 0, TopGrabberPosition.SQUARE.position));
                 time.reset();
             }
+            if (TopGrabberServo.getPosition() == TopGrabberPosition.SQUARE.position) TopCurrentPosition = position;
         }
     }
 
@@ -93,31 +116,6 @@ public class RelicGrabber {
     public int getAveragePosition() {
         int[] positions = getCurrentPositions();
         return (positions[0] + positions[1]) / 2;
-    }
-
-    public LiftToPosition.LiftPosition getClosestPosition() {
-        int currentPosition = getAveragePosition();
-        LiftToPosition.LiftPosition lowestOne = LiftToPosition.LiftPosition.FOURTH;
-        for (LiftToPosition.LiftPosition position : LiftToPosition.LiftPosition.values()) {
-            if (position.getPosition() < currentPosition) {
-                lowestOne = position;
-            }
-        }
-        if (currentPosition < LiftToPosition.LiftPosition.GROUND.getPosition()) {
-            lowestOne = LiftToPosition.LiftPosition.GROUND;
-        }
-        return lowestOne;
-    }
-
-    public LiftToPosition.LiftPosition getPositionAbove() {
-        LiftToPosition.LiftPosition currentPosition = getClosestPosition();
-        return LiftToPosition.LiftPosition.values()[Range.clip(currentPosition.ordinal() + 1, 0, LiftToPosition.LiftPosition.values().length - 1)];
-    }
-
-    public LiftToPosition.LiftPosition getPositionBelow() {
-        LiftToPosition.LiftPosition currentPosition = getClosestPosition();
-        return LiftToPosition.LiftPosition.values()[Range.clip(currentPosition.ordinal() - 1, 0, LiftToPosition.LiftPosition.values().length - 1)];
-
     }
 
     public void stepTopUp() {

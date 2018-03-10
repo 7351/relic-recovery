@@ -27,8 +27,8 @@ public class Intake {
     }
 
     public enum ServoPosition {
-        IN(0.34, 0.75),
-        OUT(0.89, 0.12);
+        IN(0.25, 1),
+        OUT(0.96, 0.2);
 
         private double[] position; // Array containing data
 

@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.serenegiant.media.Encoder;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
@@ -9,7 +8,6 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
-import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 
 /**
  * Created by Dynamic Signals on 10/10/2017.
@@ -17,6 +15,8 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 
 @Autonomous(name = "B1OneGlyph", group = "A-Team")
 public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.Autonomous {
+
+    boolean twoGlyph = false;
 
     @Override
     public void start() {
@@ -73,10 +73,12 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             }
         }
 
+        // Drive to the correct distance away from the cyrptobox
         if (stage == 4) {
             EncoderDrive.createDrive(this, 200);
         }
 
+        // Put the ramp up
         if (stage == 5) {
             lift.setRampPosition(Lift.RampServoPosition.SCORE);
             if (time.time() > 1) {
@@ -84,23 +86,28 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             }
         }
 
+        // Drive back to get ready to push back in
         if (stage == 6) {
             EncoderDrive.createDrive(this, -100);
         }
 
+        // Push back in
         if (stage == 7) {
             EncoderDrive.createDrive(this, 220);
         }
 
+        // Drive back out
         if (stage == 8) {
             EncoderDrive.createDrive(this, -200);
         }
 
+        // Put ramp down
         if (stage == 9) {
             lift.setRampPosition(Lift.RampServoPosition.HOME);
-            next();
+            if (twoGlyph) next();
         }
 
+        // Turn to face the pit of glyphs
         if (stage == 10) {
             BasicGyroTurn.createTurn(this, 90);
         }
@@ -112,7 +119,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         if (stage == 12) {
-            EncoderDrive.createDrive(this,100, 0.25);
+            EncoderDrive.createDrive(this, 100, 0.25);
         }
 
         if (telemetryEnabled) {
@@ -120,7 +127,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             telemetry.addData("Heading", gyroUtils.getHeading());
             telemetry.addData("Pitch", gyroUtils.getPitch());
             telemetry.addData("Roll", gyroUtils.getRoll());
-            telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown") );
+            telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown"));
 
         }
     }

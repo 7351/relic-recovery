@@ -258,33 +258,52 @@ public class TeleOp extends StateMachineOpMode {
         /*
          * Relic Scorer
          * Left Joystick - move lift out and in
-         * A - Put grabber down
-         * Y - Put grabber up
-         * X - Toggle for gripping
+         *
          */
 
         double relicLiftJoystick = teleOpUtils.scaleInput(gamepad2.left_stick_y);
         relicGrabber.setPower(relicLiftJoystick);
 
         if (teleOpUtils.gamepad2Controller.A()) {
-            if (gamepad2.right_trigger != 0 && gamepad2.left_trigger != 0) {
-                relicGrabber.stepTopDown();
-            } else {
-                if (gamepad2.right_trigger == 0) {
-                    relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.SQUARECLOSE);
-                } else {
-                    relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.SQUAREFAR);
+            if (!gamepad2.left_bumper) {
+                if (gamepad2.right_trigger != 0 && gamepad2.left_trigger != 0) {
+                    relicGrabber.stepTopDown();
+                } else if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0) {
+                    relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.SQUARE);
                 }
             }
 
         }
 
-        if (teleOpUtils.gamepad2Controller.YOnce()) {
-            if (gamepad2.right_trigger != 0 && gamepad2.left_trigger != 0) {
-                relicGrabber.stepTopUp();
-            } else {
-                relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.UP);
+        if (teleOpUtils.gamepad2Controller.leftBumper()) {
+            if (teleOpUtils.gamepad2Controller.A()) { // Bring down
+                relicGrabber.bringUpRack();
             }
+
+            if (teleOpUtils.gamepad2Controller.Y()) { // Bring up
+                relicGrabber.bringDownRack();
+            }
+        }
+
+        if (teleOpUtils.gamepad2Controller.left_trigger != 0 && teleOpUtils.gamepad2Controller.right_trigger == 0) {
+            if (teleOpUtils.gamepad2Controller.A()) { // Bring down
+                relicGrabber.stepRackDown();
+            }
+
+            if (teleOpUtils.gamepad2Controller.Y()) { // Bring up
+                relicGrabber.stepRackUp();
+            }
+        }
+
+        if (teleOpUtils.gamepad2Controller.YOnce()) {
+            if (!gamepad2.left_bumper) {
+                if (gamepad2.right_trigger != 0 && gamepad2.left_trigger != 0) {
+                    relicGrabber.stepTopUp();
+                } else if (gamepad2.right_trigger == 0 && gamepad2.left_trigger == 0) {
+                    relicGrabber.setTopPosition(RelicGrabber.TopGrabberPosition.UP);
+                }
+            }
+
         }
 
         if (teleOpUtils.gamepad2Controller.BOnce()) {
@@ -294,8 +313,7 @@ public class TeleOp extends StateMachineOpMode {
         if (teleOpUtils.gamepad2Controller.XOnce()) {
             switch (relicGrabber.BottomCurrentPosition) {
                 case GRIP:
-                    if (relicGrabber.TopCurrentPosition.equals(RelicGrabber.TopGrabberPosition.SQUARECLOSE) ||
-                            relicGrabber.TopCurrentPosition.equals(RelicGrabber.TopGrabberPosition.SQUAREFAR)) {
+                    if (relicGrabber.TopCurrentPosition.equals(RelicGrabber.TopGrabberPosition.SQUARE)) {
                         relicGrabber.setBottomPosition(RelicGrabber.BottomGrabberPosition.OPEN);
                     }
                     break;

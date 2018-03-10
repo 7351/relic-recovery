@@ -11,6 +11,7 @@
             <Servo name="JewelKickerX" port="2" />
             <Servo name="TopGrabberServo" port="4" />
             <Servo name="JewelKickerY" port="5"/>
+            <Servo name="RelicRackCRServo" port="1" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <LynxColorSensor name="JewelColorSensor" port="1" bus="0" />
         </LynxModule>
