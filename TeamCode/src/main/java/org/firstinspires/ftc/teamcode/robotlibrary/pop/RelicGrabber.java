@@ -25,7 +25,7 @@ public class RelicGrabber {
         LiftMotor2 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor2");
 
         setBottomPosition(BottomCurrentPosition);
-        setTopPosition(TopGrabberPosition.UP);
+        setTopPosition(TopGrabberPosition.HOME);
         time = new ElapsedTime();
         bringDownRack();
     }
@@ -47,7 +47,7 @@ public class RelicGrabber {
     }
 
     public enum BottomGrabberPosition {
-        OPEN(0.45),
+        OPEN(0.31),
         GRIP(0.83);
 
         private double position; // Array containing data

@@ -32,21 +32,18 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
                 relicRecoveryVuMark = RelicRecoveryVuMark.CENTER;
             }
-        }
-
-        // Move lift up to second position
-        if (stage == 1) {
-            lift.setRampPosition(Lift.RampServoPosition.FLAT);
-            next();
+            if (time.time() > 1) {
+                lift.setRampPosition(Lift.RampServoPosition.FLAT); // Set ramp position to flat
+            }
         }
 
         // Drive off platform
-        if (stage == 2) {
+        if (stage == 1) {
             EncoderDrive.createDrive(this, -1000, 0.35);
         }
 
         // Turn to be parallel with cryptobox
-        if (stage == 3) {
+        if (stage == 2) {
             BasicGyroTurn.createTurn(this, 90);
         }
 
@@ -56,7 +53,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
          * Right - -300
          */
         // Drive to distance depending on read vumark
-        if (stage == 4) {
+        if (stage == 3) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 EncoderDrive.createDrive(this, -500, 0.35);
             }
@@ -69,7 +66,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         // Turn based on vumark
-        if (stage == 5) {
+        if (stage == 4) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 BasicGyroTurn.createTurn(this, 152);
             }
@@ -81,30 +78,30 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             }
         }
 
-        if (stage == 6) {
+        if (stage == 5) {
             EncoderDrive.createDrive(this, 90);
         }
 
-        if (stage == 7) {
+        if (stage == 6) {
             lift.setRampPosition(Lift.RampServoPosition.SCORE);
             if (time.time() > 1) {
                 next();
             }
         }
 
-        if (stage == 8) {
+        if (stage == 7) {
             EncoderDrive.createDrive(this, -175);
         }
 
-        if (stage == 9) {
+        if (stage == 8) {
             EncoderDrive.createDrive(this, 220);
         }
 
-        if (stage == 10) {
+        if (stage == 9) {
             EncoderDrive.createDrive(this, -200);
         }
 
-        if (stage == 11) {
+        if (stage == 10) {
             lift.setRampPosition(Lift.RampServoPosition.HOME);
             next();
         }

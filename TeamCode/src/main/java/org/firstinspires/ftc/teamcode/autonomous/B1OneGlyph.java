@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.serenegiant.media.Encoder;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
@@ -34,12 +35,9 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
                 relicRecoveryVuMark = RelicRecoveryVuMark.RIGHT;
             }
-        }
-
-        // Lift up lift to second position
-        if (stage == 1) {
-            lift.setRampPosition(Lift.RampServoPosition.FLAT);
-            next();
+            if (time.time() > 1) {
+                lift.setRampPosition(Lift.RampServoPosition.FLAT); // Set ramp position to flat
+            }
         }
 
         /*
@@ -48,7 +46,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
          * Right - -1520
          */
         // Drive to distance depending on read vumark
-        if (stage == 2) {
+        if (stage == 1) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 EncoderDrive.createDrive(this, -1700, 0.35);
             }
@@ -61,7 +59,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         // Turn based on vumark
-        if (stage == 3) {
+        if (stage == 2) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 BasicGyroTurn.createTurn(this, 55);
             }
@@ -74,12 +72,12 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         // Drive to the correct distance away from the cyrptobox
-        if (stage == 4) {
+        if (stage == 3) {
             EncoderDrive.createDrive(this, 200);
         }
 
         // Put the ramp up
-        if (stage == 5) {
+        if (stage == 4) {
             lift.setRampPosition(Lift.RampServoPosition.SCORE);
             if (time.time() > 1) {
                 next();
@@ -87,39 +85,51 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         // Drive back to get ready to push back in
-        if (stage == 6) {
+        if (stage == 5) {
             EncoderDrive.createDrive(this, -100);
         }
 
         // Push back in
-        if (stage == 7) {
+        if (stage == 6) {
             EncoderDrive.createDrive(this, 220);
         }
 
         // Drive back out
-        if (stage == 8) {
+        if (stage == 7) {
             EncoderDrive.createDrive(this, -200);
         }
 
         // Put ramp down
-        if (stage == 9) {
+        if (stage == 8) {
             lift.setRampPosition(Lift.RampServoPosition.HOME);
             if (twoGlyph) next();
         }
 
         // Turn to face the pit of glyphs
-        if (stage == 10) {
+        if (stage == 9) {
             BasicGyroTurn.createTurn(this, 90);
         }
 
-        if (stage == 11) {
+        if (stage == 10) {
             intake.setPower(Intake.Power.IN);
             intake.setPosition(Intake.ServoPosition.OUT);
             EncoderDrive.createDrive(this, -1300);
         }
 
-        if (stage == 12) {
+        if (stage == 11) {
             EncoderDrive.createDrive(this, 100, 0.25);
+        }
+
+        if (stage == 12) {
+            EncoderDrive.createDrive(this, -100, 0.25);
+        }
+
+        if (stage == 13) {
+            BasicGyroTurn.createTurn(this, 90);
+        }
+
+        if (stage == 14) {
+            EncoderDrive.createDrive(this, 1300);
         }
 
         if (telemetryEnabled) {

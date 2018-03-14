@@ -1,25 +1,25 @@
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <Robot type="FirstInspires-FTC">
-    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ1443B1" parentModuleAddress="3">
+    <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ2LYOZ7" parentModuleAddress="3">
         <LynxModule name="Expansion Hub B" port="2">
             <NeveRest20Gearmotor name="LeftBackMotor" port="0" />
             <NeveRest20Gearmotor name="LeftFrontMotor" port="1" />
             <NeveRest20Gearmotor name="RightBackMotor" port="2" />
             <NeveRest20Gearmotor name="RightFrontMotor" port="3" />
             <ContinuousRotationServo name="LeftIntakeCRServo" port="0" />
-            <Servo name="LeftIntakePositionServo" port="3" />
-            <Servo name="JewelKickerX" port="2" />
-            <Servo name="TopGrabberServo" port="4" />
-            <Servo name="JewelKickerY" port="5"/>
             <Servo name="RelicRackCRServo" port="1" />
+            <Servo name="JewelKickerX" port="2" />
+            <Servo name="LeftIntakePositionServo" port="3" />
+            <Servo name="TopGrabberServo" port="4" />
+            <Servo name="JewelKickerY" port="5" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <LynxColorSensor name="JewelColorSensor" port="1" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub A" port="3">
             <NeveRest60Gearmotor name="RelicLiftMotor1" port="0" />
             <NeveRest60Gearmotor name="RelicLiftMotor2" port="1" />
-            <NeveRest40Gearmotor name="LiftMotor1" port="2" />
-            <NeveRest40Gearmotor name="LiftMotor2" port="3" />
+            <NeveRest40Gearmotor name="LiftMotor2" port="2" />
+            <NeveRest40Gearmotor name="LiftMotor1" port="3" />
             <Servo name="RampUpDown1" port="0" />
             <Servo name="RampUpDown2" port="1" />
             <Servo name="BottomGrabberServo" port="3" />
