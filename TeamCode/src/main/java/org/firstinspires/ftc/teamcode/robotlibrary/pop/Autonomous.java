@@ -21,7 +21,7 @@ public abstract class Autonomous extends StateMachineOpMode {
     public GyroUtils gyroUtils;
     public JewelKicker kicker;
     public DriveTrain driveTrain;
-    public RelicRecoveryVuMark relicRecoveryVuMark;
+    public RelicRecoveryVuMark relicRecoveryVuMark, initialVuMark;
     AutoTransitioner autoTransitioner;
 
     public void setAlliance(String alliance) {
@@ -57,6 +57,13 @@ public abstract class Autonomous extends StateMachineOpMode {
     @Override
     public void init_loop() {
         telemetry.addData("VuMark (Not Saved)", vuforiaSystem.getVuMark().toString().toLowerCase());
+    }
+
+    public void getVuMark() {
+        RelicRecoveryVuMark scannedVuMark = vuforiaSystem.getVuMark();
+        if (!scannedVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
+            relicRecoveryVuMark = scannedVuMark;
+        }
     }
 
     @Override

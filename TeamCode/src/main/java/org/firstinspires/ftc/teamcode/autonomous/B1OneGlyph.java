@@ -30,11 +30,8 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
         // Use Jewel Kicker with color and alliance and read vumark
         if (stage == 0) {
+            getVuMark();
             ActUponJewelKicker.doAction(this, kicker, alliance);
-            relicRecoveryVuMark = vuforiaSystem.getVuMark();
-            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.RIGHT;
-            }
             if (time.time() > 1) {
                 lift.setRampPosition(Lift.RampServoPosition.FLAT); // Set ramp position to flat
             }
@@ -47,6 +44,9 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
          */
         // Drive to distance depending on read vumark
         if (stage == 1) {
+            if (relicRecoveryVuMark == null) {
+                relicRecoveryVuMark = RelicRecoveryVuMark.RIGHT;
+            }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 EncoderDrive.createDrive(this, -1700, 0.35);
             }

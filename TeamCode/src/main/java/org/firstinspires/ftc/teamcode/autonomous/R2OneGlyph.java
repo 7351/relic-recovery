@@ -27,11 +27,8 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
         // Use Jewel Kicker with color and alliance and read vumark
         if (stage == 0) {
+            getVuMark();
             ActUponJewelKicker.doAction(this, kicker, alliance);
-            relicRecoveryVuMark = vuforiaSystem.getVuMark();
-            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.UNKNOWN)) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.LEFT;
-            }
             if (time.time() > 1) {
                 lift.setRampPosition(Lift.RampServoPosition.FLAT); // Set ramp position to flat
             }
@@ -54,6 +51,9 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
          */
         // Drive to appropriate positions based on read vumark
         if (stage == 3) {
+            if (relicRecoveryVuMark == null) {
+                relicRecoveryVuMark = RelicRecoveryVuMark.LEFT;
+            }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 EncoderDrive.createDrive(this, 400, 0.35);
             }
