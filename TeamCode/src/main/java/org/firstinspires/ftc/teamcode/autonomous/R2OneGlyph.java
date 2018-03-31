@@ -106,6 +106,8 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             next();
         }
 
+
+
         if (telemetryEnabled) {
             telemetry.addData("Stage", stage);
             telemetry.addData("Heading", gyroUtils.getHeading());

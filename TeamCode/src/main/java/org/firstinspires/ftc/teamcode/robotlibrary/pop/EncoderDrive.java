@@ -87,6 +87,74 @@ public class EncoderDrive implements Routine {
     }
 }
 
+class RoutineEncoderDrive implements Routine {
+
+    private static RoutineEncoderDrive instance;
+
+    private LegacyEncoderDrive drive;
+    private DriveTrain driveTrain;
+    private Autonomous autonomous;
+    private StateMachineRoutine stateMachineRoutine;
+
+    /*
+    This class is basically a wrapper for LegacyEncoderDrive in the new Routine format
+     */
+    
+    public static RoutineEncoderDrive createDrive(Autonomous autonomous, StateMachineRoutine stateMachineRoutine, int targetPosition) {
+        if (instance == null) {
+            instance = new RoutineEncoderDrive(autonomous, stateMachineRoutine, targetPosition);
+        }
+        instance.isCompleted();
+        return instance;
+    }
+
+    private RoutineEncoderDrive(Autonomous autonomous, StateMachineRoutine stateMachineRoutine, int targetPosition) {
+        this.autonomous = autonomous;
+        this.stateMachineRoutine = stateMachineRoutine;
+        driveTrain = autonomous.driveTrain;
+        drive = new LegacyEncoderDrive(autonomous.driveTrain, targetPosition, 0.35, false);
+    }
+
+    private int lastEncoder = 0;
+    private int stuckCounter = 0;
+
+    @Override
+    public void run() {
+        drive.run();
+    }
+
+    @Override
+    public boolean isCompleted() {
+        boolean completed = drive.isCompleted();
+        if (lastEncoder == driveTrain.RightFrontMotor.getCurrentPosition()) {
+            stuckCounter++;
+        } else {
+            stuckCounter = 0;
+        }
+        if (stuckCounter > 2) {
+            completed = true;
+        }
+        if (completed) {
+            completed();
+        } else {
+            run();
+        }
+        lastEncoder = driveTrain.RightFrontMotor.getCurrentPosition();
+        return completed;
+    }
+
+    @Override
+    public void completed() {
+        driveTrain.stopRobot();
+        stateMachineRoutine.next();
+        teardown();
+    }
+
+    public static void teardown() {
+        instance = null;
+    }
+}
+
 class LegacyEncoderDrive implements Routine {
 
     DriveTrain driveTrain;

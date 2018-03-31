@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.ScoreGlyph;
 
 /**
  * Created by Dynamic Signals on 10/10/2017.
@@ -15,6 +16,8 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 
 @Autonomous(name = "R1OneGlyph", group = "A-Team")
 public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.Autonomous {
+
+    boolean twoGlyph = false;
 
     @Override
     public void start() {
@@ -69,34 +72,10 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         if (stage == 3) {
-            EncoderDrive.createDrive(this, 200);
+            ScoreGlyph.scoreGlyph(this);
         }
 
-        if (stage == 4) {
-            lift.setRampPosition(Lift.RampServoPosition.SCORE);
-            if (time.time() > 1) {
-                next();
-            }
-        }
-
-        if (stage == 5) {
-            EncoderDrive.createDrive(this, -100);
-        }
-
-        if (stage == 6) {
-            EncoderDrive.createDrive(this, 220);
-        }
-
-        if (stage == 7) {
-            EncoderDrive.createDrive(this, -200);
-        }
-
-        if (stage == 8) {
-            lift.setRampPosition(Lift.RampServoPosition.HOME);
-            next();
-        }
-
-        if (stage == 9) {
+        if (stage == 4 && twoGlyph) {
             BasicGyroTurn.createTurn(this, 90);
         }
 
