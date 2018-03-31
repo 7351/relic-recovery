@@ -1,5 +1,2 @@
 include ':FtcRobotController'
 include ':TeamCode'
-include ':libuvccamera'
-include ':DogeCV'
-include ':openCVLibrary320'

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 public class RelicGrabber {
 
-    private DcMotor LiftMotor1, LiftMotor2;
+    private DcMotor LiftMotor;
     private ElapsedTime time;
     double deltaPosition = 0.025, deltaTime = 0.0005;
     public Servo TopGrabberServo, BottomGrabberServo;
@@ -21,8 +21,7 @@ public class RelicGrabber {
         BottomGrabberServo = opMode.hardwareMap.servo.get("BottomGrabberServo");
         RelicRackCRServo = opMode.hardwareMap.servo.get("RelicRackCRServo");
 
-        LiftMotor1 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor1");
-        LiftMotor2 = opMode.hardwareMap.dcMotor.get("RelicLiftMotor2");
+        LiftMotor = opMode.hardwareMap.dcMotor.get("RelicLiftMotor");
 
         setBottomPosition(BottomCurrentPosition);
         setTopPosition(TopGrabberPosition.HOME);
@@ -100,22 +99,7 @@ public class RelicGrabber {
     }
 
     public void setPower(double power) {
-        LiftMotor1.setPower(power); // Give power to both motors
-        LiftMotor2.setPower(power);
-    }
-
-    public void setMode(DcMotor.RunMode mode) {
-        LiftMotor1.setMode(mode);
-        LiftMotor2.setMode(mode);
-    }
-
-    public int[] getCurrentPositions() {
-        return new int[]{LiftMotor1.getCurrentPosition(), LiftMotor2.getCurrentPosition()};
-    }
-
-    public int getAveragePosition() {
-        int[] positions = getCurrentPositions();
-        return (positions[0] + positions[1]) / 2;
+        LiftMotor.setPower(power); // Give power to both motors
     }
 
     public void stepTopUp() {

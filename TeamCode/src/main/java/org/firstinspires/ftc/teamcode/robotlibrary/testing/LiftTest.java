@@ -56,7 +56,7 @@ public class LiftTest extends StateMachineOpMode {
         }
 
         telemetry.addData("Stage", stage);
-        telemetry.addData("Counts", lift.getAveragePosition());
+        telemetry.addData("Counts", lift.LiftMotor.getCurrentPosition());
 
     }
 }

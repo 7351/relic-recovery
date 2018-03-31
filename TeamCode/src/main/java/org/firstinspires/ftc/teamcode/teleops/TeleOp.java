@@ -190,12 +190,12 @@ public class TeleOp extends StateMachineOpMode {
             lift.setPower(leftStickValueY * 0.3);
         }
         if (leftStickValueY > 0.15) { // Up
-            if (lift.getAveragePosition() < LiftToPosition.LiftPosition.TOP.getPosition()) {
+            if (lift.LiftMotor.getCurrentPosition() < LiftToPosition.LiftPosition.TOP.getPosition()) {
                 lift.setPower(leftStickValueY);
             }
         }
 
-        if (lift.getAveragePosition() > LiftToPosition.LiftPosition.TOP.getPosition() + 60) {
+        if (lift.LiftMotor.getCurrentPosition() > LiftToPosition.LiftPosition.TOP.getPosition() + 60) {
             lift.setPower(-0.1);
         }
 
@@ -222,7 +222,7 @@ public class TeleOp extends StateMachineOpMode {
         }
 
         telemetry.addData("Lift Position", lift.getClosestPosition().toString());
-        telemetry.addData("Lift Encoder", "Avg: " + lift.getAveragePosition() + " 1: " + -lift.getCurrentPositions()[0] + " 2: " + lift.getCurrentPositions()[1]);
+        telemetry.addData("Lift Encoder", lift.LiftMotor.getCurrentPosition());
 
 
         /*

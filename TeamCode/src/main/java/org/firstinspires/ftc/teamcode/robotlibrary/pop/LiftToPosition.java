@@ -66,7 +66,7 @@ public class LiftToPosition implements Routine {
 
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        difference = position.getPosition() - lift.getAveragePosition();
+        difference = position.getPosition() - lift.LiftMotor.getCurrentPosition();
         // Positive (must go up) (positive power)
         // Negative (must go down) (negative power)
 
@@ -85,7 +85,7 @@ public class LiftToPosition implements Routine {
     @Override
     public boolean isCompleted() {
         boolean completed = false;
-        int current = lift.getAveragePosition();
+        int current = lift.LiftMotor.getCurrentPosition();
         if (difference < 0) { // We need to go down
             if (current <= targetPosition.getPosition()) completed = true;
         } else { // We need to go up

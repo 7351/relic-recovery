@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.pop;
 
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -12,16 +12,16 @@ public class Intake {
 
     StateMachineOpMode opMode;
     public Servo LeftPositionServo, RightPositionServo;
-    public CRServo LeftIntakeCRServo, RightIntakeCRServo;
+    public DcMotor LeftIntakeMotor, RightIntakeMotor;
 
     public Intake(StateMachineOpMode opMode) {
         this.opMode = opMode;
 
         LeftPositionServo = opMode.hardwareMap.servo.get("LeftIntakePositionServo");
         RightPositionServo = opMode.hardwareMap.servo.get("RightIntakePositionServo");
-        LeftIntakeCRServo = opMode.hardwareMap.crservo.get("LeftIntakeCRServo");
-        RightIntakeCRServo = opMode.hardwareMap.crservo.get("RightIntakeCRServo");
-        RightIntakeCRServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        LeftIntakeMotor = opMode.hardwareMap.dcMotor.get("LeftIntakeMotor");
+        RightIntakeMotor = opMode.hardwareMap.dcMotor.get("RightIntakeMotor");
+        RightIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         setPosition(ServoPosition.IN);
     }
@@ -61,17 +61,17 @@ public class Intake {
     public void setPower(boolean on) {
         /*
         if (on) {
-            LeftIntakeCRServo.setPower(0.7);
-            RightIntakeCRServo.setPower(0.7);
+            LeftIntakeMotor.setPower(0.7);
+            RightIntakeMotor.setPower(0.7);
         } else {
-            LeftIntakeCRServo.setPower(0);
-            RightIntakeCRServo.setPower(0);
+            LeftIntakeMotor.setPower(0);
+            RightIntakeMotor.setPower(0);
         }*/
     }
 
     public void setPower(Power power) {
-        LeftIntakeCRServo.setPower(power.getPower());
-        RightIntakeCRServo.setPower(power.getPower());
+        LeftIntakeMotor.setPower(power.getPower());
+        RightIntakeMotor.setPower(power.getPower());
     }
 
     public void setPosition(ServoPosition position) {

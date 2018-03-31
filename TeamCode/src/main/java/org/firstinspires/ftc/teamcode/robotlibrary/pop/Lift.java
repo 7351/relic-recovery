@@ -13,7 +13,7 @@ public class Lift {
 
     private StateMachineOpMode opMode;
 
-    public DcMotor LiftMotor1, LiftMotor2;
+    public DcMotor LiftMotor;
     public Servo RampUpDown1, RampUpDown2;
 
     private RampServoPosition currentRampPosition;
@@ -22,16 +22,12 @@ public class Lift {
 
     public Lift(StateMachineOpMode opMode) {
         this.opMode = opMode;
-        LiftMotor1 = opMode.hardwareMap.dcMotor.get("LiftMotor1");
-        LiftMotor2 = opMode.hardwareMap.dcMotor.get("LiftMotor2"); // Grab from hardwaremap
+        LiftMotor = opMode.hardwareMap.dcMotor.get("LiftMotor2"); // Grab from hardwaremap
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        LiftMotor2.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        LiftMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // We want the motor to brake when we give it 0 power
-        LiftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); // We want the motor to brake when we give it 0 power
 
         RampUpDown1 = opMode.hardwareMap.servo.get("RampUpDown1");
         RampUpDown2 = opMode.hardwareMap.servo.get("RampUpDown2");
@@ -40,26 +36,15 @@ public class Lift {
     }
 
     public void setPower(double power) {
-        LiftMotor1.setPower(power); // Give power to both motors
-        LiftMotor2.setPower(power);
+        LiftMotor.setPower(power); // Give power to both motors
     }
 
     public void setMode(DcMotor.RunMode mode) {
-        LiftMotor1.setMode(mode);
-        LiftMotor2.setMode(mode);
-    }
-
-    public int[] getCurrentPositions() {
-        return new int[]{LiftMotor1.getCurrentPosition(), -LiftMotor2.getCurrentPosition()};
-    }
-
-    public int getAveragePosition() {
-        int[] positions = getCurrentPositions();
-        return (positions[0] + positions[1]) / 2;
+        LiftMotor.setMode(mode);
     }
 
     public LiftToPosition.LiftPosition getClosestPosition() {
-        int currentPosition = getAveragePosition();
+        int currentPosition = LiftMotor.getCurrentPosition();
         LiftToPosition.LiftPosition lowestOne = LiftToPosition.LiftPosition.FOURTH;
         for (LiftToPosition.LiftPosition position: LiftToPosition.LiftPosition.values()) {
             if (position.getPosition() < currentPosition) {

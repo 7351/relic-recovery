@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.robotcontroller.internal;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -39,8 +40,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.SurfaceTexture;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
@@ -51,13 +50,11 @@ import android.support.annotation.NonNull;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.Surface;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.blocks.ftcrobotcontroller.BlocksActivity;
 import com.google.blocks.ftcrobotcontroller.ProgrammingModeActivity;
@@ -93,14 +90,6 @@ import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.wifi.NetworkConnectionFactory;
 import com.qualcomm.robotcore.wifi.NetworkType;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
-import com.serenegiant.common.BaseActivity;
-import com.serenegiant.usb.CameraDialog;
-import com.serenegiant.usb.IButtonCallback;
-import com.serenegiant.usb.IFrameCallback;
-import com.serenegiant.usb.IStatusCallback;
-import com.serenegiant.usb.USBMonitor;
-import com.serenegiant.usb.UVCCamera;
-import com.serenegiant.widget.SimpleUVCCameraTextureView;
 
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
@@ -120,21 +109,14 @@ import org.firstinspires.ftc.robotcore.internal.webserver.RobotControllerWebInfo
 import org.firstinspires.ftc.robotcore.internal.webserver.WebServer;
 import org.firstinspires.inspection.RcInspectionActivity;
 
-import java.nio.ByteBuffer;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-//modified for turbo: removed blockly imports
-// modified for turbo: removed ProgramAndManageActivity import
-//modified for turbo: removed 2 webserver imports
-
 @SuppressWarnings("WeakerAccess")
-public class FtcRobotControllerActivity extends BaseActivity implements CameraDialog.CameraDialogParent {
+public class FtcRobotControllerActivity extends Activity
+{
     public static final String TAG = "RCActivity";
-
-    public String getTag() {
-        return TAG;
-    }
+    public String getTag() { return TAG; }
 
     private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
     private static final int NUM_GAMEPADS = 2;
@@ -171,17 +153,6 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
 
     protected FtcEventLoop eventLoop;
     protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
-
-    /* UVC Camera Mod */
-    private final Object mSync = new Object();
-    // for accessing USB and USB camera
-    private USBMonitor mUSBMonitor;
-    public static UVCCamera mUVCCamera;
-    public SimpleUVCCameraTextureView mUVCCameraView;
-    // for open&start / stop&close camera preview
-    private ImageButton mCameraButton;
-    private Surface mPreviewSurface;
-    /* End */
 
     protected class RobotRestarter implements Restarter {
 
@@ -226,13 +197,14 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
 
     protected void passReceivedUsbAttachmentsToEventLoop() {
         if (this.eventLoop != null) {
-            for (; ; ) {
+            for (;;) {
                 UsbDevice usbDevice = receivedUsbAttachmentNotifications.poll();
                 if (usbDevice == null)
                     break;
                 this.eventLoop.onUsbDeviceAttached(usbDevice);
             }
-        } else {
+        }
+        else {
             // Paranoia: we don't want the pending list to grow without bound when we don't
             // (yet) have an event loop
             while (receivedUsbAttachmentNotifications.size() > 100) {
@@ -259,7 +231,8 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
                 RobotLog.vv(TAG, "disabling Dragonboard and exiting robot controller");
                 DragonboardLynxDragonboardIsPresentPin.getInstance().setState(false);
                 AppUtil.getInstance().finishRootActivityAndExitApp();
-            } else {
+            }
+            else {
                 // Double-sure check that we can talk to the DB over the serial TTY
                 DragonboardLynxDragonboardIsPresentPin.getInstance().setState(true);
             }
@@ -332,14 +305,6 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
         ServiceController.startService(FtcRobotControllerWatchdogService.class);
         bindToService();
         logPackageVersions();
-
-        /* UVC Camera Mod) */
-        mUVCCameraView = (SimpleUVCCameraTextureView) findViewById(R.id.UVCCameraTextureView1);
-        mUVCCameraView.setAspectRatio(UVCCamera.DEFAULT_PREVIEW_WIDTH / (float) UVCCamera.DEFAULT_PREVIEW_HEIGHT);
-
-        mUSBMonitor = new USBMonitor(this, mOnDeviceConnectListener);
-        /* End */
-
     }
 
     protected UpdateUI createUpdateUI() {
@@ -376,16 +341,6 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
                 return false;
             }
         });
-
-        /* UVC Camera Mod */
-        mUSBMonitor.register();
-        synchronized (mSync) {
-            if (mUVCCamera != null) {
-                mUVCCamera.startPreview();
-            }
-        }
-        /* End */
-
     }
 
     @Override
@@ -409,16 +364,6 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
         // called surprisingly often. So, we don't actually do much here.
         super.onStop();
         RobotLog.vv(TAG, "onStop()");
-        /* UVC Camera Mod */
-        synchronized (mSync) {
-            if (mUVCCamera != null) {
-                mUVCCamera.stopPreview();
-            }
-            if (mUSBMonitor != null) {
-                mUSBMonitor.unregister();
-            }
-        }
-        /* End */
     }
 
     @Override
@@ -439,171 +384,7 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
 
         preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
         RobotLog.cancelWriteLogcatToDisk();
-        /* UVC Camera Mod */
-        synchronized (mSync) {
-            releaseCamera();
-            if (mToast != null) {
-                mToast.cancel();
-                mToast = null;
-            }
-            if (mUSBMonitor != null) {
-                mUSBMonitor.destroy();
-                mUSBMonitor = null;
-            }
-        }
-        mUVCCameraView = null;
-        mCameraButton = null;
-        /* End */
     }
-
-    /* UVC Camera Mod */
-    private Toast mToast;
-
-    private final USBMonitor.OnDeviceConnectListener mOnDeviceConnectListener = new USBMonitor.OnDeviceConnectListener() {
-        @Override
-        public void onAttach(final UsbDevice device) {
-            Toast.makeText(context, "USB_DEVICE_ATTACHED", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onConnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock, final boolean createNew) {
-            releaseCamera();
-            queueEvent(new Runnable() {
-                @Override
-                public void run() {
-                    final UVCCamera camera = new UVCCamera();
-                    camera.open(ctrlBlock);
-                    camera.setStatusCallback(new IStatusCallback() {
-                        @Override
-                        public void onStatus(final int statusClass, final int event, final int selector,
-                                             final int statusAttribute, final ByteBuffer data) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    final Toast toast = Toast.makeText(context, "onStatus(statusClass=" + statusClass
-                                            + "; " +
-                                            "event=" + event + "; " +
-                                            "selector=" + selector + "; " +
-                                            "statusAttribute=" + statusAttribute + "; " +
-                                            "data=...)", Toast.LENGTH_SHORT);
-                                    synchronized (mSync) {
-                                        if (mToast != null) {
-                                            mToast.cancel();
-                                        }
-                                        toast.show();
-                                        mToast = toast;
-                                    }
-                                }
-                            });
-                        }
-                    });
-                    camera.setButtonCallback(new IButtonCallback() {
-                        @Override
-                        public void onButton(final int button, final int state) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    final Toast toast = Toast.makeText(context, "onButton(button=" + button + "; " +
-                                            "state=" + state + ")", Toast.LENGTH_SHORT);
-                                    synchronized (mSync) {
-                                        if (mToast != null) {
-                                            mToast.cancel();
-                                        }
-                                        mToast = toast;
-                                        toast.show();
-                                    }
-                                }
-                            });
-                        }
-                    });
-//					camera.setPreviewTexture(camera.getSurfaceTexture());
-                    if (mPreviewSurface != null) {
-                        mPreviewSurface.release();
-                        mPreviewSurface = null;
-                    }
-                    try {
-                        camera.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.FRAME_FORMAT_MJPEG);
-                    } catch (final IllegalArgumentException e) {
-                        // fallback to YUV mode
-                        try {
-                            camera.setPreviewSize(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, UVCCamera.DEFAULT_PREVIEW_MODE);
-                        } catch (final IllegalArgumentException e1) {
-                            camera.destroy();
-                            return;
-                        }
-                    }
-                    final SurfaceTexture st = mUVCCameraView.getSurfaceTexture();
-                    if (st != null) {
-                        mPreviewSurface = new Surface(st);
-                        camera.setPreviewDisplay(mPreviewSurface);
-                        //camera.setFrameCallback(mIFrameCallback, UVCCamera.PIXEL_FORMAT_RGB565/*UVCCamera.PIXEL_FORMAT_NV21*/);
-                        camera.startPreview();
-                    }
-                    synchronized (mSync) {
-                        mUVCCamera = camera;
-                    }
-                }
-            }, 0);
-        }
-
-        @Override
-        public void onDisconnect(final UsbDevice device, final USBMonitor.UsbControlBlock ctrlBlock) {
-            // XXX you should check whether the coming device equal to camera device that currently using
-            releaseCamera();
-        }
-
-        @Override
-        public void onDettach(final UsbDevice device) {
-            Toast.makeText(context, "USB_DEVICE_DETACHED", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onCancel(final UsbDevice device) {
-        }
-    };
-
-    private synchronized void releaseCamera() {
-        synchronized (mSync) {
-            if (mUVCCamera != null) {
-                try {
-                    mUVCCamera.setStatusCallback(null);
-                    mUVCCamera.setButtonCallback(null);
-                    mUVCCamera.close();
-                    mUVCCamera.destroy();
-                } catch (final Exception e) {
-                    //
-                }
-                mUVCCamera = null;
-            }
-            if (mPreviewSurface != null) {
-                mPreviewSurface.release();
-                mPreviewSurface = null;
-            }
-        }
-    }
-
-    /**
-     * to access from CameraDialog
-     *
-     * @return
-     */
-    @Override
-    public USBMonitor getUSBMonitor() {
-        return mUSBMonitor;
-    }
-
-    @Override
-    public void onDialogResult(boolean canceled) {
-        if (canceled) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // FIXME
-                }
-            });
-        }
-    }
-    /* End */
 
     protected void bindToService() {
         readNetworkType();
@@ -644,13 +425,13 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
+    public void onWindowFocusChanged(boolean hasFocus){
         super.onWindowFocusChanged(hasFocus);
         // When the window loses focus (e.g., the action overflow is shown),
         // cancel any pending hide action. When the window gains focus,
         // hide the system UI.
         if (hasFocus) {
-            if (ImmersiveMode.apiOver19()) {
+            if (ImmersiveMode.apiOver19()){
                 // Immersive flag only works on API 19 and above.
                 immersion.hideSystemUI();
             }
@@ -670,15 +451,7 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_configure_camera) {
-            synchronized (mSync) {
-                if (mUVCCamera == null) {
-                    CameraDialog.showDialog(FtcRobotControllerActivity.this);
-                } else {
-                    releaseCamera();
-                }
-            }
-        } else if (id == R.id.action_programming_mode) {
+        if (id == R.id.action_programming_mode) {
             if (cfgFileMgr.getActiveConfig().isNoConfig()) {
                 // Tell the user they must configure the robot before starting programming mode.
                 // TODO: as we are no longer truly 'modal' this warning should be adapted
@@ -700,31 +473,37 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
             Intent inspectionModeIntent = new Intent(AppUtil.getDefContext(), RcInspectionActivity.class);
             startActivity(inspectionModeIntent);
             return true;
-        } else if (id == R.id.action_blocks) {
+        }
+        else if (id == R.id.action_blocks) {
             Intent blocksIntent = new Intent(AppUtil.getDefContext(), BlocksActivity.class);
             startActivity(blocksIntent);
             return true;
-        } else if (id == R.id.action_restart_robot) {
+        }
+        else if (id == R.id.action_restart_robot) {
             dimmer.handleDimTimer();
             AppUtil.getInstance().showToast(UILocation.BOTH, context, context.getString(R.string.toastRestartingRobot));
             requestRobotRestart();
             return true;
-        } else if (id == R.id.action_configure_robot) {
+        }
+        else if (id == R.id.action_configure_robot) {
             EditParameters parameters = new EditParameters();
             Intent intentConfigure = new Intent(AppUtil.getDefContext(), FtcLoadFileActivity.class);
             parameters.putIntent(intentConfigure);
             startActivityForResult(intentConfigure, RequestCode.CONFIGURE_ROBOT_CONTROLLER.ordinal());
-        } else if (id == R.id.action_settings) {
+        }
+        else if (id == R.id.action_settings) {
             // historical: this once erroneously used FTC_CONFIGURE_REQUEST_CODE_ROBOT_CONTROLLER
             Intent settingsIntent = new Intent(AppUtil.getDefContext(), FtcRobotControllerSettingsActivity.class);
             startActivityForResult(settingsIntent, RequestCode.SETTINGS_ROBOT_CONTROLLER.ordinal());
             return true;
-        } else if (id == R.id.action_about) {
+        }
+        else if (id == R.id.action_about) {
             Intent intent = new Intent(AppUtil.getDefContext(), AboutActivity.class);
             intent.putExtra(LaunchActivityConstantsList.ABOUT_ACTIVITY_CONNECTION_TYPE, networkType);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_exit_app) {
+        }
+        else if (id == R.id.action_exit_app) {
             finish();
             return true;
         }
@@ -837,24 +616,10 @@ public class FtcRobotControllerActivity extends BaseActivity implements CameraDi
     }
 
     protected class SharedPreferencesListener implements SharedPreferences.OnSharedPreferenceChangeListener {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        @Override public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals(context.getString(R.string.pref_app_theme))) {
                 ThemedActivity.restartForAppThemeChange(getTag(), getString(R.string.appThemeChangeRestartNotifyRC));
             }
         }
     }
-
-    // if you need frame data as byte array on Java side, you can use this callback method with UVCCamera#setFrameCallback
-    // if you need to create Bitmap in IFrameCallback, please refer following snippet.
-    public final static Bitmap bitmap = Bitmap.createBitmap(UVCCamera.DEFAULT_PREVIEW_WIDTH, UVCCamera.DEFAULT_PREVIEW_HEIGHT, Bitmap.Config.RGB_565);
-    private final IFrameCallback mIFrameCallback = new IFrameCallback() {
-        @Override
-        public void onFrame(final ByteBuffer frame) {
-            frame.clear();
-            synchronized (bitmap) {
-                bitmap.copyPixelsFromBuffer(frame);
-            }
-        }
-    };
 }

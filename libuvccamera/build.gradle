@@ -82,7 +82,7 @@ task ndkBuild(type: Exec, description: 'Compile JNI source via NDK') {
 task ndkClean(type: Exec, description: 'clean JNI libraries') {
 	println('executing ndkBuild clean')
 	def ndkBuildPath = getNdkBuildPath();
-	commandLine ndkBuildPath, 'clean', '-C', file('src/main').absolutePath
+	commandLine ndkBuildPath, 'clean', '-C', file('src/main/jni').absolutePath
 }
 
 clean.dependsOn 'ndkClean'
