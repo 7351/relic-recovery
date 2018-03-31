@@ -174,7 +174,9 @@ public class TeleOp extends StateMachineOpMode {
         if (gamepad1.right_stick_button) {
             if (!rightButtonClicked) {
                 if (gamepad1.left_trigger == 0) {
-                    if (lift.currentRampPosition.equals(Lift.RampServoPosition.HOME) || lift.currentRampPosition.equals(Lift.RampServoPosition.INBETWEEN)) {
+                    if (lift.currentRampPosition.equals(Lift.RampServoPosition.HOME)
+                            || lift.currentRampPosition.equals(Lift.RampServoPosition.INBETWEEN)
+                            || lift.currentRampPosition.equals(Lift.RampServoPosition.FLAT)) {
                         lift.setRampPosition(Lift.RampServoPosition.SCORE);
                     } else if (lift.currentRampPosition.equals(Lift.RampServoPosition.SCORE)) {
                         lift.setRampPosition(Lift.RampServoPosition.HOME);
