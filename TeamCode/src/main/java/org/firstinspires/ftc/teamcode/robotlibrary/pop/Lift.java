@@ -16,13 +16,13 @@ public class Lift {
     public DcMotor LiftMotor;
     public Servo RampUpDown1, RampUpDown2;
 
-    private RampServoPosition currentRampPosition;
+    public RampServoPosition currentRampPosition;
 
     private double delta = 0.015;
 
     public Lift(StateMachineOpMode opMode) {
         this.opMode = opMode;
-        LiftMotor = opMode.hardwareMap.dcMotor.get("LiftMotor2"); // Grab from hardwaremap
+        LiftMotor = opMode.hardwareMap.dcMotor.get("LiftMotor"); // Grab from hardwaremap
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_USING_ENCODER);

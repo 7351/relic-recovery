@@ -21,7 +21,6 @@ public class Intake {
         RightPositionServo = opMode.hardwareMap.servo.get("RightIntakePositionServo");
         LeftIntakeMotor = opMode.hardwareMap.dcMotor.get("LeftIntakeMotor");
         RightIntakeMotor = opMode.hardwareMap.dcMotor.get("RightIntakeMotor");
-        RightIntakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         setPosition(ServoPosition.IN);
     }
@@ -45,7 +44,7 @@ public class Intake {
     public enum Power {
         OUT(-0.7),
         STOP(0),
-        IN(0.7);
+        IN(0.9);
 
         private double power;
 
@@ -69,9 +68,16 @@ public class Intake {
         }*/
     }
 
+    private Power currentPower;
+
     public void setPower(Power power) {
         LeftIntakeMotor.setPower(power.getPower());
         RightIntakeMotor.setPower(power.getPower());
+        currentPower = power;
+    }
+
+    public Power getCurrentPower() {
+        return currentPower;
     }
 
     public void setPosition(ServoPosition position) {

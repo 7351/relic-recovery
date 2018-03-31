@@ -19,7 +19,7 @@ public class LiftToPosition implements Routine {
 
     int difference;
 
-    double power = 0.5;
+    double power = 1;
 
     // Controls all w trigger
     // D-pad left - low position right off ground
@@ -31,7 +31,7 @@ public class LiftToPosition implements Routine {
         FIRST(216),
         SECOND(GROUND.position),
         FOURTH(GROUND.position),
-        TOP(1150);
+        TOP(1500);
 
         private int position; // Array containing data
 
@@ -78,7 +78,7 @@ public class LiftToPosition implements Routine {
     @Override
     public void run() {
 
-        lift.setPower((power > 0 && difference < 0) ? -1 * power * 0.35 : power);
+        lift.setPower((power > 0 && difference < 0) ? -1 * power * 0.8 : power);
 
     }
 

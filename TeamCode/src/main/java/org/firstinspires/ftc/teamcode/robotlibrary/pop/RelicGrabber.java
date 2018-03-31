@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.robotlibrary.pop;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -30,7 +29,7 @@ public class RelicGrabber {
     }
 
     public enum TopGrabberPosition {
-        HOME(0.1),
+        HOME(0.05),
         SQUARE(0.9),
         UP(0.3);
 

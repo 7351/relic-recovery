@@ -35,6 +35,7 @@ public class TeleOp extends StateMachineOpMode {
     private DcMotor.ZeroPowerBehavior currentBehavior = DcMotor.ZeroPowerBehavior.BRAKE;
     private JewelKicker.ServoPosition currentKickerPosition = JewelKicker.ServoPosition.TELEOP;
     private boolean intakeRunning = false;
+    private boolean rightButtonClicked = false;
 
     @Override
     public void init() {
@@ -49,7 +50,6 @@ public class TeleOp extends StateMachineOpMode {
     @Override
     public void start() {
 
-
         driveTrain = new DriveTrain(this);
         driveTrain.setZeroPowerBehavior(currentBehavior);
         lift = new Lift(this);
@@ -57,7 +57,6 @@ public class TeleOp extends StateMachineOpMode {
         kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
         relicGrabber = new RelicGrabber(this);
         intake = new Intake(this);
-
 
     }
 
@@ -160,17 +159,37 @@ public class TeleOp extends StateMachineOpMode {
          */
 
         if (gamepad1.left_trigger == 0) {
-            if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
+            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
                 lift.setRampPosition(Lift.RampServoPosition.INBETWEEN);
             }
             if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
                 lift.setRampPosition(Lift.RampServoPosition.HOME);
             }
-            if (teleOpUtils.gamepad1Controller.dpadUpOnce()) {
-                lift.setRampPosition(Lift.RampServoPosition.SCORE);
+            if (teleOpUtils.gamepad1Controller.dpadRightOnce()) {
+                lift.setRampPosition(Lift.RampServoPosition.FLAT);
             }
 
         }
+
+        if (gamepad1.right_stick_button) {
+            if (!rightButtonClicked) {
+                if (gamepad1.left_trigger == 0) {
+                    if (lift.currentRampPosition.equals(Lift.RampServoPosition.HOME) || lift.currentRampPosition.equals(Lift.RampServoPosition.INBETWEEN)) {
+                        lift.setRampPosition(Lift.RampServoPosition.SCORE);
+                    } else if (lift.currentRampPosition.equals(Lift.RampServoPosition.SCORE)) {
+                        lift.setRampPosition(Lift.RampServoPosition.HOME);
+                    }
+                    rightButtonClicked = true;
+                } else {
+                    runLiftToPosition = true;
+                    targetPosition = LiftToPosition.LiftPosition.GROUND;
+                }
+            }
+        } else {
+            rightButtonClicked = false;
+        }
+
+
 
         /*
          * Lift Controls
@@ -187,7 +206,7 @@ public class TeleOp extends StateMachineOpMode {
             lift.setPower(0);
         }
         if (leftStickValueY < -0.15) { // Down
-            lift.setPower(leftStickValueY * 0.3);
+            lift.setPower(leftStickValueY * 0.8);
         }
         if (leftStickValueY > 0.15) { // Up
             if (lift.LiftMotor.getCurrentPosition() < LiftToPosition.LiftPosition.TOP.getPosition()) {
@@ -200,9 +219,6 @@ public class TeleOp extends StateMachineOpMode {
         }
 
         if (gamepad1.left_trigger != 0) {
-            if (teleOpUtils.gamepad1Controller.dpadLeftOnce()) {
-                lift.setRampPosition(Lift.RampServoPosition.FLAT);
-            }
             if (teleOpUtils.gamepad1Controller.dpadDownOnce()) {
                 runLiftToPosition = true;
                 targetPosition = LiftToPosition.LiftPosition.GROUND;
@@ -211,12 +227,11 @@ public class TeleOp extends StateMachineOpMode {
 
         if (runLiftToPosition) {
             LiftToPosition.movePosition(this, lift, targetPosition);
+            if (targetPosition.equals(LiftToPosition.LiftPosition.GROUND))
+                lift.setRampPosition(Lift.RampServoPosition.HOME);
         }
 
         if (stage == 1) {
-            if (targetPosition == LiftToPosition.LiftPosition.GROUND) {
-                lift.setRampPosition(Lift.RampServoPosition.HOME);
-            }
             runLiftToPosition = false;
             stage = 0;
         }
@@ -232,26 +247,22 @@ public class TeleOp extends StateMachineOpMode {
 
         if (teleOpUtils.gamepad1Controller.rightBumperOnce()) {
             intakeRunning = !intakeRunning;
-            intake.setPower(Intake.Power.IN);
-        }
-
-        if (gamepad1.right_trigger != 0) {
-            intake.setPosition(Intake.ServoPosition.OUT);
-            if (!intakeRunning) {
-                if (gamepad1.left_trigger == 0) {
-                    intake.setPower(Intake.Power.IN);
-                } else {
-                    intake.setPower(Intake.Power.OUT);
-                }
-
-            }
-        } else {
-            intake.setPosition(Intake.ServoPosition.IN);
-            if (!intakeRunning) {
+            if (intakeRunning) {
+                intake.setPosition(Intake.ServoPosition.OUT);
+                intake.setPower(Intake.Power.IN);
+            } else {
+                intake.setPosition(Intake.ServoPosition.IN);
                 intake.setPower(Intake.Power.STOP);
             }
         }
 
+        if (intakeRunning) {
+            if (gamepad1.right_trigger != 0) {
+                intake.setPower(Intake.Power.OUT);
+            } else {
+                intake.setPower(Intake.Power.IN);
+            }
+        }
 
         /*- Controller 2 Controls -*/
 
