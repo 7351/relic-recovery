@@ -13,6 +13,7 @@ public class LiftToPosition implements Routine {
 
     private Lift lift;
     private StateMachineOpMode opMode;
+    private boolean nextStage = true;
     static int maxCounts = 1588;
     private LiftPosition targetPosition;
     ElapsedTime time;
@@ -28,7 +29,7 @@ public class LiftToPosition implements Routine {
 
     public enum LiftPosition {
         GROUND(5),
-        FIRST(216),
+        FIRST(450),
         SECOND(GROUND.position),
         FOURTH(GROUND.position),
         TOP(1500);
@@ -45,6 +46,14 @@ public class LiftToPosition implements Routine {
 
     }
 
+    public static LiftToPosition movePosition(Autonomous autonomous, LiftPosition position, boolean nextStage) {
+        if (instance == null) {
+            instance = new LiftToPosition(autonomous, autonomous.lift, position, nextStage);
+        }
+        instance.isCompleted();
+        return instance;
+    }
+
     /**
      * Constructor for percent
      *
@@ -54,15 +63,16 @@ public class LiftToPosition implements Routine {
      */
     public static LiftToPosition movePosition(StateMachineOpMode opMode, Lift lift, LiftPosition position) {
         if (instance == null) {
-            instance = new LiftToPosition(opMode, lift, position);
+            instance = new LiftToPosition(opMode, lift, position, true);
         }
         instance.isCompleted();
         return instance;
     }
 
-    private LiftToPosition(StateMachineOpMode opMode, Lift lift, LiftPosition position) {
+    private LiftToPosition(StateMachineOpMode opMode, Lift lift, LiftPosition position, boolean nextStage) {
         this.opMode = opMode;
         this.lift = lift;
+        this.nextStage = nextStage;
 
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -105,7 +115,7 @@ public class LiftToPosition implements Routine {
     @Override
     public void completed() {
         lift.setPower(0);
-        opMode.next();
+        if (nextStage) opMode.next();
         teardown();
     }
 

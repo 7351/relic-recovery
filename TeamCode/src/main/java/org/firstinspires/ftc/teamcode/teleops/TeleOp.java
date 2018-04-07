@@ -213,6 +213,9 @@ public class TeleOp extends StateMachineOpMode {
         if (leftStickValueY > 0.15) { // Up
             if (lift.LiftMotor.getCurrentPosition() < LiftToPosition.LiftPosition.TOP.getPosition()) {
                 lift.setPower(leftStickValueY);
+                if (lift.LiftMotor.getCurrentPosition() < LiftToPosition.LiftPosition.FIRST.getPosition()) {
+                    lift.setRampPosition(Lift.RampServoPosition.INBETWEEN);
+                }
             }
         }
 
@@ -249,22 +252,26 @@ public class TeleOp extends StateMachineOpMode {
 
         if (teleOpUtils.gamepad1Controller.rightBumperOnce()) {
             intakeRunning = !intakeRunning;
-            if (intakeRunning) {
-                intake.setPosition(Intake.ServoPosition.OUT);
-                intake.setPower(Intake.Power.IN);
-            } else {
-                intake.setPosition(Intake.ServoPosition.IN);
+            intake.setPower(Intake.Power.IN);
+        }
+
+        if (gamepad1.right_trigger != 0) {
+            intake.setPosition(Intake.ServoPosition.OUT);
+            if (!intakeRunning) {
+                if (gamepad1.left_trigger == 0) {
+                    intake.setPower(Intake.Power.IN);
+                } else {
+                    intake.setPower(Intake.Power.OUT);
+                }
+
+            }
+        } else {
+            intake.setPosition(Intake.ServoPosition.IN);
+            if (!intakeRunning) {
                 intake.setPower(Intake.Power.STOP);
             }
         }
 
-        if (intakeRunning) {
-            if (gamepad1.right_trigger != 0) {
-                intake.setPower(Intake.Power.OUT);
-            } else {
-                intake.setPower(Intake.Power.IN);
-            }
-        }
 
         /*- Controller 2 Controls -*/
 

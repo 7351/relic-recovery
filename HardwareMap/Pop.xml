@@ -6,24 +6,22 @@
             <NeveRest20Gearmotor name="LeftFrontMotor" port="1" />
             <NeveRest20Gearmotor name="RightBackMotor" port="2" />
             <NeveRest20Gearmotor name="RightFrontMotor" port="3" />
-            <ContinuousRotationServo name="LeftIntakeCRServo" port="0" />
-            <Servo name="RelicRackCRServo" port="1" />
+            <Servo name="LeftIntakePositionServo" port="0" />
             <Servo name="JewelKickerX" port="2" />
-            <Servo name="LeftIntakePositionServo" port="3" />
             <Servo name="TopGrabberServo" port="4" />
             <Servo name="JewelKickerY" port="5" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <LynxColorSensor name="JewelColorSensor" port="1" bus="0" />
         </LynxModule>
         <LynxModule name="Expansion Hub A" port="3">
-            <NeveRest60Gearmotor name="RelicLiftMotor1" port="0" />
-            <NeveRest60Gearmotor name="RelicLiftMotor2" port="1" />
-            <NeveRest40Gearmotor name="LiftMotor2" port="2" />
-            <NeveRest40Gearmotor name="LiftMotor1" port="3" />
+            <NeveRest60Gearmotor name="RelicLiftMotor" port="0" />
+            <NeveRest20Gearmotor name="RightIntakeMotor" port="1" />
+            <NeveRest20Gearmotor name="LeftIntakeMotor" port="2" />
+            <NeveRest60Gearmotor name="LiftMotor" port="3" />
             <Servo name="RampUpDown1" port="0" />
             <Servo name="RampUpDown2" port="1" />
+            <Servo name="RelicRackCRServo" port="2" />
             <Servo name="BottomGrabberServo" port="3" />
-            <ContinuousRotationServo name="RightIntakeCRServo" port="4" />
             <Servo name="RightIntakePositionServo" port="5" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
         </LynxModule>

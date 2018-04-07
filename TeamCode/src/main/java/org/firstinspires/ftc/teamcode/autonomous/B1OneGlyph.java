@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ScoreGlyph;
 
 /**
@@ -72,7 +75,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         if (stage == 3) {
-            ScoreGlyph.scoreGlyph(this);
+            ScoreGlyph.scoreGlyph(this, !twoGlyph);
         }
 
         // Turn to face the pit of glyphs
@@ -87,18 +90,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         if (stage == 6) {
-            if (time.time() > 1 && time.time() < 1.75) {
-                driveTrain.powerLeft(-0.225);
-                driveTrain.powerRight(0);
-            }
-            if (time.time() > 1.75 && time.time() < 2.5) {
-                driveTrain.powerLeft(0);
-                driveTrain.powerRight(-0.225);
-            }
-            if (time.time() > 2.5) {
-                driveTrain.stopRobot();
-            }
-            if (time.time() > 3) {
+            if (time.time() > 2) {
                 next();
             }
         }
@@ -127,33 +119,17 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             }
         }
 
-        // Drive to the correct distance away from the cyrptobox
         if (stage == 10) {
-            EncoderDrive.createDrive(this, 200);
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
         }
 
-        // Put the ramp up
+        // Drive to the correct distance away from the cyrptobox
         if (stage == 11) {
-            lift.setRampPosition(Lift.RampServoPosition.SCORE);
-            if (time.time() > 1) {
-                next();
-            }
+            ScoreGlyph.scoreGlyph(this, true);
         }
 
-        // Drive back to get ready to push back in
         if (stage == 12) {
-            EncoderDrive.createDrive(this, -100);
-        }
-
-        // Push back in
-        if (stage == 13) {
-            EncoderDrive.createDrive(this, 220);
-        }
-
-        // Drive back out
-        if (stage == 14) {
-            EncoderDrive.createDrive(this, -200);
-            lift.setRampPosition(Lift.RampServoPosition.HOME);
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
         }
 
         if (telemetryEnabled) {
@@ -161,6 +137,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             telemetry.addData("Heading", gyroUtils.getHeading());
             telemetry.addData("Pitch", gyroUtils.getPitch());
             telemetry.addData("Roll", gyroUtils.getRoll());
+            telemetry.addData("Time", time.time());
             telemetry.addData("VuMark", (relicRecoveryVuMark != null ? relicRecoveryVuMark.toString().toLowerCase() : "Unknown"));
         }
     }

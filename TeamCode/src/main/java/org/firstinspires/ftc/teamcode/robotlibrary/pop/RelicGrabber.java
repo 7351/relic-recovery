@@ -21,6 +21,7 @@ public class RelicGrabber {
         RelicRackCRServo = opMode.hardwareMap.servo.get("RelicRackCRServo");
 
         LiftMotor = opMode.hardwareMap.dcMotor.get("RelicLiftMotor");
+        LiftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         setBottomPosition(BottomCurrentPosition);
         setTopPosition(TopGrabberPosition.HOME);

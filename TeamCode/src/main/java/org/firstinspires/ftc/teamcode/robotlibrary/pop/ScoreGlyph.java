@@ -6,17 +6,23 @@ public class ScoreGlyph extends StateMachineRoutine {
 
     private static ScoreGlyph instance;
     private Autonomous autonomous;
+    private boolean secondPush = true;
 
-    public static ScoreGlyph scoreGlyph(Autonomous autonomous) {
+    public static ScoreGlyph scoreGlyph(Autonomous autonomous, boolean secondPush) {
         if (instance == null) {
-            instance = new ScoreGlyph(autonomous);
+            instance = new ScoreGlyph(autonomous, secondPush);
         }
         instance.isCompleted();
         return instance;
     }
 
-    private ScoreGlyph(Autonomous autonomous) {
+    public static ScoreGlyph scoreGlyph(Autonomous autonomous) {
+        return scoreGlyph(autonomous, true);
+    }
+
+    private ScoreGlyph(Autonomous autonomous, boolean secondPush) {
         this.autonomous = autonomous;
+        this.secondPush = secondPush;
         time = new ElapsedTime();
     }
 
@@ -39,6 +45,8 @@ public class ScoreGlyph extends StateMachineRoutine {
         if (stage == 2) {
             RoutineEncoderDrive.createDrive(autonomous, this, -100);
         }
+
+        if (stage == 3 && !secondPush) stage = 5;
 
         // Push back in
         if (stage == 3) {
