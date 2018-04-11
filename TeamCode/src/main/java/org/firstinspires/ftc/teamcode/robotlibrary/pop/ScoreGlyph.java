@@ -8,6 +8,7 @@ public class ScoreGlyph extends StateMachineRoutine {
     private Autonomous autonomous;
     private boolean secondPush = true;
 
+
     public static ScoreGlyph scoreGlyph(Autonomous autonomous, boolean secondPush) {
         if (instance == null) {
             instance = new ScoreGlyph(autonomous, secondPush);
@@ -30,7 +31,7 @@ public class ScoreGlyph extends StateMachineRoutine {
     public void run() {
         // Drive to the correct distance away from the cyrptobox
         if (stage == 0) {
-            RoutineEncoderDrive.createDrive(autonomous, this, 200);
+            RoutineEncoderDrive.createDrive(autonomous, this, 150);
         }
 
         // Put the ramp up
@@ -43,22 +44,30 @@ public class ScoreGlyph extends StateMachineRoutine {
 
         // Drive back to get ready to push back in
         if (stage == 2) {
-            RoutineEncoderDrive.createDrive(autonomous, this, -100);
+            RoutineEncoderDrive.createDrive(autonomous, this, 75);
         }
 
-        if (stage == 3 && !secondPush) stage = 5;
+        if (stage == 3) {
+            RoutineEncoderDrive.createDrive(autonomous, this, -150);
+        }
+
+        if (stage == 4 && secondPush) {
+            stage++;
+        } else if (stage == 4 && !secondPush) {
+            stage = 7;
+        }
 
         // Push back in
-        if (stage == 3) {
+        if (stage == 5) {
             RoutineEncoderDrive.createDrive(autonomous, this, 220);
         }
 
         // Drive back out
-        if (stage == 4) {
+        if (stage == 6) {
             RoutineEncoderDrive.createDrive(autonomous, this, -200);
         }
 
-        if (stage == 5) {
+        if (stage == 7) {
             autonomous.lift.setRampPosition(Lift.RampServoPosition.HOME);
             next();
         }
@@ -66,7 +75,7 @@ public class ScoreGlyph extends StateMachineRoutine {
 
     @Override
     public boolean isCompleted() {
-        boolean completed = stage > 5;
+        boolean completed = stage > 6;
         if (completed) {
             completed();
         } else {

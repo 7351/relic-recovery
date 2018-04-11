@@ -51,11 +51,13 @@ public class ActUponJewelKicker implements Routine {
             time.reset();
         }
         if (stage == 1) {
-            if (time.time() < 1) {
+            if (time.time() < 0.5) {
                 kicker.setJewelKickerPosition(JewelKicker.ServoPosition.TELEOP);
-            } if (time.time() > 1 && time.time() < 1.75) {
+            }
+            if (time.time() > 0.5 && time.time() < 0.75) {
                 kicker.setJewelKickerPosition(JewelKicker.ServoPosition.MIDDLEJEWELUP);
-            } if (time.time() > 1.75) {
+            }
+            if (time.time() > 1.15) {
                 stage++;
                 time.reset();
             }
@@ -63,7 +65,7 @@ public class ActUponJewelKicker implements Routine {
         if (stage == 2) {
             kicker.setJewelKickerPositionY(JewelKicker.ServoPosition.MIDDLEJEWEL, servoStepperTime, deltaPosition, deltaTime);
             double distance = kicker.colorRangeSensor.getDistance(CM);
-            if (time.time() > 2.25) {
+            if (time.time() > 1.5) {
                 if (distance <= ballDistance) {
                     stage++;
                     time.reset();
@@ -110,11 +112,9 @@ public class ActUponJewelKicker implements Routine {
                     }
                 }
             }
-            if (time.time() > 2.75) {
-                if (time.time() > 0.75) {
-                    stage++;
-                    time.reset();
-                }
+            if (time.time() > 2.4) {
+                stage++;
+                time.reset();
             }
         }
         if (stage == 4) {
@@ -123,7 +123,7 @@ public class ActUponJewelKicker implements Routine {
         }
         if (stage == 5) {
             kicker.setJewelKickerPositionX(JewelKicker.ServoPosition.MIDDLEJEWEL, servoStepperTime, deltaPosition, deltaTime);
-            if (time.time() > 0.5) {
+            if (time.time() > 0.25) {
                 time.reset();
                 stage++;
             }
@@ -131,7 +131,7 @@ public class ActUponJewelKicker implements Routine {
 
         if (stage == 6) {
             kicker.setJewelKickerPosition(JewelKicker.ServoPosition.MIDDLEJEWELUP);
-            if (time.time() > 1) {
+            if (time.time() > 0.5) {
                 stage++;
             }
         }

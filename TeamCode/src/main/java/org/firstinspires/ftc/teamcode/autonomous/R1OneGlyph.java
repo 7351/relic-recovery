@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ScoreGlyph;
@@ -72,11 +73,62 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         if (stage == 3) {
-            ScoreGlyph.scoreGlyph(this);
+            ScoreGlyph.scoreGlyph(this, !twoGlyph);
         }
 
+        // Turn to face the pit of glyphs
         if (stage == 4 && twoGlyph) {
             BasicGyroTurn.createTurn(this, 90);
+        }
+
+        if (stage == 5) {
+            intake.setPower(Intake.Power.IN);
+            intake.setPosition(Intake.ServoPosition.OUT);
+            EncoderDrive.createDrive(this, -1300, 0.35);
+        }
+
+        if (stage == 6) {
+            if (time.time() > 0.75) {
+                next();
+            }
+        }
+
+        if (stage == 7) {
+            BasicGyroTurn.createTurn(this, 90);
+        }
+
+        if (stage == 8) {
+            lift.setRampPosition(Lift.RampServoPosition.FLAT);
+            intake.setPower(Intake.Power.STOP);
+            intake.setPosition(Intake.ServoPosition.IN);
+            EncoderDrive.createDrive(this, 1150, 0.35);
+        }
+
+        // Turn based on vumark
+        if (stage == 9) {
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                BasicGyroTurn.createTurn(this, 51);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
+                BasicGyroTurn.createTurn(this, 58);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                BasicGyroTurn.createTurn(this, 120);
+            }
+        }
+
+        if (stage == 10) {
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
+        }
+
+        // Drive to the correct distance away from the cyrptobox
+        if (stage == 11) {
+            ScoreGlyph.scoreGlyph(this, true);
+        }
+
+        if (stage == 12) {
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
+            lift.setRampPosition(Lift.RampServoPosition.HOME);
         }
 
         if (telemetryEnabled) {
