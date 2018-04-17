@@ -25,6 +25,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
     @Override
     public void start() {
         setAlliance("Blue");
+        startingPosition = CLOSE;
         gyroUtils.calibrateGyro();
     }
 
@@ -86,11 +87,11 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         if (stage == 5) {
             intake.setPower(Intake.Power.IN);
             intake.setPosition(Intake.ServoPosition.OUT);
-            EncoderDrive.createDrive(this, -1300);
+            EncoderDrive.createDrive(this, -1300, 0.35);
         }
 
         if (stage == 6) {
-            if (time.time() > 2) {
+            if (time.time() > 0.75) {
                 next();
             }
         }
@@ -103,7 +104,7 @@ public class B1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             lift.setRampPosition(Lift.RampServoPosition.FLAT);
             intake.setPower(Intake.Power.STOP);
             intake.setPosition(Intake.ServoPosition.IN);
-            EncoderDrive.createDrive(this, 1150);
+            EncoderDrive.createDrive(this, 1150, 0.35);
         }
 
         // Turn based on vumark

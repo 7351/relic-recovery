@@ -6,8 +6,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.ScoreGlyph;
 
 /**
  * Created by Dynamic Signals on 10/10/2017.
@@ -16,9 +18,12 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 @Autonomous(name = "B2OneGlyph", group = "A-Team")
 public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.Autonomous {
 
+    boolean twoGlyph = false;
+
     @Override
     public void start() {
         setAlliance("Blue");
+        startingPosition = FAR;
         gyroUtils.calibrateGyro();
     }
 
@@ -52,7 +57,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         // Drive to distance depending on read vumark
         if (stage == 3) {
             if (relicRecoveryVuMark == null) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.LEFT;
+                relicRecoveryVuMark = RelicRecoveryVuMark.RIGHT;
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 EncoderDrive.createDrive(this, -500, 0.35);
@@ -68,7 +73,54 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         // Turn based on vumark
         if (stage == 4) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                BasicGyroTurn.createTurn(this, 152);
+                BasicGyroTurn.createTurn(this, 147);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
+                BasicGyroTurn.createTurn(this, -158);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                BasicGyroTurn.createTurn(this, -165);
+            }
+        }
+
+        if (stage == 5) {
+            ScoreGlyph.scoreGlyph(this, !twoGlyph);
+        }
+
+        if (stage == 6 && twoGlyph) {
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                BasicGyroTurn.createTurn(this, 142);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
+                BasicGyroTurn.createTurn(this, 142);
+            }
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                BasicGyroTurn.createTurn(this, 142);
+            }
+        }
+
+        if (stage == 7) {
+            intake.setPower(Intake.Power.IN);
+            intake.setPosition(Intake.ServoPosition.OUT);
+            EncoderDrive.createDrive(this, -1700, 0.35);
+        }
+
+        if (stage == 8) {
+            if (time.time() > 0.75) {
+                next();
+            }
+        }
+
+        if (stage == 9) {
+            lift.setRampPosition(Lift.RampServoPosition.FLAT);
+            intake.setPower(Intake.Power.STOP);
+            intake.setPosition(Intake.ServoPosition.IN);
+            EncoderDrive.createDrive(this, 1625, 0.35);
+        }
+
+        if (stage == 10) {
+            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                BasicGyroTurn.createTurn(this, 147);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
                 BasicGyroTurn.createTurn(this, -158);
@@ -78,35 +130,22 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             }
         }
 
-        if (stage == 5) {
-            EncoderDrive.createDrive(this, 90);
+        if (stage == 11) {
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.FIRST);
         }
 
-        if (stage == 6) {
-            lift.setRampPosition(Lift.RampServoPosition.SCORE);
-            if (time.time() > 1) {
-                next();
-            }
+        // Drive to the correct distance away from the cryptobox
+        if (stage == 12) {
+            ScoreGlyph.scoreGlyph(this, true);
         }
 
-        if (stage == 7) {
-            EncoderDrive.createDrive(this, -175);
-        }
-
-        if (stage == 8) {
-            EncoderDrive.createDrive(this, 220);
-        }
-
-        if (stage == 9) {
-            EncoderDrive.createDrive(this, -200);
-        }
-
-        if (stage == 10) {
+        if (stage == 13) {
+            LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
             lift.setRampPosition(Lift.RampServoPosition.HOME);
-            next();
         }
 
-        if (telemetryEnabled) {
+
+            if (telemetryEnabled) {
             telemetry.addData("Stage", stage);
             telemetry.addData("Heading", gyroUtils.getHeading());
             telemetry.addData("Pitch", gyroUtils.getPitch());

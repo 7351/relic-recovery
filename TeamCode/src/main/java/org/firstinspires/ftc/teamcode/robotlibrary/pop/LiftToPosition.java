@@ -29,7 +29,7 @@ public class LiftToPosition implements Routine {
 
     public enum LiftPosition {
         GROUND(5),
-        FIRST(450),
+        FIRST(500),
         SECOND(GROUND.position),
         FOURTH(GROUND.position),
         TOP(1500);

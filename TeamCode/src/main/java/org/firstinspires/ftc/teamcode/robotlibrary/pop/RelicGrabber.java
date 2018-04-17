@@ -30,7 +30,7 @@ public class RelicGrabber {
     }
 
     public enum TopGrabberPosition {
-        HOME(0.05),
+        HOME(0),
         SQUARE(0.9),
         UP(0.3);
 

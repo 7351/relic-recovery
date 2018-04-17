@@ -13,6 +13,10 @@ public abstract class Autonomous extends StateMachineOpMode {
 
     OpModeManagerImpl manager;
 
+    public int startingPosition = CLOSE;
+    public final static int CLOSE = 1; // Closer to the relic scoring zone
+    public final static int FAR = 2; // Farther away from scoring zone
+
     public String alliance;
     public VuforiaSystem vuforiaSystem;
     public Intake intake;

@@ -31,7 +31,11 @@ public class ScoreGlyph extends StateMachineRoutine {
     public void run() {
         // Drive to the correct distance away from the cyrptobox
         if (stage == 0) {
-            RoutineEncoderDrive.createDrive(autonomous, this, 150);
+            if (autonomous.startingPosition == Autonomous.CLOSE) {
+                RoutineEncoderDrive.createDrive(autonomous, this, 150);
+            } if (autonomous.startingPosition == Autonomous.FAR) {
+                RoutineEncoderDrive.createDrive(autonomous, this, 85);
+            }
         }
 
         // Put the ramp up
@@ -44,7 +48,7 @@ public class ScoreGlyph extends StateMachineRoutine {
 
         // Drive back to get ready to push back in
         if (stage == 2) {
-            RoutineEncoderDrive.createDrive(autonomous, this, 75);
+            RoutineEncoderDrive.createDrive(autonomous, this, 50);
         }
 
         if (stage == 3) {
