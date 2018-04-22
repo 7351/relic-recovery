@@ -57,13 +57,13 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         // Drive to appropriate positions based on read vumark
         if (stage == 3) {
             if (relicRecoveryVuMark == null) {
-                relicRecoveryVuMark = RelicRecoveryVuMark.RIGHT;
+                relicRecoveryVuMark = RelicRecoveryVuMark.CENTER;
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 EncoderDrive.createDrive(this, 400, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                EncoderDrive.createDrive(this, 100, 0.35);
+                EncoderDrive.createDrive(this, 175, 0.35);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
                 EncoderDrive.createDrive(this, 400, 0.35);
@@ -87,7 +87,7 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             ScoreGlyph.scoreGlyph(this, !twoGlyph);
         }
 
-        if (stage == 6 && twoGlyph) {
+        if (stage == 6 && twoGlyph && !relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 BasicGyroTurn.createTurn(this, 39);
             }
@@ -102,11 +102,11 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         if (stage == 7) {
             intake.setPower(Intake.Power.IN);
             intake.setPosition(Intake.ServoPosition.OUT);
-            EncoderDrive.createDrive(this, -1700, 0.35);
+            EncoderDrive.createDrive(this, -1775, 0.35);
         }
 
         if (stage == 8) {
-            if (time.time() > 0.75) {
+            if (time.time() > 1.25) {
                 next();
             }
         }
@@ -115,7 +115,7 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             lift.setRampPosition(Lift.RampServoPosition.FLAT);
             intake.setPower(Intake.Power.STOP);
             intake.setPosition(Intake.ServoPosition.IN);
-            EncoderDrive.createDrive(this, 1625, 0.35);
+            EncoderDrive.createDrive(this, 1700, 0.35);
         }
 
         if (stage == 10) {
@@ -123,7 +123,7 @@ public class R2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
                 BasicGyroTurn.createTurn(this, -28);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                BasicGyroTurn.createTurn(this, -27);
+                BasicGyroTurn.createTurn(this, -25);
             }
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
                 BasicGyroTurn.createTurn(this, 22);

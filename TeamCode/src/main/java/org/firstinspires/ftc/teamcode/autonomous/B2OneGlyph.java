@@ -87,7 +87,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             ScoreGlyph.scoreGlyph(this, !twoGlyph);
         }
 
-        if (stage == 6 && twoGlyph) {
+        if (stage == 6 && twoGlyph && !relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
             if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
                 BasicGyroTurn.createTurn(this, 142);
             }
