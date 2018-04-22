@@ -22,6 +22,7 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
     @Override
     public void start() {
+        classType = Type.AUTONOMOUS;
         setAlliance("Red");
         startingPosition = CLOSE;
         gyroUtils.calibrateGyro();

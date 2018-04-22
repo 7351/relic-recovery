@@ -74,6 +74,10 @@ public class LiftToPosition implements Routine {
         this.lift = lift;
         this.nextStage = nextStage;
 
+        if (opMode.classType.equals(StateMachineOpMode.Type.AUTONOMOUS)) {
+            power = 0.7;
+        }
+
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         difference = position.getPosition() - lift.LiftMotor.getCurrentPosition();
@@ -87,6 +91,7 @@ public class LiftToPosition implements Routine {
 
     @Override
     public void run() {
+
 
         lift.setPower((power > 0 && difference < 0) ? -1 * power * 0.8 : power);
 

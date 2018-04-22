@@ -39,6 +39,7 @@ public class TeleOp extends StateMachineOpMode {
 
     @Override
     public void init() {
+        classType = Type.TELEOP;
         teleOpUtils = new TeleOpUtils(gamepad1, gamepad2);
     }
 

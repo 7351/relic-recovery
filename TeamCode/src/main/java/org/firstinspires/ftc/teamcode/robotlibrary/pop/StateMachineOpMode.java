@@ -14,6 +14,12 @@ public abstract class StateMachineOpMode extends OpMode implements StateMachine 
     public double stage = 0;
     public ElapsedTime time = new ElapsedTime();
     public boolean telemetryEnabled = true;
+    public Type classType;
+
+    public static enum Type {
+        AUTONOMOUS,
+        TELEOP
+    }
 
     public void start() {
         time.reset();

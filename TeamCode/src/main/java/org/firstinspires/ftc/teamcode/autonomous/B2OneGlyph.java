@@ -22,6 +22,7 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
 
     @Override
     public void start() {
+        classType = Type.AUTONOMOUS;
         setAlliance("Blue");
         startingPosition = FAR;
         gyroUtils.calibrateGyro();
