@@ -214,7 +214,7 @@ public class TeleOp extends StateMachineOpMode {
         if (leftStickValueY > 0.15) { // Up
             if (lift.LiftMotor.getCurrentPosition() < LiftToPosition.LiftPosition.TOP.getPosition()) {
                 lift.setPower(leftStickValueY);
-                if (lift.LiftMotor.getCurrentPosition() < LiftToPosition.LiftPosition.FIRST.getPosition()) {
+                if (lift.LiftMotor.getCurrentPosition() < LiftToPosition.LiftPosition.FIRST.getPosition() && lift.currentRampPosition != Lift.RampServoPosition.FLAT) {
                     lift.setRampPosition(Lift.RampServoPosition.INBETWEEN);
                 }
             }

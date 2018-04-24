@@ -31,10 +31,10 @@ public class JewelKicker {
     }
 
     public enum ServoPosition {
-        INROBOT(0.72, 0.07),
-        MIDDLEJEWEL(0.45, 0.81),
-        KNOCKRIGHT(0.57, MIDDLEJEWEL.getPosition()[1]),
-        KNOCKLEFT(0.33, MIDDLEJEWEL.getPosition()[1]),
+        INROBOT(0.55, 0.07),
+        MIDDLEJEWEL(0.47, 0.81),
+        KNOCKRIGHT(0.59, MIDDLEJEWEL.getPosition()[1]),
+        KNOCKLEFT(0.32, MIDDLEJEWEL.getPosition()[1]),
         TELEOP(INROBOT.getPosition()[0], 0.4),
         MIDDLEJEWELUP(MIDDLEJEWEL.getPosition()[0], TELEOP.getPosition()[1]);
 
