@@ -13,6 +13,7 @@ public abstract class StateMachineOpMode extends OpMode implements StateMachine 
 
     public double stage = 0;
     public ElapsedTime time = new ElapsedTime();
+    public ElapsedTime matchTime = new ElapsedTime();
     public boolean telemetryEnabled = true;
     public Type classType;
 
@@ -23,6 +24,7 @@ public abstract class StateMachineOpMode extends OpMode implements StateMachine 
 
     public void start() {
         time.reset();
+        matchTime.reset();
     }
 
     public void next() {

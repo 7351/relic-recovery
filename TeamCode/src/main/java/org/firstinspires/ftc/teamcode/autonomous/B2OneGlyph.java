@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ScoreGlyph;
@@ -88,16 +89,20 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             ScoreGlyph.scoreGlyph(this, !twoGlyph);
         }
 
-        if (stage == 6 && twoGlyph && !relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
-                BasicGyroTurn.createTurn(this, 142);
+        if (stage == 6) {
+            if (twoGlyph) {
+                if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.LEFT)) {
+                    BasicGyroTurn.createTurn(this, 142);
+                }
+                if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
+                    BasicGyroTurn.createTurn(this, 142);
+                }
+            } else {
+                if (time.time() > 3) {
+                    kicker.setJewelKickerPosition(JewelKicker.ServoPosition.INROBOT);
+                }
             }
-            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.CENTER)) {
-                BasicGyroTurn.createTurn(this, 142);
-            }
-            if (relicRecoveryVuMark.equals(RelicRecoveryVuMark.RIGHT)) {
-                BasicGyroTurn.createTurn(this, 142);
-            }
+
         }
 
         if (stage == 7) {
@@ -145,8 +150,13 @@ public class B2OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             lift.setRampPosition(Lift.RampServoPosition.HOME);
         }
 
+        if (stage == 14) {
+            if (time.time() > 3) {
+                kicker.setJewelKickerPosition(JewelKicker.ServoPosition.INROBOT);
+            }
+        }
 
-            if (telemetryEnabled) {
+        if (telemetryEnabled) {
             telemetry.addData("Stage", stage);
             telemetry.addData("Heading", gyroUtils.getHeading());
             telemetry.addData("Pitch", gyroUtils.getPitch());

@@ -72,6 +72,7 @@ public abstract class Autonomous extends StateMachineOpMode {
 
     @Override
     public void stop() {
+        kicker.setJewelKickerPosition(JewelKicker.ServoPosition.INROBOT);
         manager = (OpModeManagerImpl) internalOpModeServices;
         manager.initActiveOpMode("TeleOp");
         CameraDevice.getInstance().setFlashTorchMode(false);

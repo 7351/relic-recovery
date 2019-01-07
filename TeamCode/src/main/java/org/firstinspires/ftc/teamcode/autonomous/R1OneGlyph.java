@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.robotlibrary.pop.ActUponJewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.BasicGyroTurn;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.EncoderDrive;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Intake;
+import org.firstinspires.ftc.teamcode.robotlibrary.pop.JewelKicker;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.Lift;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.LiftToPosition;
 import org.firstinspires.ftc.teamcode.robotlibrary.pop.ScoreGlyph;
@@ -79,8 +80,14 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
         }
 
         // Turn to face the pit of glyphs
-        if (stage == 4 && twoGlyph) {
-            BasicGyroTurn.createTurn(this, 90);
+        if (stage == 4) {
+            if (twoGlyph) {
+                BasicGyroTurn.createTurn(this, 90);
+            } else {
+                if (time.time() > 3) {
+                    kicker.setJewelKickerPosition(JewelKicker.ServoPosition.INROBOT);
+                }
+            }
         }
 
         if (stage == 5) {
@@ -132,6 +139,13 @@ public class R1OneGlyph extends org.firstinspires.ftc.teamcode.robotlibrary.pop.
             LiftToPosition.movePosition(this, lift, LiftToPosition.LiftPosition.GROUND);
             lift.setRampPosition(Lift.RampServoPosition.HOME);
         }
+
+        if (stage == 13) {
+            if (time.time() > 3) {
+                kicker.setJewelKickerPosition(JewelKicker.ServoPosition.INROBOT);
+            }
+        }
+
 
         if (telemetryEnabled) {
             telemetry.addData("Stage", stage);
